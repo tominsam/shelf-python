@@ -55,7 +55,8 @@ class ShelfController (NSWindowController):
             try:
                 clues = handler.clues()
                 if len(clues) == 0:
-                    NSLog("No clues from %s"%handler)
+                    NSLog("No clues from %s"%handler.__class__.__name__)
+                    self.current_person = None
                     self.blank_info()
                 elif self.current_person and self.current_person.uniqueId() == clues[0].uniqueId():
                     pass
