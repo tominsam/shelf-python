@@ -14,7 +14,6 @@ class ComAppleMail( Extractor ):
         messages = self.mail.selection()
         
         for message in messages:
-            NSLog( " - selected mail is from %s"%( message.sender() ) )
             clues += self.clues_from_email( message.sender() )
         
         return clues

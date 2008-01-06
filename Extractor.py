@@ -17,20 +17,22 @@ class Extractor(object):
     def clues_from_email( self, email ):
         # email look like 'Name <email>' sometimes.
         name, email = parseaddr( email )
+        print("Looking for people with email '%s'"%email)
         return self._search_for( email, "Email" )
     
     def clues_from_url( self, url ):
         if not url: return []
-        print("Trying url %s"%url)
+        print("Looking for people with url '%s'"%url)
         clues = self._search_for( url, "URLs" ) + self._search_for( url + "/", "URLs" ) 
         while len(clues) == 0 and re.search(r'//.*?/', url):
             url = re.sub(r'/[^/]*$','',url)
-            print("Trying url %s"%url)
+            print("Looking for people with url '%s'"%url)
             clues = self._search_for( url, "URLs" ) + self._search_for( url + "/", "URLs" ) 
         return clues
 
-    def clues_from_aim( self, url ):
-        return self._search_for( url, "AIMInstant" )
+    def clues_from_aim( self, aim ):
+        print("Looking for people with AIM %s"%aim)
+        return self._search_for( aim, "AIMInstant" )
     
     def _search_for( self, thing, type ):
         if not thing or len(thing) == 0:

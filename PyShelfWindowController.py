@@ -25,7 +25,6 @@ class ShelfController (NSWindowController):
         self.current_person = None
         
     def applicationDidFinishLaunching_(self, sender):
-        NSLog("Application did finish launching.")
         self.performSelector_withObject_afterDelay_( 'poll', None, 0 )
         self.blank_info()
 
@@ -39,7 +38,6 @@ class ShelfController (NSWindowController):
                 mod = __import__(classname, globals(), locals(), [''])
                 cls = getattr( mod, classname )
                 self.handlers[ bundle ] = cls()
-                NSLog( "** Loaded provider %s"%classname )
             except ImportError:
                 NSLog( "** Couldn't import file for %s"%( classname ) )
                 self.handlers[ bundle ] = None
@@ -47,29 +45,28 @@ class ShelfController (NSWindowController):
         return self.handlers[ bundle ]
 
     def poll(self):
-        NSLog( "..polling.." )
+        #NSLog( "..polling.." )
         
         # get bundle name of active application
         bundle = NSWorkspace.sharedWorkspace().activeApplication()['NSApplicationBundleIdentifier']
-        NSLog( "** foreground app is %s"%bundle )
         
         handler = self.handler_for( bundle )
         if handler:
-            NSLog( "** Getting clues from %s"%bundle )
             try:
                 clues = handler.clues()
                 if len(clues) == 0:
-                    NSLog(" - No clues from this handler")
+                    NSLog("No clues from %s"%handler)
                     self.blank_info()
                 elif self.current_person and self.current_person.uniqueId() == clues[0].uniqueId():
-                    NSLog(" - Same person as before")
+                    pass
+                    #NSLog("Context has not changed")
                 else:
-                    NSLog(" - New person found!")
+                    NSLog("New context - %s"%clues[0].displayName())
                     # person has changed
                     self.current_person = clues[0]
                     self.update_info_for( clues[0] )
             except:
-                NSLog("** Error getting clues from %s!"%bundle)
+                NSLog("Error getting clues from %s!"%bundle)
                 print( traceback.format_exc() )
 
         self.performSelector_withObject_afterDelay_( 'poll', None, 1 )
@@ -85,7 +82,6 @@ class ShelfController (NSWindowController):
         self.webView.mainFrame().loadHTMLString_baseURL_( "No context", None )
     
     def update_info_for( self, person ):
-        NSLog( " - Got person %s"%person )
         self.nameView.setStringValue_( person.displayName() )
         self.companyView.setStringValue_( person.companyName() )
         self.imageView.setImageFrameStyle_( NSImageFrameNone )

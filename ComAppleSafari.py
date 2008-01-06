@@ -12,9 +12,6 @@ class ComAppleSafari(Extractor):
 
         # window 0 is always the foreground window?
         url = self.safari.windows()[ 0 ].currentTab().URL()
-        NSLog(" - current url is %s"%url)
         clues += self.clues_from_url( url )
-
-        # TODO - look for embedded vcard?
-
+        # TODO - look for embedded hcard?
         return clues
