@@ -33,10 +33,14 @@ class Extractor(object):
     def clues_from_aim( self, aim ):
         print("Looking for people with AIM %s"%aim)
         return self._search_for( aim, "AIMInstant" )
-        
+    
+    def clues_from_name( self, name ):
+        names = re.split(r'\s+', name)
+        return self.clues_from_names( names[0], names[-1] )
+
     def clues_from_names( self, forename, surname ):
         print("Looking for people called '%s' '%s'"%( forename, surname ))
-        forename_search = ABPerson.searchElementForProperty_label_key_value_comparison_( kABFirstNameProperty, None, None, forename, kABEqualCaseInsensitive )
+        forename_search = ABPerson.searchElementForProperty_label_key_value_comparison_( kABFirstNameProperty, None, None, forename, kABPrefixMatchCaseInsensitive )
         surname_search = ABPerson.searchElementForProperty_label_key_value_comparison_( kABLastNameProperty, None, None, surname, kABEqualCaseInsensitive )
         se = ABSearchElement.searchElementForConjunction_children_( kABSearchAnd, [ forename_search, surname_search ] )
         return list(self.addressBook.recordsMatchingSearchElement_( se ))

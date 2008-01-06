@@ -40,6 +40,9 @@ class ComAppleSafari(Extractor):
                         # TODO - check ordering here for .jp issues? Gah.
                         clues += self.clues_from_names( card['given-name'], card['family-name'] )
                     
+                    if 'fn' in card:
+                         clues += self.clues_from_name( card['fn'] )
+
                     if len(clues) == 0:
                         print "Can't get anything useful from %s"%(repr(card))
             
