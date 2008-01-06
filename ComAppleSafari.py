@@ -27,17 +27,21 @@ class ComAppleSafari(Extractor):
                 vcards = [ tree for name, tree in feed if name =='vcard']
                 if len(vcards) > 0:
                     card = dict(vcards[0])
-                    if card['url']:
+                    if 'url' in card:
                         clues += self.clues_from_url( card['url'] )
-                    if card['email']:
+
+                    if 'email' in card:
                         for addr in card['email']:
                             # bloody flickr
                             e = re.sub(r'\s*\[\s*at\s*\]\s*', '@', addr[1])
                             clues += self.clues_from_email( e )
-                    if card['family-name'] and card['given-name']:
+
+                    if 'family-name' in card and 'given-name' in card:
                         # TODO - check ordering here for .jp issues? Gah.
                         clues += self.clues_from_names( card['given-name'], card['family-name'] )
-                        
+                    
+                    if len(clues) == 0:
+                        print "Can't get anything useful from %s"%(repr(card))
             
         return clues
     
