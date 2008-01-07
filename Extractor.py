@@ -13,7 +13,7 @@ from HTMLParser import HTMLParseError
 class Extractor(object):
 
     def __init__(self):
-        NSLog("** %s init"%self.__class__.__name__)
+        NSLog("** Extractor '%s' init"%self.__class__.__name__)
         super( Extractor, self ).__init__()
         self.addressBook = ABAddressBook.sharedAddressBook()
 

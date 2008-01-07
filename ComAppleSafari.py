@@ -26,6 +26,11 @@ class ComAppleSafari(Extractor):
             print("Found rel='me' links: %s"%( ",".join(relme.hrefs) ) )
             for link in relme.hrefs:
                 profile = urlparse.urljoin( tab.URL(), link )
+                # not sure what to do here. This might point somewhere
+                # useful. It might not. In the case of flickr, it points
+                # to a page that contains enough microformats that we
+                # might be able to work out who they are, but I really
+                # don't want to have to _fetch_ the page, not here.
                 clues += self.clues_from_url( profile )
                 
         return clues

@@ -12,8 +12,9 @@ class BasicProvider( Provider ):
 
         addresses = person.addresses()
         if len(addresses) > 0:
-           a = addresses[0]
-           joined = ", ".join([ a['Street'], a['City'], a['ZIP'] ])
+           address = addresses[0]
+           bits = [ address[atom] for atom in filter(lambda a: a in address, ['Street', 'City', 'Zip']) ]
+           joined = ", ".join(bits)
            data.append('<p><a href="http://maps.google.com/maps?q=%s">%s</a></p>'%( quote(joined), joined ) )
     
         return data
