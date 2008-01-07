@@ -35,9 +35,17 @@ class Extractor(object):
             clues = self._search_for( url, "URLs" ) + self._search_for( url + "/", "URLs" ) 
         return clues
 
-    def clues_from_aim( self, aim ):
-        print("Looking for people with AIM %s"%aim)
-        return self._search_for( aim, "AIMInstant" )
+    def clues_from_aim( self, username ):
+        print("Looking for people with AIM %s"%username)
+        return self._search_for( username, kABAIMInstantProperty )
+    
+    def clues_from_jabber( self, username ):
+        print("Looking for people with Jabber %s"%username)
+        return self._search_for( username, kABJabberInstantProperty )
+    
+    def clues_from_yahoo( self, username ):
+        print("Looking for people with Yahoo! %s"%username)
+        return self._search_for( username, kABYahooInstantProperty )
     
     def clues_from_name( self, name ):
         names = re.split(r'\s+', name)

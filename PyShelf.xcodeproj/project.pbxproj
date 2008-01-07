@@ -26,6 +26,7 @@
 		E68418130D315C840002A660 /* BasicProvider.py in Resources */ = {isa = PBXBuildFile; fileRef = E68418120D315C840002A660 /* BasicProvider.py */; };
 		E68418150D315C950002A660 /* Provider.py in Resources */ = {isa = PBXBuildFile; fileRef = E68418140D315C950002A660 /* Provider.py */; };
 		E68418690D315F4D0002A660 /* Utilities.py in Resources */ = {isa = PBXBuildFile; fileRef = E68418680D315F4D0002A660 /* Utilities.py */; };
+		E692373C0D32720A00231B16 /* ComAppleIChat.py in Resources */ = {isa = PBXBuildFile; fileRef = E692373B0D32720A00231B16 /* ComAppleIChat.py */; };
 		E6B90E910D317E27002399DA /* ComIconfactoryTwitterrific.py in Resources */ = {isa = PBXBuildFile; fileRef = E6B90E900D317E27002399DA /* ComIconfactoryTwitterrific.py */; };
 		E6B90EB40D317FC0002399DA /* ComAdiumXAdiumX.py in Resources */ = {isa = PBXBuildFile; fileRef = E6B90EB30D317FC0002399DA /* ComAdiumXAdiumX.py */; };
 		E6D37BEB0D31692500557F3F /* feedparser.py in Resources */ = {isa = PBXBuildFile; fileRef = E6D37BEA0D31692500557F3F /* feedparser.py */; };
@@ -62,6 +63,7 @@
 		E68418120D315C840002A660 /* BasicProvider.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = BasicProvider.py; sourceTree = "<group>"; };
 		E68418140D315C950002A660 /* Provider.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = Provider.py; sourceTree = "<group>"; };
 		E68418680D315F4D0002A660 /* Utilities.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = Utilities.py; sourceTree = "<group>"; };
+		E692373B0D32720A00231B16 /* ComAppleIChat.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = ComAppleIChat.py; sourceTree = "<group>"; };
 		E6B90E900D317E27002399DA /* ComIconfactoryTwitterrific.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = ComIconfactoryTwitterrific.py; sourceTree = "<group>"; };
 		E6B90EB30D317FC0002399DA /* ComAdiumXAdiumX.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = ComAdiumXAdiumX.py; sourceTree = "<group>"; };
 		E6D37BEA0D31692500557F3F /* feedparser.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = feedparser.py; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 				E6D37C900D3178AB00557F3F /* ComRancheroNetNewsWire.py */,
 				E6B90E900D317E27002399DA /* ComIconfactoryTwitterrific.py */,
 				E6B90EB30D317FC0002399DA /* ComAdiumXAdiumX.py */,
+				E692373B0D32720A00231B16 /* ComAppleIChat.py */,
 			);
 			name = Extractors;
 			sourceTree = "<group>";
@@ -272,6 +275,7 @@
 				E6816B7B0D32372C0061EAD4 /* spinner.gif in Resources */,
 				E66862540D323D9A0051F65F /* DopplrProvider.py in Resources */,
 				E66862CC0D3245BA0051F65F /* FlickrProvider.py in Resources */,
+				E692373C0D32720A00231B16 /* ComAppleIChat.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

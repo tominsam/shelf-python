@@ -3,8 +3,8 @@ from AppKit import *
 
 def dump( obj ):
     methods = dir(obj)
-    [ methods.remove(x) for x in dir(NSObject.alloc().init()) ]
-    [ methods.remove(x) for x in dir(object()) ]
+    for x in dir(object()) + dir(NSObject.alloc().init()):
+        if x in methods: methods.remove(x)
     methods.sort()
     print( obj.__class__.__name__ )
     print( "\n".join(map(lambda x: " - %s"%x, methods) ) )
