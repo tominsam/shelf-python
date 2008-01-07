@@ -5,8 +5,9 @@ from AddressBook import *
 import urllib
 
 import re
+from time import time, sleep
 
-from threading import Thread
+from threading import Thread, Lock
 
 class Provider( Thread ):
     
@@ -45,10 +46,25 @@ class Provider( Thread ):
     
     
     CACHE = {}
-    def cacheUrl( self, url ):
-        if not url in Provider.CACHE:
-            Provider.CACHE[url] = None # so that other threads don't try to fetch
-            # TODO - put a 'defer' object here if we're fetching it, other
-            # threads can wait till we have it. Caching is _hard_
-            Provider.CACHE[url] = urllib.urlopen(url).read()
-        return Provider.CACHE[url]
+    CACHE_LOCK = Lock()
+    def cacheUrl( self, url, timeout = 600 ):
+        print "cacheUrl( %s )"%url
+        if url in Provider.CACHE:
+            while 'defer' in Provider.CACHE[url] and Provider.CACHE[url]['expires'] > time():
+                print "  other thread is fetching %s"%url
+                sleep(1)
+            if 'expires' in Provider.CACHE[url] and Provider.CACHE[url]['expires'] > time():
+                print "  non-expired cache value for  %s"%url
+                return Provider.CACHE[url]['value']
+        
+        # ok, the cached value has expired. Indicate that this thread
+        # will get the value anew. 20 second timeout on this promise.
+        Provider.CACHE_LOCK.acquire()
+        Provider.CACHE[url] = { 'defer':True, 'expires':time() + 30 }
+        Provider.CACHE_LOCK.release()
+        data = urllib.urlopen(url).read()
+        print "  got data for %s"%url
+        Provider.CACHE_LOCK.acquire()
+        Provider.CACHE[url] = { 'expires':time() + timeout, 'value':data }
+        Provider.CACHE_LOCK.release()
+        return Provider.CACHE[url]['value']

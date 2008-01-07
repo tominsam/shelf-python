@@ -3,6 +3,7 @@ from urllib import quote
 
 import feedparser
 from autorss import getRSSLinkFromHTMLSource
+import urllib, urlparse
 
 class FeedProvider( Provider ):
 
@@ -14,13 +15,22 @@ class FeedProvider( Provider ):
         print("Running thread")
         pool = NSAutoreleasePool.alloc().init()        
 
-        self.atoms = [ "<h3><a href='%s'>%s</a></h3>"%(url,url) for url in self.person.boring_urls ]
+        todo = self.person.boring_urls
+        done = []
+        
+        def tick( doing = None ):
+            self.atoms = done + [ "<h3><a href='%s'>%s</a></h3>"%(url,url) for url in todo ]
+            if doing: self.atoms[0:0] = [ doing ]
+            self.changed()
 
-        index = 0
-        for url in self.person.boring_urls:
+        tick()
 
+        while todo:
+            url = todo[0]
+            todo = todo[1:]
+            
             print("Looking at %s for feed"%url)
-            self.atoms[ index ] = "<h3><a href='%s'>%s</a>&nbsp;<img src='spinner.gif'></h3>"%(url,url)
+            tick("<h3><a href='%s'>%s</a>&nbsp;<img src='spinner.gif'></h3>"%(url,url))
             
             feed = self.getFeed( url )
             if feed:
@@ -28,16 +38,14 @@ class FeedProvider( Provider ):
                 entries = feed.entries
                 for item in entries[0:4]:
                     html += '<p><a href="%s">%s</a></p>'%( item.link, item.title )
-                self.atoms[ index ] = html
-                index += 1
-            else:
-                self.atoms[ index : index + 1 ] = []
+                done.append(html)
+
+            tick()
         
-            self.changed()
-    
     def getFeed( self, url, rss = None ):
         if not rss:
             rss = getRSSLinkFromHTMLSource( self.cacheUrl( url ) )
+            rss = urlparse.urljoin( url, rss )
         
         if rss:
             feed = feedparser.parse( self.cacheUrl( rss ) )
