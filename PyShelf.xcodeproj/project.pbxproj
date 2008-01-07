@@ -14,6 +14,7 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		E61E42ED0D31419900C40C6E /* PyShelfWindowController.py in Resources */ = {isa = PBXBuildFile; fileRef = E61E42EC0D31419900C40C6E /* PyShelfWindowController.py */; };
 		E678866F0D3192A90024C8D6 /* microformatparser.py in Resources */ = {isa = PBXBuildFile; fileRef = E678866E0D3192A90024C8D6 /* microformatparser.py */; };
+		E67886B50D320F100024C8D6 /* Credits.html in Resources */ = {isa = PBXBuildFile; fileRef = E67886B40D320F100024C8D6 /* Credits.html */; };
 		E68417430D314AA70002A660 /* ComAppleMail.py in Resources */ = {isa = PBXBuildFile; fileRef = E68417420D314AA70002A660 /* ComAppleMail.py */; };
 		E68417450D314AC00002A660 /* Extractor.py in Resources */ = {isa = PBXBuildFile; fileRef = E68417440D314AC00002A660 /* Extractor.py */; };
 		E68417B50D3158190002A660 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77C8C1F80C07829500965286 /* MainMenu.xib */; };
@@ -48,6 +49,7 @@
 		8D1107320486CEB800E47090 /* Shelf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shelf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E61E42EC0D31419900C40C6E /* PyShelfWindowController.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = PyShelfWindowController.py; sourceTree = "<group>"; };
 		E678866E0D3192A90024C8D6 /* microformatparser.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = microformatparser.py; sourceTree = "<group>"; };
+		E67886B40D320F100024C8D6 /* Credits.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Credits.html; sourceTree = "<group>"; };
 		E68417420D314AA70002A660 /* ComAppleMail.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = ComAppleMail.py; sourceTree = "<group>"; };
 		E68417440D314AC00002A660 /* Extractor.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = Extractor.py; sourceTree = "<group>"; };
 		E68417EB0D315AD20002A660 /* SwizzleABPerson.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = SwizzleABPerson.py; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				77C8C1F80C07829500965286 /* MainMenu.xib */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165DFE840E0CC02AAC07 /* InfoPlist.strings */,
+				E67886B40D320F100024C8D6 /* Credits.html */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -256,6 +259,7 @@
 				E6B90E910D317E27002399DA /* ComIconfactoryTwitterrific.py in Resources */,
 				E6B90EB40D317FC0002399DA /* ComAdiumXAdiumX.py in Resources */,
 				E678866F0D3192A90024C8D6 /* microformatparser.py in Resources */,
+				E67886B50D320F100024C8D6 /* Credits.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
