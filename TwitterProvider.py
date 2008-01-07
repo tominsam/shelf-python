@@ -2,7 +2,6 @@ from FeedProvider import *
 
 # cunning subclassing of feedprovider here as a demo.
 class TwitterProvider( FeedProvider ):
-    cache = {}
 
     def provide( self ):
         self.username = NSUserDefaults.standardUserDefaults().stringForKey_("twitterUsername")
@@ -30,12 +29,12 @@ class TwitterProvider( FeedProvider ):
             auth = "%s:%s@"%( self.username, self.password )
             
         feed = self.getFeed( self.urls[0], "http://%stwitter.com/statuses/user_timeline/%s.atom"%( auth, username ) )
-        if not feed:
+        if not feed or not feed.entries:
             self.atoms = []
             self.changed
             return
         
-        tweet = feed.entries[0].content[0].value
+        tweet = feed.entries[0].title
 
         self.atoms = [ "<h3><a href='http://twitter.com/%s'>Twitter</a></h3>"%self.username, "<p>%s</p>"%tweet ]
         self.changed()

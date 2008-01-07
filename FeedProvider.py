@@ -2,10 +2,9 @@ from Provider import *
 from urllib import quote
 
 import feedparser
-from autorss import getRSSLink
+from autorss import getRSSLinkFromHTMLSource
 
 class FeedProvider( Provider ):
-    cache = {}
 
     def provide( self ):
         self.atoms = []
@@ -37,17 +36,11 @@ class FeedProvider( Provider ):
             self.changed()
     
     def getFeed( self, url, rss = None ):
-        # Note - the twitter source url here may contain username/password
-        # so don't print it!
-        source = rss or url
-        if not source in FeedProvider.cache:
-            FeedProvider.cache[source] = None
-            if not rss:
-                rss = getRSSLink( url )
-            if rss:
-                feed = feedparser.parse( rss )
-                if feed and 'feed' in feed:
-                    FeedProvider.cache[source] = feed
-        # TODO - expire cache
-        return FeedProvider.cache[source]
+        if not rss:
+            rss = getRSSLinkFromHTMLSource( self.cacheUrl( url ) )
+        
+        if rss:
+            feed = feedparser.parse( self.cacheUrl( rss ) )
+            if feed and 'feed' in feed:
+                return feed
 

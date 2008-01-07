@@ -4,7 +4,6 @@ import re
 import xmltramp
 
 class DopplrProvider( Provider ):
-    cache = {}
 
     def provide( self ):
         self.token = NSUserDefaults.standardUserDefaults().stringForKey_("dopplrToken")
@@ -21,12 +20,9 @@ class DopplrProvider( Provider ):
         print("Running thread")
         pool = NSAutoreleasePool.alloc().init()
         
-        if not self.username in DopplrProvider.cache:
-            DopplrProvider.cache[ self.username ] = None
-            url = "https://www.dopplr.com/api/traveller_info.xml?token=%s&traveller=%s"%( self.token, self.username )
-            DopplrProvider.cache[ self.username ] = xmltramp.load( url )
-        
-        doc = DopplrProvider.cache[ self.username ]
+        url = "https://www.dopplr.com/api/traveller_info.xml?token=%s&traveller=%s"%( self.token, self.username )
+        xml = self.cacheUrl( url )
+        doc = xmltramp.parse( xml )
         
         if doc:
             self.atoms = [ "<h3><a href='http://www.dopplr.com/traveller/%s/'>Dopplr</a></h3><p>%s %s</p>"%( self.username, self.person.displayName(), doc.traveller.status ) ]

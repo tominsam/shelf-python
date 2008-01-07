@@ -55,7 +55,7 @@ class ShelfController (NSWindowController):
         
         # this app has no effect on the current context, otherwise activating
         # the app makes it clear. oops.
-        if bundle == "org.jerakeen.pyshelf":
+        if bundle.lower() in ["org.jerakeen.pyshelf", "com.apple.xcode"]:
             pass
         
         elif not handler:
