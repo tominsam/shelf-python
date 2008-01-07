@@ -13,6 +13,7 @@
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		E61E42ED0D31419900C40C6E /* PyShelfWindowController.py in Resources */ = {isa = PBXBuildFile; fileRef = E61E42EC0D31419900C40C6E /* PyShelfWindowController.py */; };
+		E649309A0D32894B00793315 /* ComAppleAddressBook.py in Resources */ = {isa = PBXBuildFile; fileRef = E64930990D32894B00793315 /* ComAppleAddressBook.py */; };
 		E66862540D323D9A0051F65F /* DopplrProvider.py in Resources */ = {isa = PBXBuildFile; fileRef = E66862530D323D9A0051F65F /* DopplrProvider.py */; };
 		E66862CC0D3245BA0051F65F /* FlickrProvider.py in Resources */ = {isa = PBXBuildFile; fileRef = E66862CB0D3245BA0051F65F /* FlickrProvider.py */; };
 		E678866F0D3192A90024C8D6 /* microformatparser.py in Resources */ = {isa = PBXBuildFile; fileRef = E678866E0D3192A90024C8D6 /* microformatparser.py */; };
@@ -52,6 +53,7 @@
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Shelf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shelf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E61E42EC0D31419900C40C6E /* PyShelfWindowController.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = PyShelfWindowController.py; sourceTree = "<group>"; };
+		E64930990D32894B00793315 /* ComAppleAddressBook.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = ComAppleAddressBook.py; sourceTree = "<group>"; };
 		E66862530D323D9A0051F65F /* DopplrProvider.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = DopplrProvider.py; sourceTree = "<group>"; };
 		E66862CB0D3245BA0051F65F /* FlickrProvider.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = FlickrProvider.py; sourceTree = "<group>"; };
 		E678866E0D3192A90024C8D6 /* microformatparser.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = microformatparser.py; sourceTree = "<group>"; };
@@ -182,6 +184,7 @@
 				E6B90E900D317E27002399DA /* ComIconfactoryTwitterrific.py */,
 				E6B90EB30D317FC0002399DA /* ComAdiumXAdiumX.py */,
 				E692373B0D32720A00231B16 /* ComAppleIChat.py */,
+				E64930990D32894B00793315 /* ComAppleAddressBook.py */,
 			);
 			name = Extractors;
 			sourceTree = "<group>";
@@ -276,6 +279,7 @@
 				E66862540D323D9A0051F65F /* DopplrProvider.py in Resources */,
 				E66862CC0D3245BA0051F65F /* FlickrProvider.py in Resources */,
 				E692373C0D32720A00231B16 /* ComAppleIChat.py in Resources */,
+				E649309A0D32894B00793315 /* ComAppleAddressBook.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

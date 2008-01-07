@@ -383,17 +383,13 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>E64930770D327DE600793315</string>
+										<string>E64930980D3285A200793315</string>
 										<key>history</key>
 										<array>
 											<string>E6816B7D0D3237450061EAD4</string>
-											<string>E66862600D323F450051F65F</string>
 											<string>E668627B0D323F8C0051F65F</string>
 											<string>E668629F0D3242510051F65F</string>
 											<string>E66862A00D3242510051F65F</string>
-											<string>E66862C10D3245440051F65F</string>
-											<string>E668630F0D3249D90051F65F</string>
-											<string>E6F66DDE0D3251390093EC3F</string>
 											<string>E6F66DE10D3251390093EC3F</string>
 											<string>E6F66DED0D3254B70093EC3F</string>
 											<string>E692372E0D32713F00231B16</string>
@@ -405,7 +401,11 @@
 											<string>E692374D0D327C2900231B16</string>
 											<string>E692374E0D327C2900231B16</string>
 											<string>E649305C0D327C8200793315</string>
-											<string>E649305D0D327C8200793315</string>
+											<string>E64930800D32851B00793315</string>
+											<string>E64930810D32851B00793315</string>
+											<string>E64930820D32851B00793315</string>
+											<string>E64930830D32851B00793315</string>
+											<string>E64930840D32851B00793315</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -430,6 +430,12 @@
 											<string>E69237510D327C2900231B16</string>
 											<string>E69237590D327C2900231B16</string>
 											<string>E649305E0D327C8200793315</string>
+											<string>E64930850D32851B00793315</string>
+											<string>E64930860D32851B00793315</string>
+											<string>E64930870D32851B00793315</string>
+											<string>E64930880D32851B00793315</string>
+											<string>E64930890D32851B00793315</string>
+											<string>E649308A0D32851B00793315</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -608,7 +614,7 @@
 	<key>StatusbarIsVisible</key>
 	<true/>
 	<key>TimeStamp</key>
-	<real>221412838.615969</real>
+	<real>221414818.22983599</real>
 	<key>ToolbarDisplayMode</key>
 	<integer>1</integer>
 	<key>ToolbarIsVisible</key>

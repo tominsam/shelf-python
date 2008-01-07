@@ -50,9 +50,14 @@ class ShelfController (NSWindowController):
         
         # get bundle name of active application
         bundle = NSWorkspace.sharedWorkspace().activeApplication()['NSApplicationBundleIdentifier']
-        
         handler = self.handler_for( bundle )
-        if not handler:
+        
+        # this app has no effect on the current context, otherwise activating
+        # the app makes it clear. oops.
+        if bundle == "org.jerakeen.pyshelf":
+            pass
+        
+        elif not handler:
             #NSLog("Can't get clues from %s"%bundle)
             self.current_person = None
             self.blank_info()
