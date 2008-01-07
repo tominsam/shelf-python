@@ -8,7 +8,7 @@ class FlickrProvider( FeedProvider ):
             self.username = re.search(r'/(photos|person)/([^/]+)', flickrs[0]).group(2)
             self.start()
 
-    def run(self):
+    def guardedRun(self):
         print("Running thread")
         pool = NSAutoreleasePool.alloc().init()        
 

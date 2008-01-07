@@ -11,7 +11,7 @@ class FeedProvider( Provider ):
         self.atoms = []
         self.start()
     
-    def run(self):
+    def guardedRun(self):
         print("Running thread")
         pool = NSAutoreleasePool.alloc().init()        
 
@@ -34,7 +34,7 @@ class FeedProvider( Provider ):
             
             feed = self.getFeed( url )
             if feed:
-                html = "<h3><a href='%s'>%s</a></h3>"%( url, feed['feed']['title'] )
+                html = "<h3><a href='%s'>%s</a></h3>"%( url, feed.feed.title )
                 entries = feed.entries
                 for item in entries[0:4]:
                     html += '<p><a href="%s">%s</a></p>'%( item.link, item.title )
@@ -49,6 +49,8 @@ class FeedProvider( Provider ):
         
         if rss:
             feed = feedparser.parse( self.cacheUrl( rss ) )
-            if feed and 'feed' in feed:
+            if feed and 'feed' in feed and 'title' in feed.feed:
                 return feed
+
+        return None
 

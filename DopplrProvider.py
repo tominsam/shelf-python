@@ -16,7 +16,7 @@ class DopplrProvider( Provider ):
 
         self.start()
     
-    def run(self):
+    def guardedRun(self):
         print("Running thread")
         pool = NSAutoreleasePool.alloc().init()
         

@@ -14,7 +14,7 @@ class TwitterProvider( FeedProvider ):
         # do we have anything to do?
         if self.urls: self.start()
     
-    def run(self):
+    def guardedRun(self):
         print("Running thread")
         pool = NSAutoreleasePool.alloc().init()        
         self.atoms = [ "<h3><a href='http://twitter.com/%s'>Twitter</a>&nbsp;<img src='spinner.gif'></h3>"%self.username ]

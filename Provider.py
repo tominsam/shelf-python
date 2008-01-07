@@ -6,6 +6,7 @@ import urllib
 
 import re
 from time import time, sleep
+import traceback
 
 from threading import Thread, Lock
 
@@ -43,8 +44,20 @@ class Provider( Thread ):
     
     def provide( self ):
         pass
-    
-    
+        
+    def guardedRun(self):
+        pass
+        
+    def run(self):
+        try:
+            self.guardedRun()
+        except:
+            print("EPIC FAIL in %s"%self.__class__.__name__)
+            print(traceback.format_exc())
+            self.atoms = ["<h3>EPIC FAIL in %s</h3>"%self.__class__.__name__,"<pre>%s</pre>"%traceback.format_exc() ]
+            self.changed()
+
+
     CACHE = {}
     CACHE_LOCK = Lock()
     def cacheUrl( self, url, timeout = 600 ):
@@ -58,7 +71,7 @@ class Provider( Thread ):
                 return Provider.CACHE[url]['value']
         
         # ok, the cached value has expired. Indicate that this thread
-        # will get the value anew. 20 second timeout on this promise.
+        # will get the value anew. 30 second timeout on this promise.
         Provider.CACHE_LOCK.acquire()
         Provider.CACHE[url] = { 'defer':True, 'expires':time() + 30 }
         Provider.CACHE_LOCK.release()
