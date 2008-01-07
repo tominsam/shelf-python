@@ -7,19 +7,20 @@ from autorss import getRSSLink
 class FeedProvider( Provider ):
 
     def provide( self ):
-        self.atoms = [ "<h3>Looking for RSS feeds</h3>" ]
+        self.atoms = [ "<h3><img src='spinner.gif'> Looking for RSS feeds</h3>" ]
         self.start()
     
     def run(self):
         print("Running thread")
         pool = NSAutoreleasePool.alloc().init()        
+        self.atoms = []
 
         urls = self.person.urls()
         for url in urls:
             if not self.running: return
 
             print("Looking at %s for feed"%url)
-            self.atoms.append("<p>&raquo; %s <img src='spinner.gif'></p>"%url)
+            self.atoms.append("<h3><img src='spinner.gif'>&nbsp;%s</h3>"%url)
             self.changed()
 
             rss = getRSSLink( url )
@@ -27,12 +28,10 @@ class FeedProvider( Provider ):
                 if not self.running: return
 
                 print("Found feed url %s"%( rss ))
-                self.atoms[-1] = "<p>&raquo; %s <img src='spinner.gif'></p>"%rss
-                self.changed()
 
                 feed = feedparser.parse( rss )
                 if feed['feed']:
-                    print( "Parsed feed as %s"%feed['feed']['title'] )
+                    print( "Parsed feed" )
                     html = "<h3>%s</h3>"%feed['feed']['title']
                     entries = feed.entries
                     for item in entries[0:4]:
@@ -46,7 +45,6 @@ class FeedProvider( Provider ):
                 print("No feed" )
                 self.atoms = self.atoms[:-1]
         
-        self.atoms = self.atoms[1:] # strip the 'looking..'
         self.changed()
 
 

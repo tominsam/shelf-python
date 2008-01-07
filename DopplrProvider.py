@@ -1,12 +1,14 @@
 from Provider import *
-from urllib import quote
+import urllib
 import re
+import simplejson
 
 class DopplrProvider( Provider ):
 
     def provide( self ):
         dopplrs = [ u for u in self.person.urls() if re.search(r'www.dopplr.com', u) ]
         if dopplrs:
+            self.username = re.search(r'/traveller/([^/]+)', dopplrs[0]).group(1)
             self.atoms = [ "<h3>Fetching Dopplr status</h3>" ]
             self.changed()
             self.start()
@@ -15,9 +17,11 @@ class DopplrProvider( Provider ):
         print("Running thread")
         pool = NSAutoreleasePool.alloc().init()        
 
-        dopplr = [ u for u in self.person.urls if re.search(r'www.dopplr.com', u) ][0]
+        #token = "06cb1750a59871aa56e7a4212adbdf19"
+        #url = "https://www.dopplr.com/api/"
+        #urllib.urlopen(url)
         
-        self.atoms = []
+        self.atoms = [ "<h3>Dopplr</h3><p>dopplr username is %s</p>"%self.username ]
         
         self.changed()
 
