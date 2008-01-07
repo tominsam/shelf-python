@@ -6,6 +6,9 @@ from ScriptingBridge import *
 
 import re
 from email.utils import parseaddr
+import microformatparser
+import sgmllib
+from HTMLParser import HTMLParseError
 
 class Extractor(object):
 
@@ -52,3 +55,52 @@ class Extractor(object):
             
         se = ABPerson.searchElementForProperty_label_key_value_comparison_( type, None, None, thing, kABEqualCaseInsensitive )
         return list(self.addressBook.recordsMatchingSearchElement_( se ))
+
+
+    def clues_from_microformats( self, source ):
+        try:
+            feeds = microformatparser.parse( source )
+        except HTMLParseError:
+            return []
+        
+        if not feeds: return []
+
+        # I'm going to assume that the _first_ microformat on the page
+        # is the person the page is about. I can't really do better
+        # than that, can I?
+        # TODO - yes, I can. Look for 'rel="me"'
+        feed = feeds[0]
+
+        # look for vcard microformats
+        vcards = [ tree for name, tree in feed if name =='vcard']
+        if not vcards: return []
+
+        card = dict(vcards[0])
+        clues = []
+        
+        if 'url' in card:
+            clues += self.clues_from_url( card['url'] )
+
+        if 'email' in card:
+            if isinstance(card['email'], str) or isinstance(card['email'], unicode):
+                addrs = [ card['email'] ]
+            else:
+                addrs = [ e[1] for e in card['email'] ]
+                
+            for addr in addrs:
+                # bloody flickr
+                e = re.sub(r'\s*\[\s*at\s*\]\s*', '@', addr)
+                clues += self.clues_from_email( e )
+
+        if 'family-name' in card and 'given-name' in card:
+            # TODO - check ordering here for .jp issues? Gah.
+            clues += self.clues_from_names( card['given-name'], card['family-name'] )
+        
+        if 'fn' in card:
+             clues += self.clues_from_name( card['fn'] )
+
+        if len(clues) == 0:
+            print "Can't get anything useful from %s"%(repr(card))
+        
+        return clues
+

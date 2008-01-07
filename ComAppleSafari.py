@@ -1,6 +1,6 @@
 from ScriptingBridge import *
 from Extractor import *
-import microformatparser
+import urlparse
 
 class ComAppleSafari(Extractor):
 
@@ -17,37 +17,38 @@ class ComAppleSafari(Extractor):
         # TODO - look for embedded hcard?
         
         if len(clues) == 0 and tab.source():
-            feeds = microformatparser.parse( tab.source() )
-            if len(feeds) > 0:
-                # I'm going to assume that the _first_ microformat on the page
-                # is the person the page is about. I can't really do better
-                # than that, can I?
-                # TODO - yes, I can. Look for 'rel="me"'
-                feed = feeds[0]
-                vcards = [ tree for name, tree in feed if name =='vcard']
-                if len(vcards) > 0:
-                    card = dict(vcards[0])
-                    if 'url' in card:
-                        clues += self.clues_from_url( card['url'] )
+            clues += self.clues_from_microformats( tab.source() )
 
-                    if 'email' in card:
-                        for addr in card['email']:
-                            # bloody flickr
-                            e = re.sub(r'\s*\[\s*at\s*\]\s*', '@', addr[1])
-                            clues += self.clues_from_email( e )
-
-                    if 'family-name' in card and 'given-name' in card:
-                        # TODO - check ordering here for .jp issues? Gah.
-                        clues += self.clues_from_names( card['given-name'], card['family-name'] )
-                    
-                    if 'fn' in card:
-                         clues += self.clues_from_name( card['fn'] )
-
-                    if len(clues) == 0:
-                        print "Can't get anything useful from %s"%(repr(card))
-            
+        if len(clues) == 0 and tab.source():
+            # no microformats
+            relme = RelMeParser()
+            relme.feed( tab.source() )
+            print("Found rel='me' links: %s"%( ",".join(relme.hrefs) ) )
+            for link in relme.hrefs:
+                profile = urlparse.urljoin( tab.URL(), link )
+                clues += self.clues_from_url( profile )
+                
         return clues
     
     # I'm sure the microformats output format makes sense _somewhere_
     def tree_to_dict(tree):
         pass
+
+
+
+
+
+
+
+from sgmllib import SGMLParser
+
+class RelMeParser(SGMLParser):
+    def reset(self):
+        SGMLParser.reset(self)
+        self.hrefs = []
+    
+    def do_a( self, attrs ):
+        if not ('rel', 'me') in attrs: return
+        self.hrefs += filter( lambda l: re.match(r'http', l), [e[1] for e in attrs if e[0]=='href'] )
+        
+    

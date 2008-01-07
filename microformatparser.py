@@ -1,4 +1,5 @@
 # from http://phildawes.net/microformats/microformatparser.html
+# changed by tom to understand multiple classes ina single class="foo bar baz" stanza
 
 
 
@@ -119,7 +120,11 @@ class MicroformatToStmts(HTMLParser):
         return self.nodestack != []
 
     def nodeStartsAMicroformat(self, attrs):
-        return self._getattr('class',attrs) in SCHEMAS.keys()
+        class_attr = self._getattr('class',attrs)
+        if not class_attr: return False
+        for a in class_attr.split():
+            if a in SCHEMAS.keys(): return True
+        return False
 
     def emitAttributeAsPropertyIfExists(self, attrname, attrs, preds):
         obj = self._getattr(attrname,attrs)
