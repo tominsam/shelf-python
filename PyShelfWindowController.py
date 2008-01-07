@@ -52,24 +52,29 @@ class ShelfController (NSWindowController):
         bundle = NSWorkspace.sharedWorkspace().activeApplication()['NSApplicationBundleIdentifier']
         
         handler = self.handler_for( bundle )
-        if handler:
+        if not handler:
+            #NSLog("Can't get clues from %s"%bundle)
+            self.current_person = None
+            self.blank_info()
+        else:
             try:
                 clues = handler.clues()
-                if len(clues) == 0:
-                    NSLog("No clues from %s"%handler.__class__.__name__)
-                    self.current_person = None
-                    self.blank_info()
-                elif self.current_person and self.current_person.uniqueId() == clues[0].uniqueId():
-                    pass
-                    #NSLog("Context has not changed")
-                else:
-                    NSLog("New context - %s"%clues[0].displayName())
-                    # person has changed
-                    self.current_person = clues[0]
-                    self.update_info_for( clues[0] )
             except:
                 NSLog("Error getting clues from %s!"%bundle)
                 print( traceback.format_exc() )
+
+            if len(clues) == 0:
+                #NSLog("No clues from %s"%handler.__class__.__name__)
+                self.current_person = None
+                self.blank_info()
+            elif self.current_person and self.current_person.uniqueId() == clues[0].uniqueId():
+                pass
+                #NSLog("Context has not changed")
+            else:
+                NSLog("New context - %s"%clues[0].displayName())
+                # person has changed
+                self.current_person = clues[0]
+                self.update_info_for( clues[0] )
 
         self.performSelector_withObject_afterDelay_( 'poll', None, 1 )
 
