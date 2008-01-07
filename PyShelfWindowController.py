@@ -20,6 +20,7 @@ class ShelfController (NSWindowController):
 
     def awakeFromNib(self):
         self.handlers = {}
+        self.providers = []
         self.current_person = None
         
     def applicationDidFinishLaunching_(self, sender):
@@ -88,15 +89,22 @@ class ShelfController (NSWindowController):
         self.window().setLevel_( NSFloatingWindowLevel ) # stuff to 'on top'
         self.webView.mainFrame().loadHTMLString_baseURL_( "thinking..", None )
 
+        self.providers = []
         try:
-            info = []
-            for provider in Provider.PROVIDERS:
-                info += provider.about( person )
+            for cls in Provider.PROVIDERS:
+                self.providers.append( cls( person ) )
         except:
-            NSLog("Failed to get info about person:")
+            NSLog("Failed to create provider for person:")
             print(traceback.format_exc())
-            info = [ "EPIC FAIL", "<pre>%s</pre>"%traceback.format_exc() ] # TODO - escape html
+            self.webView.mainFrame().loadHTMLString_baseURL_("<h2>EPIC FAIL</h2><pre>%s</pre>"%traceback.format_exc(), None ) # TODO - escape html
+            return
+        
+        self.update_webview()
             
+    def update_webview(self):
+        info = []
+        for provider in self.providers:
+            info += provider.atoms
         
         self.webView.mainFrame().loadHTMLString_baseURL_( "".join(info), None )
 

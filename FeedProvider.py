@@ -6,10 +6,10 @@ from autorss import getRSSLink
 
 class FeedProvider( Provider ):
 
-    def about( self, person ):
-        info = []
+    def provide( self ):
+        self.atoms = []
 
-        urls = person.urls()
+        urls = self.person.urls()
         for url in urls:
             NSLog("Looking at %s for feed"%url)
             rss = getRSSLink( url )
@@ -22,13 +22,11 @@ class FeedProvider( Provider ):
                     entries = feed.entries
                     for item in entries[0:4]:
                         html += '<p><a href="%s">%s</a></p>'%( item.link, item.title )
-                    info.append(html)
+                    self.atoms.append(html)
                 else:
                     NSLog(" Can't parse feed" )
             else:
                 NSLog("No feed" )
 
-        return info
 
-
-Provider.PROVIDERS.append( FeedProvider() )
+Provider.PROVIDERS.append( FeedProvider )
