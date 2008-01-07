@@ -8,8 +8,6 @@ import objc
 import re
 import traceback
 
-import SwizzleABPerson
-
 from Provider import *
 import BasicProvider
 #import FeedProvider # slow
@@ -86,7 +84,7 @@ class ShelfController (NSWindowController):
         self.nameView.setStringValue_( person.displayName() )
         self.companyView.setStringValue_( person.companyName() )
         self.imageView.setImageFrameStyle_( NSImageFrameNone )
-        self.imageView.setImage_( NSImage.alloc().initWithData_( person.imageData() ) ) # leak?
+        self.imageView.setImage_( person.image() ) # leak?
         self.window().setLevel_( NSFloatingWindowLevel ) # stuff to 'on top'
         self.webView.mainFrame().loadHTMLString_baseURL_( "thinking..", None )
 

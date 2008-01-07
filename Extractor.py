@@ -10,6 +10,8 @@ import microformatparser
 import sgmllib
 from HTMLParser import HTMLParseError
 
+from Clue import *
+
 class Extractor(object):
 
     def __init__(self):
@@ -46,7 +48,7 @@ class Extractor(object):
         forename_search = ABPerson.searchElementForProperty_label_key_value_comparison_( kABFirstNameProperty, None, None, forename, kABPrefixMatchCaseInsensitive )
         surname_search = ABPerson.searchElementForProperty_label_key_value_comparison_( kABLastNameProperty, None, None, surname, kABEqualCaseInsensitive )
         se = ABSearchElement.searchElementForConjunction_children_( kABSearchAnd, [ forename_search, surname_search ] )
-        return list(self.addressBook.recordsMatchingSearchElement_( se ))
+        return map(lambda a: Clue(a), self.addressBook.recordsMatchingSearchElement_( se ))
         
     
     def _search_for( self, thing, type ):
@@ -54,7 +56,7 @@ class Extractor(object):
             return []
             
         se = ABPerson.searchElementForProperty_label_key_value_comparison_( type, None, None, thing, kABEqualCaseInsensitive )
-        return list(self.addressBook.recordsMatchingSearchElement_( se ))
+        return map(lambda a: Clue(a), self.addressBook.recordsMatchingSearchElement_( se ))
 
 
     def clues_from_microformats( self, source ):

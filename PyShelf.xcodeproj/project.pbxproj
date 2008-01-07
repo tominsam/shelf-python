@@ -15,11 +15,11 @@
 		E61E42ED0D31419900C40C6E /* PyShelfWindowController.py in Resources */ = {isa = PBXBuildFile; fileRef = E61E42EC0D31419900C40C6E /* PyShelfWindowController.py */; };
 		E678866F0D3192A90024C8D6 /* microformatparser.py in Resources */ = {isa = PBXBuildFile; fileRef = E678866E0D3192A90024C8D6 /* microformatparser.py */; };
 		E67886B50D320F100024C8D6 /* Credits.html in Resources */ = {isa = PBXBuildFile; fileRef = E67886B40D320F100024C8D6 /* Credits.html */; };
+		E67886BA0D3223520024C8D6 /* Clue.py in Resources */ = {isa = PBXBuildFile; fileRef = E67886B90D3223520024C8D6 /* Clue.py */; };
 		E68417430D314AA70002A660 /* ComAppleMail.py in Resources */ = {isa = PBXBuildFile; fileRef = E68417420D314AA70002A660 /* ComAppleMail.py */; };
 		E68417450D314AC00002A660 /* Extractor.py in Resources */ = {isa = PBXBuildFile; fileRef = E68417440D314AC00002A660 /* Extractor.py */; };
 		E68417B50D3158190002A660 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77C8C1F80C07829500965286 /* MainMenu.xib */; };
 		E68417B70D3158220002A660 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165DFE840E0CC02AAC07 /* InfoPlist.strings */; };
-		E68417EC0D315AD20002A660 /* SwizzleABPerson.py in Resources */ = {isa = PBXBuildFile; fileRef = E68417EB0D315AD20002A660 /* SwizzleABPerson.py */; };
 		E68418130D315C840002A660 /* BasicProvider.py in Resources */ = {isa = PBXBuildFile; fileRef = E68418120D315C840002A660 /* BasicProvider.py */; };
 		E68418150D315C950002A660 /* Provider.py in Resources */ = {isa = PBXBuildFile; fileRef = E68418140D315C950002A660 /* Provider.py */; };
 		E68418690D315F4D0002A660 /* Utilities.py in Resources */ = {isa = PBXBuildFile; fileRef = E68418680D315F4D0002A660 /* Utilities.py */; };
@@ -50,9 +50,9 @@
 		E61E42EC0D31419900C40C6E /* PyShelfWindowController.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = PyShelfWindowController.py; sourceTree = "<group>"; };
 		E678866E0D3192A90024C8D6 /* microformatparser.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = microformatparser.py; sourceTree = "<group>"; };
 		E67886B40D320F100024C8D6 /* Credits.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Credits.html; sourceTree = "<group>"; };
+		E67886B90D3223520024C8D6 /* Clue.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = Clue.py; sourceTree = "<group>"; };
 		E68417420D314AA70002A660 /* ComAppleMail.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = ComAppleMail.py; sourceTree = "<group>"; };
 		E68417440D314AC00002A660 /* Extractor.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = Extractor.py; sourceTree = "<group>"; };
-		E68417EB0D315AD20002A660 /* SwizzleABPerson.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = SwizzleABPerson.py; sourceTree = "<group>"; };
 		E68418120D315C840002A660 /* BasicProvider.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = BasicProvider.py; sourceTree = "<group>"; };
 		E68418140D315C950002A660 /* Provider.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = Provider.py; sourceTree = "<group>"; };
 		E68418680D315F4D0002A660 /* Utilities.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = Utilities.py; sourceTree = "<group>"; };
@@ -86,8 +86,8 @@
 				E61E42EC0D31419900C40C6E /* PyShelfWindowController.py */,
 				E68417440D314AC00002A660 /* Extractor.py */,
 				E68418140D315C950002A660 /* Provider.py */,
-				E68417EB0D315AD20002A660 /* SwizzleABPerson.py */,
 				E68418680D315F4D0002A660 /* Utilities.py */,
+				E67886B90D3223520024C8D6 /* Clue.py */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -246,7 +246,6 @@
 				E61E42ED0D31419900C40C6E /* PyShelfWindowController.py in Resources */,
 				E68417430D314AA70002A660 /* ComAppleMail.py in Resources */,
 				E68417450D314AC00002A660 /* Extractor.py in Resources */,
-				E68417EC0D315AD20002A660 /* SwizzleABPerson.py in Resources */,
 				E68418130D315C840002A660 /* BasicProvider.py in Resources */,
 				E68418150D315C950002A660 /* Provider.py in Resources */,
 				E68418690D315F4D0002A660 /* Utilities.py in Resources */,
@@ -260,6 +259,7 @@
 				E6B90EB40D317FC0002399DA /* ComAdiumXAdiumX.py in Resources */,
 				E678866F0D3192A90024C8D6 /* microformatparser.py in Resources */,
 				E67886B50D320F100024C8D6 /* Credits.html in Resources */,
+				E67886BA0D3223520024C8D6 /* Clue.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
