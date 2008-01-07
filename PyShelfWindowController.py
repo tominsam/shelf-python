@@ -113,16 +113,14 @@ class ShelfController (NSWindowController):
             current.stop()
 
         self.providers = []
-        try:
-            for cls in Provider.providers():
+        for cls in Provider.providers():
+            try:
                 self.providers.append( cls( person, self ) )
-        except:
-            NSLog("Failed to create provider for person:")
-            print(traceback.format_exc())
-            self.webView.mainFrame().loadHTMLString_baseURL_("<h2>EPIC FAIL</h2><pre>%s</pre>"%traceback.format_exc(), base ) # TODO - escape html
-            return
+            except:
+                NSLog("Failed to create provider %s for person:"%cls)
+                print(traceback.format_exc())
         
-        #self.updateWebview()
+        self.updateWebview()
             
     def updateWebview(self):
         info = []
