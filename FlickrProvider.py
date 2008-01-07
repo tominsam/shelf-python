@@ -17,7 +17,7 @@ class FlickrProvider( Provider ):
         print("Running thread")
         pool = NSAutoreleasePool.alloc().init()        
 
-        self.atoms = [ "<h3>Flickr&nbsp;<img src='spinner.gif'></h3>", "<p>" ]
+        self.atoms = [ "<h3><a href='http://flickr.com/photos/%s'>Flickr</a>&nbsp;<img src='spinner.gif'></h3>"%self.username, "<p>" ]
         self.changed()
         
         if not self.username in FlickrProvider.cache:
@@ -32,6 +32,6 @@ class FlickrProvider( Provider ):
             img = re.sub(r'_m.jpg', '_s.jpg', img)
             self.atoms.append("<a href='%s'><img src='%s' width='32' height='32' style='margin: 3px'></a>"%( item.link, img ) )
         
-        self.atoms[0] = "<h3>Flickr</h3>"
+        self.atoms[0] = "<h3><a href='http://flickr.com/photos/%s'>Flickr</a></h3>"%self.username
         self.atoms.append("</p>")
         self.changed()

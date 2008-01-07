@@ -12,7 +12,7 @@ class DopplrProvider( Provider ):
         if not dopplrs or not self.token: return
     
         self.username = re.search(r'/traveller/([^/]+)', dopplrs[0]).group(1)
-        self.atoms = [ "<h3>Dopplr&nbsp;<img src='spinner.gif'></h3>" ]
+        self.atoms = [ "<h3><a href='http://www.dopplr.com/traveller/%s/'>Dopplr</a>&nbsp;<img src='spinner.gif'></h3>"%( self.username ) ]
         self.changed()
 
         self.start()
@@ -29,7 +29,7 @@ class DopplrProvider( Provider ):
         doc = DopplrProvider.cache[ self.username ]
         
         if doc:
-            self.atoms = [ "<h3>Dopplr</h3><p>%s %s</p>"%( self.person.displayName(), doc.traveller.status ) ]
+            self.atoms = [ "<h3><a href='http://www.dopplr.com/traveller/%s/'>Dopplr</a></h3><p>%s %s</p>"%( self.username, self.person.displayName(), doc.traveller.status ) ]
         else:
             self.atoms = []
         

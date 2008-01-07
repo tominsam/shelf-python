@@ -18,7 +18,7 @@ class TwitterProvider( FeedProvider ):
     def run(self):
         print("Running thread")
         pool = NSAutoreleasePool.alloc().init()        
-        self.atoms = [ "<h3>Twitter&nbsp;<img src='spinner.gif'></h3>" ]
+        self.atoms = [ "<h3><a href='http://twitter.com/%s'>Twitter</a>&nbsp;<img src='spinner.gif'></h3>"%self.username ]
         self.changed()
 
         # deriving the feed url from the username is faster than
@@ -37,6 +37,6 @@ class TwitterProvider( FeedProvider ):
         
         tweet = feed.entries[0].content[0].value
 
-        self.atoms = [ "<h3>Twitter</h3>", "<p>%s</p>"%tweet ]
+        self.atoms = [ "<h3><a href='http://twitter.com/%s'>Twitter</a></h3>"%self.username, "<p>%s</p>"%tweet ]
         self.changed()
         

@@ -328,7 +328,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>18</integer>
+									<integer>21</integer>
 									<integer>16</integer>
 									<integer>0</integer>
 								</array>
@@ -371,7 +371,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>FeedProvider.py</string>
+								<string>TwitterProvider.py</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -379,11 +379,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>FeedProvider.py</string>
+										<string>TwitterProvider.py</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>E64931890D32CEBF00793315</string>
+										<string>E64931A90D32D1EE00793315</string>
 										<key>history</key>
 										<array>
 											<string>E6816B7D0D3237450061EAD4</string>
@@ -399,17 +399,17 @@
 											<string>E64930A00D328EC200793315</string>
 											<string>E64930A20D328EC200793315</string>
 											<string>E64930A30D328EC200793315</string>
-											<string>E64930EC0D32BFD900793315</string>
 											<string>E64931070D32C27500793315</string>
-											<string>E64931090D32C27500793315</string>
-											<string>E64931370D32C73B00793315</string>
 											<string>E64931470D32C94C00793315</string>
 											<string>E64931510D32C96900793315</string>
 											<string>E649315F0D32CA5C00793315</string>
 											<string>E649317E0D32CE4F00793315</string>
 											<string>E64931840D32CEBF00793315</string>
-											<string>E64931850D32CEBF00793315</string>
-											<string>E64931860D32CEBF00793315</string>
+											<string>E64931940D32D04300793315</string>
+											<string>E64931A10D32D18B00793315</string>
+											<string>E64931A20D32D18B00793315</string>
+											<string>E64931A60D32D1EE00793315</string>
+											<string>E64931A70D32D1EE00793315</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -510,6 +510,16 @@
 											<string>E64931810D32CE4F00793315</string>
 											<string>E64931870D32CEBF00793315</string>
 											<string>E64931880D32CEBF00793315</string>
+											<string>E649318F0D32CFDE00793315</string>
+											<string>E64931900D32CFDE00793315</string>
+											<string>E64931910D32CFDE00793315</string>
+											<string>E64931920D32CFDE00793315</string>
+											<string>E64931960D32D04300793315</string>
+											<string>E649319B0D32D09700793315</string>
+											<string>E649319C0D32D09700793315</string>
+											<string>E64931A30D32D18B00793315</string>
+											<string>E64931A40D32D18B00793315</string>
+											<string>E64931A80D32D1EE00793315</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -688,7 +698,7 @@
 	<key>StatusbarIsVisible</key>
 	<true/>
 	<key>TimeStamp</key>
-	<real>221433535.486846</real>
+	<real>221434350.96366599</real>
 	<key>ToolbarDisplayMode</key>
 	<integer>1</integer>
 	<key>ToolbarIsVisible</key>

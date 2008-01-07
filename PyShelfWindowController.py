@@ -63,13 +63,14 @@ class ShelfController (NSWindowController):
             self.current_person = None
             self.blank_info()
         else:
+            clues = []
             try:
                 clues = handler.clues()
             except:
                 NSLog("Error getting clues from %s!"%bundle)
                 print( traceback.format_exc() )
 
-            if len(clues) == 0:
+            if not clues:
                 #NSLog("No clues from %s"%handler.__class__.__name__)
                 self.current_person = None
                 self.blank_info()
