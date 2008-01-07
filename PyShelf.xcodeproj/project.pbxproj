@@ -14,6 +14,7 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		E61E42ED0D31419900C40C6E /* PyShelfWindowController.py in Resources */ = {isa = PBXBuildFile; fileRef = E61E42EC0D31419900C40C6E /* PyShelfWindowController.py */; };
 		E66862540D323D9A0051F65F /* DopplrProvider.py in Resources */ = {isa = PBXBuildFile; fileRef = E66862530D323D9A0051F65F /* DopplrProvider.py */; };
+		E66862CC0D3245BA0051F65F /* FlickrProvider.py in Resources */ = {isa = PBXBuildFile; fileRef = E66862CB0D3245BA0051F65F /* FlickrProvider.py */; };
 		E678866F0D3192A90024C8D6 /* microformatparser.py in Resources */ = {isa = PBXBuildFile; fileRef = E678866E0D3192A90024C8D6 /* microformatparser.py */; };
 		E67886B50D320F100024C8D6 /* Credits.html in Resources */ = {isa = PBXBuildFile; fileRef = E67886B40D320F100024C8D6 /* Credits.html */; };
 		E67886BA0D3223520024C8D6 /* Clue.py in Resources */ = {isa = PBXBuildFile; fileRef = E67886B90D3223520024C8D6 /* Clue.py */; };
@@ -51,6 +52,7 @@
 		8D1107320486CEB800E47090 /* Shelf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shelf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E61E42EC0D31419900C40C6E /* PyShelfWindowController.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = PyShelfWindowController.py; sourceTree = "<group>"; };
 		E66862530D323D9A0051F65F /* DopplrProvider.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = DopplrProvider.py; sourceTree = "<group>"; };
+		E66862CB0D3245BA0051F65F /* FlickrProvider.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = FlickrProvider.py; sourceTree = "<group>"; };
 		E678866E0D3192A90024C8D6 /* microformatparser.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = microformatparser.py; sourceTree = "<group>"; };
 		E67886B40D320F100024C8D6 /* Credits.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Credits.html; sourceTree = "<group>"; };
 		E67886B90D3223520024C8D6 /* Clue.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = Clue.py; sourceTree = "<group>"; };
@@ -187,6 +189,7 @@
 				E68418120D315C840002A660 /* BasicProvider.py */,
 				E6D37BED0D31693300557F3F /* FeedProvider.py */,
 				E66862530D323D9A0051F65F /* DopplrProvider.py */,
+				E66862CB0D3245BA0051F65F /* FlickrProvider.py */,
 			);
 			name = Providers;
 			sourceTree = "<group>";
@@ -268,6 +271,7 @@
 				E67886BA0D3223520024C8D6 /* Clue.py in Resources */,
 				E6816B7B0D32372C0061EAD4 /* spinner.gif in Resources */,
 				E66862540D323D9A0051F65F /* DopplrProvider.py in Resources */,
+				E66862CC0D3245BA0051F65F /* FlickrProvider.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

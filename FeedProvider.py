@@ -7,7 +7,7 @@ from autorss import getRSSLink
 class FeedProvider( Provider ):
 
     def provide( self ):
-        self.atoms = [ "<h3><img src='spinner.gif'> Looking for RSS feeds</h3>" ]
+        self.atoms = [ "<h3>Looking for RSS feeds&nbsp;<img src='spinner.gif'></h3>" ]
         self.start()
     
     def run(self):
@@ -19,7 +19,7 @@ class FeedProvider( Provider ):
             if not self.running: return
 
             print("Looking at %s for feed"%url)
-            self.atoms.append("<h3><img src='spinner.gif'>&nbsp;%s</h3>"%url)
+            self.atoms.append("<h3>%s&nbsp;<img src='spinner.gif'></h3>"%url)
             self.changed()
 
             rss = getRSSLink( url )

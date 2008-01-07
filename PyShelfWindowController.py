@@ -11,6 +11,7 @@ import traceback
 from Provider import *
 import BasicProvider
 import DopplrProvider
+import FlickrProvider
 import FeedProvider
 
 class ShelfController (NSWindowController):
