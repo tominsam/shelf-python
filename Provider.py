@@ -11,8 +11,18 @@ class Provider( Thread ):
     
     PROVIDERS = []
 
+    @classmethod
+    def addProvider( myClass, classname ):
+        cls = __import__(classname, globals(), locals(), [''])
+        Provider.PROVIDERS.append(getattr(cls, classname))
+    
+    @classmethod
+    def providers( myClass ):
+        return Provider.PROVIDERS
+
+
     def __init__(self, person, delegate):
-        NSLog("** Provider '%s' init"%self.__class__.__name__)
+        #NSLog("** Provider '%s' init"%self.__class__.__name__)
         super( Provider, self ).__init__()
         self.atoms = []
         self.running = True

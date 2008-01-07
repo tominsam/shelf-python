@@ -35,5 +35,3 @@ class FlickrProvider( Provider ):
         self.atoms[0] = "<h3>Flickr</h3>"
         self.atoms.append("</p>")
         self.changed()
-    
-Provider.PROVIDERS.append( FlickrProvider )

@@ -9,10 +9,11 @@ import re
 import traceback
 
 from Provider import *
-import BasicProvider
-import DopplrProvider
-import FlickrProvider
-import FeedProvider
+Provider.addProvider( "BasicProvider" )
+Provider.addProvider( "TwitterProvider" )
+Provider.addProvider( "DopplrProvider" )
+Provider.addProvider( "FlickrProvider" )
+Provider.addProvider( "FeedProvider" )
 
 class ShelfController (NSWindowController):
     companyView = objc.IBOutlet()
@@ -112,7 +113,7 @@ class ShelfController (NSWindowController):
 
         self.providers = []
         try:
-            for cls in Provider.PROVIDERS:
+            for cls in Provider.providers():
                 self.providers.append( cls( person, self ) )
         except:
             NSLog("Failed to create provider for person:")
@@ -132,8 +133,7 @@ class ShelfController (NSWindowController):
 
     def providerUpdated_(self, provider):
         print("Provider '%s' updated"%( provider ))
-        if provider in self.providers:
-            self.performSelectorOnMainThread_withObject_waitUntilDone_('updateWebview', None, False)
+        self.performSelectorOnMainThread_withObject_waitUntilDone_('updateWebview', None, False)
 
     # supress right-click menu
     def webView_contextMenuItemsForElement_defaultMenuItems_( self, webview, element, items ):

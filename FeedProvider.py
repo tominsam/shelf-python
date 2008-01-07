@@ -8,7 +8,7 @@ class FeedProvider( Provider ):
     cache = {}
 
     def provide( self ):
-        self.atoms = [ "<h3>Looking for RSS feeds&nbsp;<img src='spinner.gif'></h3>" ]
+        self.atoms = []
         self.start()
     
     def run(self):
@@ -19,8 +19,6 @@ class FeedProvider( Provider ):
         for url in self.person.boring_urls:
 
             print("Looking at %s for feed"%url)
-            self.atoms.append("<h3>%s&nbsp;<img src='spinner.gif'></h3>"%url)
-            self.changed()
             
             feed = self.getFeed( url )
             if feed:
@@ -28,25 +26,22 @@ class FeedProvider( Provider ):
                 entries = feed.entries
                 for item in entries[0:4]:
                     html += '<p><a href="%s">%s</a></p>'%( item.link, item.title )
-                self.atoms[-1] = html
-            else:
-                self.atoms = self.atoms[:-1]
+                self.atoms.append( html )
         
             self.changed()
     
-    def getFeed( self, url ):
-        if not 'feed' in FeedProvider.cache:
-            FeedProvider.cache['feed'] = {}
-        if not url in FeedProvider.cache['feed']:
-            FeedProvider.cache['feed'][url] = None
-            rss = getRSSLink( url )
+    def getFeed( self, url, rss = None ):
+        # Note - the twitter source url here may contain username/password
+        # so don't print it!
+        source = rss or url
+        if not source in FeedProvider.cache:
+            FeedProvider.cache[source] = None
+            if not rss:
+                rss = getRSSLink( url )
             if rss:
                 feed = feedparser.parse( rss )
                 if feed and 'feed' in feed:
-                    FeedProvider.cache['feed'][url] = feed
+                    FeedProvider.cache[source] = feed
         # TODO - expire cache
-        return FeedProvider.cache['feed'][url]
+        return FeedProvider.cache[source]
 
-
-
-Provider.PROVIDERS.append( FeedProvider )

@@ -383,31 +383,33 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>E64930B60D328EC200793315</string>
+										<string>E64931890D32CEBF00793315</string>
 										<key>history</key>
 										<array>
 											<string>E6816B7D0D3237450061EAD4</string>
 											<string>E668627B0D323F8C0051F65F</string>
-											<string>E668629F0D3242510051F65F</string>
-											<string>E66862A00D3242510051F65F</string>
 											<string>E6F66DE10D3251390093EC3F</string>
 											<string>E6F66DED0D3254B70093EC3F</string>
 											<string>E692372E0D32713F00231B16</string>
 											<string>E69237480D327C2900231B16</string>
 											<string>E69237490D327C2900231B16</string>
-											<string>E692374B0D327C2900231B16</string>
 											<string>E64930800D32851B00793315</string>
-											<string>E64930810D32851B00793315</string>
 											<string>E649309E0D328EC200793315</string>
 											<string>E649309F0D328EC200793315</string>
 											<string>E64930A00D328EC200793315</string>
-											<string>E64930A10D328EC200793315</string>
 											<string>E64930A20D328EC200793315</string>
 											<string>E64930A30D328EC200793315</string>
-											<string>E64930A40D328EC200793315</string>
-											<string>E64930A50D328EC200793315</string>
-											<string>E64930A60D328EC200793315</string>
-											<string>E64930A70D328EC200793315</string>
+											<string>E64930EC0D32BFD900793315</string>
+											<string>E64931070D32C27500793315</string>
+											<string>E64931090D32C27500793315</string>
+											<string>E64931370D32C73B00793315</string>
+											<string>E64931470D32C94C00793315</string>
+											<string>E64931510D32C96900793315</string>
+											<string>E649315F0D32CA5C00793315</string>
+											<string>E649317E0D32CE4F00793315</string>
+											<string>E64931840D32CEBF00793315</string>
+											<string>E64931850D32CEBF00793315</string>
+											<string>E64931860D32CEBF00793315</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -452,6 +454,62 @@
 											<string>E64930B30D328EC200793315</string>
 											<string>E64930B40D328EC200793315</string>
 											<string>E64930B50D328EC200793315</string>
+											<string>E64930BB0D328FFF00793315</string>
+											<string>E64930C10D32B0DB00793315</string>
+											<string>E64930CE0D32B29600793315</string>
+											<string>E64930CF0D32B29600793315</string>
+											<string>E64930D00D32B29600793315</string>
+											<string>E64930D10D32B29600793315</string>
+											<string>E64930D60D32BECF00793315</string>
+											<string>E64930E00D32BFAE00793315</string>
+											<string>E64930E10D32BFAE00793315</string>
+											<string>E64930E20D32BFAE00793315</string>
+											<string>E64930E30D32BFAE00793315</string>
+											<string>E64930EE0D32BFD900793315</string>
+											<string>E64930F90D32C00B00793315</string>
+											<string>E64930FA0D32C00B00793315</string>
+											<string>E64930FB0D32C00B00793315</string>
+											<string>E64930FC0D32C00B00793315</string>
+											<string>E64930FD0D32C00B00793315</string>
+											<string>E64930FE0D32C00B00793315</string>
+											<string>E64930FF0D32C00B00793315</string>
+											<string>E64931040D32C09A00793315</string>
+											<string>E649310B0D32C27500793315</string>
+											<string>E649310C0D32C27500793315</string>
+											<string>E649310D0D32C27500793315</string>
+											<string>E649310E0D32C27500793315</string>
+											<string>E64931160D32C2F600793315</string>
+											<string>E64931230D32C38700793315</string>
+											<string>E64931290D32C5A800793315</string>
+											<string>E649312A0D32C5A800793315</string>
+											<string>E649312F0D32C62700793315</string>
+											<string>E64931300D32C62700793315</string>
+											<string>E64931390D32C73B00793315</string>
+											<string>E649313A0D32C73B00793315</string>
+											<string>E649313B0D32C73B00793315</string>
+											<string>E649313C0D32C73B00793315</string>
+											<string>E649313D0D32C73B00793315</string>
+											<string>E649314A0D32C94C00793315</string>
+											<string>E649314B0D32C94C00793315</string>
+											<string>E649314C0D32C94C00793315</string>
+											<string>E64931530D32C96900793315</string>
+											<string>E64931540D32C96900793315</string>
+											<string>E649315B0D32CA2C00793315</string>
+											<string>E649315C0D32CA2C00793315</string>
+											<string>E64931610D32CA5C00793315</string>
+											<string>E64931620D32CA5C00793315</string>
+											<string>E64931670D32CAD600793315</string>
+											<string>E64931680D32CAD600793315</string>
+											<string>E64931710D32CD7200793315</string>
+											<string>E64931770D32CE1800793315</string>
+											<string>E64931780D32CE1800793315</string>
+											<string>E64931790D32CE1800793315</string>
+											<string>E649317A0D32CE1800793315</string>
+											<string>E649317B0D32CE1800793315</string>
+											<string>E64931800D32CE4F00793315</string>
+											<string>E64931810D32CE4F00793315</string>
+											<string>E64931870D32CEBF00793315</string>
+											<string>E64931880D32CEBF00793315</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -630,7 +688,7 @@
 	<key>StatusbarIsVisible</key>
 	<true/>
 	<key>TimeStamp</key>
-	<real>221417154.37086299</real>
+	<real>221433535.486846</real>
 	<key>ToolbarDisplayMode</key>
 	<integer>1</integer>
 	<key>ToolbarIsVisible</key>
@@ -645,6 +703,9 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
+		<string>E64930E50D32BFAE00793315</string>
+		<string>E64930E60D32BFAE00793315</string>
+		<string>E64930E70D32BFAE00793315</string>
 		<string>1CD10A99069EF8BA00B06720</string>
 		<string>E6816AEC0D322A2F0061EAD4</string>
 		<string>1C78EAAD065D492600B07095</string>
@@ -995,7 +1056,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {985, 599}}</string>
 								<key>RubberWindowFrame</key>
-								<string>455 238 985 640 0 0 1440 878 </string>
+								<string>293 238 985 640 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXDebugCLIModule</string>
@@ -1024,7 +1085,7 @@
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.consoleV3</string>
 			<key>WindowString</key>
-			<string>455 238 985 640 0 0 1440 878 </string>
+			<string>293 238 985 640 0 0 1440 878 </string>
 			<key>WindowToolGUID</key>
 			<string>1C78EAAD065D492600B07095</string>
 			<key>WindowToolIsVisible</key>

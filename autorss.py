@@ -6,11 +6,6 @@ __license__ = "Python"
 
 # messed around with by Tom to do Atom as well.
 
-try:
-    import timeoutsocket # http://www.timo-tasi.org/python/timeoutsocket.py
-    timeoutsocket.setDefaultSocketTimeout(10)
-except ImportError:
-    pass
 import urllib, urlparse
 from sgmllib import SGMLParser
 

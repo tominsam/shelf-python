@@ -14,6 +14,8 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		E61E42ED0D31419900C40C6E /* PyShelfWindowController.py in Resources */ = {isa = PBXBuildFile; fileRef = E61E42EC0D31419900C40C6E /* PyShelfWindowController.py */; };
 		E649309A0D32894B00793315 /* ComAppleAddressBook.py in Resources */ = {isa = PBXBuildFile; fileRef = E64930990D32894B00793315 /* ComAppleAddressBook.py */; };
+		E64930C70D32B21100793315 /* TwitterProvider.py in Resources */ = {isa = PBXBuildFile; fileRef = E64930C60D32B21100793315 /* TwitterProvider.py */; };
+		E64931580D32CA0B00793315 /* xmltramp.py in Resources */ = {isa = PBXBuildFile; fileRef = E64931570D32CA0B00793315 /* xmltramp.py */; };
 		E66862540D323D9A0051F65F /* DopplrProvider.py in Resources */ = {isa = PBXBuildFile; fileRef = E66862530D323D9A0051F65F /* DopplrProvider.py */; };
 		E66862CC0D3245BA0051F65F /* FlickrProvider.py in Resources */ = {isa = PBXBuildFile; fileRef = E66862CB0D3245BA0051F65F /* FlickrProvider.py */; };
 		E678866F0D3192A90024C8D6 /* microformatparser.py in Resources */ = {isa = PBXBuildFile; fileRef = E678866E0D3192A90024C8D6 /* microformatparser.py */; };
@@ -33,7 +35,6 @@
 		E6D37BEB0D31692500557F3F /* feedparser.py in Resources */ = {isa = PBXBuildFile; fileRef = E6D37BEA0D31692500557F3F /* feedparser.py */; };
 		E6D37BEE0D31693300557F3F /* FeedProvider.py in Resources */ = {isa = PBXBuildFile; fileRef = E6D37BED0D31693300557F3F /* FeedProvider.py */; };
 		E6D37BFD0D316A0100557F3F /* autorss.py in Resources */ = {isa = PBXBuildFile; fileRef = E6D37BFC0D316A0100557F3F /* autorss.py */; };
-		E6D37C1B0D316A2B00557F3F /* timeoutsocket.py in Resources */ = {isa = PBXBuildFile; fileRef = E6D37C1A0D316A2B00557F3F /* timeoutsocket.py */; };
 		E6D37C590D31765A00557F3F /* ComAppleSafari.py in Resources */ = {isa = PBXBuildFile; fileRef = E6D37C580D31765A00557F3F /* ComAppleSafari.py */; };
 		E6D37C910D3178AB00557F3F /* ComRancheroNetNewsWire.py in Resources */ = {isa = PBXBuildFile; fileRef = E6D37C900D3178AB00557F3F /* ComRancheroNetNewsWire.py */; };
 /* End PBXBuildFile section */
@@ -54,6 +55,8 @@
 		8D1107320486CEB800E47090 /* Shelf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shelf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E61E42EC0D31419900C40C6E /* PyShelfWindowController.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = PyShelfWindowController.py; sourceTree = "<group>"; };
 		E64930990D32894B00793315 /* ComAppleAddressBook.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = ComAppleAddressBook.py; sourceTree = "<group>"; };
+		E64930C60D32B21100793315 /* TwitterProvider.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = TwitterProvider.py; sourceTree = "<group>"; };
+		E64931570D32CA0B00793315 /* xmltramp.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = xmltramp.py; sourceTree = "<group>"; };
 		E66862530D323D9A0051F65F /* DopplrProvider.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = DopplrProvider.py; sourceTree = "<group>"; };
 		E66862CB0D3245BA0051F65F /* FlickrProvider.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = FlickrProvider.py; sourceTree = "<group>"; };
 		E678866E0D3192A90024C8D6 /* microformatparser.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = microformatparser.py; sourceTree = "<group>"; };
@@ -71,7 +74,6 @@
 		E6D37BEA0D31692500557F3F /* feedparser.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = feedparser.py; sourceTree = "<group>"; };
 		E6D37BED0D31693300557F3F /* FeedProvider.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = FeedProvider.py; sourceTree = "<group>"; };
 		E6D37BFC0D316A0100557F3F /* autorss.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = autorss.py; sourceTree = "<group>"; };
-		E6D37C1A0D316A2B00557F3F /* timeoutsocket.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = timeoutsocket.py; sourceTree = "<group>"; };
 		E6D37C580D31765A00557F3F /* ComAppleSafari.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = ComAppleSafari.py; sourceTree = "<group>"; };
 		E6D37C900D3178AB00557F3F /* ComRancheroNetNewsWire.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = ComRancheroNetNewsWire.py; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -196,6 +198,7 @@
 				E6D37BED0D31693300557F3F /* FeedProvider.py */,
 				E66862530D323D9A0051F65F /* DopplrProvider.py */,
 				E66862CB0D3245BA0051F65F /* FlickrProvider.py */,
+				E64930C60D32B21100793315 /* TwitterProvider.py */,
 			);
 			name = Providers;
 			sourceTree = "<group>";
@@ -204,8 +207,8 @@
 			isa = PBXGroup;
 			children = (
 				E678866E0D3192A90024C8D6 /* microformatparser.py */,
+				E64931570D32CA0B00793315 /* xmltramp.py */,
 				E6D37BFC0D316A0100557F3F /* autorss.py */,
-				E6D37C1A0D316A2B00557F3F /* timeoutsocket.py */,
 				E6D37BEA0D31692500557F3F /* feedparser.py */,
 			);
 			name = Libs;
@@ -267,7 +270,6 @@
 				E6D37BEB0D31692500557F3F /* feedparser.py in Resources */,
 				E6D37BEE0D31693300557F3F /* FeedProvider.py in Resources */,
 				E6D37BFD0D316A0100557F3F /* autorss.py in Resources */,
-				E6D37C1B0D316A2B00557F3F /* timeoutsocket.py in Resources */,
 				E6D37C590D31765A00557F3F /* ComAppleSafari.py in Resources */,
 				E6D37C910D3178AB00557F3F /* ComRancheroNetNewsWire.py in Resources */,
 				E6B90E910D317E27002399DA /* ComIconfactoryTwitterrific.py in Resources */,
@@ -280,6 +282,8 @@
 				E66862CC0D3245BA0051F65F /* FlickrProvider.py in Resources */,
 				E692373C0D32720A00231B16 /* ComAppleIChat.py in Resources */,
 				E649309A0D32894B00793315 /* ComAppleAddressBook.py in Resources */,
+				E64930C70D32B21100793315 /* TwitterProvider.py in Resources */,
+				E64931580D32CA0B00793315 /* xmltramp.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
