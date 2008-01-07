@@ -16,6 +16,7 @@
 		E678866F0D3192A90024C8D6 /* microformatparser.py in Resources */ = {isa = PBXBuildFile; fileRef = E678866E0D3192A90024C8D6 /* microformatparser.py */; };
 		E67886B50D320F100024C8D6 /* Credits.html in Resources */ = {isa = PBXBuildFile; fileRef = E67886B40D320F100024C8D6 /* Credits.html */; };
 		E67886BA0D3223520024C8D6 /* Clue.py in Resources */ = {isa = PBXBuildFile; fileRef = E67886B90D3223520024C8D6 /* Clue.py */; };
+		E6816B7B0D32372C0061EAD4 /* spinner.gif in Resources */ = {isa = PBXBuildFile; fileRef = E6816B7A0D32372C0061EAD4 /* spinner.gif */; };
 		E68417430D314AA70002A660 /* ComAppleMail.py in Resources */ = {isa = PBXBuildFile; fileRef = E68417420D314AA70002A660 /* ComAppleMail.py */; };
 		E68417450D314AC00002A660 /* Extractor.py in Resources */ = {isa = PBXBuildFile; fileRef = E68417440D314AC00002A660 /* Extractor.py */; };
 		E68417B50D3158190002A660 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77C8C1F80C07829500965286 /* MainMenu.xib */; };
@@ -51,6 +52,7 @@
 		E678866E0D3192A90024C8D6 /* microformatparser.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = microformatparser.py; sourceTree = "<group>"; };
 		E67886B40D320F100024C8D6 /* Credits.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Credits.html; sourceTree = "<group>"; };
 		E67886B90D3223520024C8D6 /* Clue.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = Clue.py; sourceTree = "<group>"; };
+		E6816B7A0D32372C0061EAD4 /* spinner.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = spinner.gif; sourceTree = "<group>"; };
 		E68417420D314AA70002A660 /* ComAppleMail.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = ComAppleMail.py; sourceTree = "<group>"; };
 		E68417440D314AC00002A660 /* Extractor.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = Extractor.py; sourceTree = "<group>"; };
 		E68418120D315C840002A660 /* BasicProvider.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = BasicProvider.py; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E6816B7A0D32372C0061EAD4 /* spinner.gif */,
 				77C8C1F80C07829500965286 /* MainMenu.xib */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165DFE840E0CC02AAC07 /* InfoPlist.strings */,
@@ -260,6 +263,7 @@
 				E678866F0D3192A90024C8D6 /* microformatparser.py in Resources */,
 				E67886B50D320F100024C8D6 /* Credits.html in Resources */,
 				E67886BA0D3223520024C8D6 /* Clue.py in Resources */,
+				E6816B7B0D32372C0061EAD4 /* spinner.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

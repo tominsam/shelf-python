@@ -10,7 +10,7 @@ import traceback
 
 from Provider import *
 import BasicProvider
-#import FeedProvider # slow
+import FeedProvider
 
 class ShelfController (NSWindowController):
     companyView = objc.IBOutlet()
@@ -79,7 +79,8 @@ class ShelfController (NSWindowController):
         self.imageView.setImageFrameStyle_( NSImageFrameNone )
         self.imageView.setImage_( None )
         self.window().setLevel_( NSFloatingWindowLevel ) # stuff to 'on top'
-        self.webView.mainFrame().loadHTMLString_baseURL_( "No context", None )
+        base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
+        self.webView.mainFrame().loadHTMLString_baseURL_( "No context", base )
     
     def update_info_for( self, person ):
         self.nameView.setStringValue_( person.displayName() )
@@ -87,27 +88,35 @@ class ShelfController (NSWindowController):
         self.imageView.setImageFrameStyle_( NSImageFrameNone )
         self.imageView.setImage_( person.image() ) # leak?
         self.window().setLevel_( NSFloatingWindowLevel ) # stuff to 'on top'
-        self.webView.mainFrame().loadHTMLString_baseURL_( "thinking..", None )
+        base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
+        self.webView.mainFrame().loadHTMLString_baseURL_( "thinking..", base )
+
+        for current in self.providers:
+            current.stop()
 
         self.providers = []
         try:
             for cls in Provider.PROVIDERS:
-                self.providers.append( cls( person ) )
+                self.providers.append( cls( person, self ) )
         except:
             NSLog("Failed to create provider for person:")
             print(traceback.format_exc())
-            self.webView.mainFrame().loadHTMLString_baseURL_("<h2>EPIC FAIL</h2><pre>%s</pre>"%traceback.format_exc(), None ) # TODO - escape html
+            self.webView.mainFrame().loadHTMLString_baseURL_("<h2>EPIC FAIL</h2><pre>%s</pre>"%traceback.format_exc(), base ) # TODO - escape html
             return
         
-        self.update_webview()
+        #self.updateWebview()
             
-    def update_webview(self):
+    def updateWebview(self):
         info = []
         for provider in self.providers:
             info += provider.atoms
         
-        self.webView.mainFrame().loadHTMLString_baseURL_( "".join(info), None )
+        base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
+        self.webView.mainFrame().loadHTMLString_baseURL_( "".join(info), base )
 
+    def providerUpdated_(self, provider):
+        print("Provider '%s' updated"%( provider ))
+        self.performSelectorOnMainThread_withObject_waitUntilDone_('updateWebview', None, False)
 
     # supress right-click menu
     def webView_contextMenuItemsForElement_defaultMenuItems_( self, webview, element, items ):

@@ -16,6 +16,8 @@ class BasicProvider( Provider ):
            bits = [ address[atom] for atom in filter(lambda a: a in address, ['Street', 'City', 'Zip']) ]
            joined = ", ".join(bits)
            self.atoms.append('<p><a href="http://maps.google.com/maps?q=%s">%s</a></p>'%( quote(joined), joined ) )
+        
+        self.changed()
     
 
 Provider.PROVIDERS.append( BasicProvider )
