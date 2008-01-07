@@ -8,6 +8,7 @@ class Clue(object):
         self.person = person
         self.nsimage = None
         self.boring_urls = self.urls()
+        self.cache = {}
     
     def takeUrls(self,pattern):
         interesting = []

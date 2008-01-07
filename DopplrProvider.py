@@ -1,7 +1,7 @@
 from Provider import *
 import urllib
 import re
-import simplejson
+#import simplejson
 
 class DopplrProvider( Provider ):
 

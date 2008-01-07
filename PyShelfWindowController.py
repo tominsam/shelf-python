@@ -85,7 +85,8 @@ class ShelfController (NSWindowController):
         self.companyView.setStringValue_( "" )
         self.imageView.setImageFrameStyle_( NSImageFrameNone )
         self.imageView.setImage_( None )
-        self.window().setLevel_( NSFloatingWindowLevel ) # stuff to 'on top'
+        self.window().setLevel_( NSNormalWindowLevel ) # stuff to 'on top'
+        self.window().setHidesOnDeactivate_( True )
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
         self.webView.mainFrame().loadHTMLString_baseURL_( "No context", base )
 
@@ -96,6 +97,8 @@ class ShelfController (NSWindowController):
         self.imageView.setImageFrameStyle_( NSImageFrameNone )
         self.imageView.setImage_( person.image() ) # leak?
         self.window().setLevel_( NSFloatingWindowLevel ) # stuff to 'on top'
+        self.window().setHidesOnDeactivate_( False )
+        self.showWindow_(self)
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
         self.webView.mainFrame().loadHTMLString_baseURL_( "thinking..", base )
 
