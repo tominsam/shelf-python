@@ -15,8 +15,7 @@ class FeedProvider( Provider ):
         pool = NSAutoreleasePool.alloc().init()        
         self.atoms = []
 
-        urls = self.person.urls()
-        for url in urls:
+        for url in self.person.boring_urls:
             if not self.running: return
 
             print("Looking at %s for feed"%url)

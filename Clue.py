@@ -1,11 +1,22 @@
 import objc
 from AddressBook import *
+import re
 
 class Clue(object):
     
     def __init__(self, person):
         self.person = person
         self.nsimage = None
+        self.boring_urls = self.urls()
+    
+    def takeUrls(self,pattern):
+        interesting = []
+        for u in self.boring_urls:
+            if re.search(pattern, u):
+                interesting.append(u)
+        for u in interesting:
+            self.boring_urls.remove(u)
+        return interesting
     
     def uniqueId(self):
         return self.person.uniqueId()

@@ -6,7 +6,7 @@ import simplejson
 class DopplrProvider( Provider ):
 
     def provide( self ):
-        dopplrs = [ u for u in self.person.urls() if re.search(r'www.dopplr.com', u) ]
+        dopplrs = self.person.takeUrls(r'dopplr\.com/traveller')
         if dopplrs:
             self.username = re.search(r'/traveller/([^/]+)', dopplrs[0]).group(1)
             self.atoms = [ "<h3>Fetching Dopplr status</h3>" ]
