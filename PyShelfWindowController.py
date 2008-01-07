@@ -10,6 +10,7 @@ import traceback
 
 from Provider import *
 import BasicProvider
+import DopplrProvider
 import FeedProvider
 
 class ShelfController (NSWindowController):
@@ -81,7 +82,8 @@ class ShelfController (NSWindowController):
         self.window().setLevel_( NSFloatingWindowLevel ) # stuff to 'on top'
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
         self.webView.mainFrame().loadHTMLString_baseURL_( "No context", base )
-    
+
+
     def update_info_for( self, person ):
         self.nameView.setStringValue_( person.displayName() )
         self.companyView.setStringValue_( person.companyName() )

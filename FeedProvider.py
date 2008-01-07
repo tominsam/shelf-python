@@ -16,12 +16,16 @@ class FeedProvider( Provider ):
 
         urls = self.person.urls()
         for url in urls:
+            if not self.running: return
+
             print("Looking at %s for feed"%url)
             self.atoms.append("<p>&raquo; %s <img src='spinner.gif'></p>"%url)
             self.changed()
 
             rss = getRSSLink( url )
             if rss:
+                if not self.running: return
+
                 print("Found feed url %s"%( rss ))
                 self.atoms[-1] = "<p>&raquo; %s <img src='spinner.gif'></p>"%rss
                 self.changed()

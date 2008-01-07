@@ -15,12 +15,17 @@ class Provider( Thread ):
         NSLog("** Provider '%s' init"%self.__class__.__name__)
         super( Provider, self ).__init__()
         self.atoms = []
+        self.running = True
         self.person = person
         self.delegate = delegate
         self.provide()
     
     def changed(self):
         self.delegate.providerUpdated_(self)
+    
+    def stop(self):
+        # not enforced, it's just a hint to the processor to stop
+        self.running = False
     
     def provide( self ):
         pass

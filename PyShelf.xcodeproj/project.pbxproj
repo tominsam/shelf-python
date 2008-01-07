@@ -13,6 +13,7 @@
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		E61E42ED0D31419900C40C6E /* PyShelfWindowController.py in Resources */ = {isa = PBXBuildFile; fileRef = E61E42EC0D31419900C40C6E /* PyShelfWindowController.py */; };
+		E66862540D323D9A0051F65F /* DopplrProvider.py in Resources */ = {isa = PBXBuildFile; fileRef = E66862530D323D9A0051F65F /* DopplrProvider.py */; };
 		E678866F0D3192A90024C8D6 /* microformatparser.py in Resources */ = {isa = PBXBuildFile; fileRef = E678866E0D3192A90024C8D6 /* microformatparser.py */; };
 		E67886B50D320F100024C8D6 /* Credits.html in Resources */ = {isa = PBXBuildFile; fileRef = E67886B40D320F100024C8D6 /* Credits.html */; };
 		E67886BA0D3223520024C8D6 /* Clue.py in Resources */ = {isa = PBXBuildFile; fileRef = E67886B90D3223520024C8D6 /* Clue.py */; };
@@ -49,6 +50,7 @@
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Shelf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shelf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E61E42EC0D31419900C40C6E /* PyShelfWindowController.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = PyShelfWindowController.py; sourceTree = "<group>"; };
+		E66862530D323D9A0051F65F /* DopplrProvider.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = DopplrProvider.py; sourceTree = "<group>"; };
 		E678866E0D3192A90024C8D6 /* microformatparser.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = microformatparser.py; sourceTree = "<group>"; };
 		E67886B40D320F100024C8D6 /* Credits.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Credits.html; sourceTree = "<group>"; };
 		E67886B90D3223520024C8D6 /* Clue.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = Clue.py; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 			children = (
 				E68418120D315C840002A660 /* BasicProvider.py */,
 				E6D37BED0D31693300557F3F /* FeedProvider.py */,
+				E66862530D323D9A0051F65F /* DopplrProvider.py */,
 			);
 			name = Providers;
 			sourceTree = "<group>";
@@ -264,6 +267,7 @@
 				E67886B50D320F100024C8D6 /* Credits.html in Resources */,
 				E67886BA0D3223520024C8D6 /* Clue.py in Resources */,
 				E6816B7B0D32372C0061EAD4 /* spinner.gif in Resources */,
+				E66862540D323D9A0051F65F /* DopplrProvider.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
