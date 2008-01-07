@@ -382,7 +382,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>E66863130D324A150051F65F</string>
+										<string>E6F66DC50D324EA30093EC3F</string>
 										<key>history</key>
 										<array>
 											<string>E66088650D32247C00D86C45</string>
@@ -397,7 +397,7 @@
 											<string>E66862DE0D3246590051F65F</string>
 											<string>E66862E60D3246E80051F65F</string>
 											<string>E668630F0D3249D90051F65F</string>
-											<string>E66863100D3249D90051F65F</string>
+											<string>E66863130D324A150051F65F</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -410,69 +410,10 @@
 											<string>E6816B120D322B4A0061EAD4</string>
 											<string>E6816B220D322DC60061EAD4</string>
 											<string>E6816B7F0D3237450061EAD4</string>
-											<string>E66862650D323F450051F65F</string>
 											<string>E66862660D323F450051F65F</string>
-											<string>E66862670D323F450051F65F</string>
-											<string>E66862680D323F450051F65F</string>
-											<string>E66862690D323F450051F65F</string>
-											<string>E668626A0D323F450051F65F</string>
-											<string>E668626B0D323F450051F65F</string>
-											<string>E668626C0D323F450051F65F</string>
-											<string>E668626D0D323F450051F65F</string>
-											<string>E668626E0D323F450051F65F</string>
 											<string>E668626F0D323F450051F65F</string>
-											<string>E66862700D323F450051F65F</string>
-											<string>E66862750D323F590051F65F</string>
-											<string>E66862760D323F590051F65F</string>
-											<string>E668627D0D323F8C0051F65F</string>
-											<string>E668627E0D323F8C0051F65F</string>
-											<string>E668627F0D323F8C0051F65F</string>
-											<string>E66862800D323F8C0051F65F</string>
-											<string>E66862810D323F8C0051F65F</string>
-											<string>E66862860D323FA00051F65F</string>
-											<string>E66862920D3240770051F65F</string>
-											<string>E66862930D3240770051F65F</string>
-											<string>E66862940D3240770051F65F</string>
-											<string>E668629A0D3242010051F65F</string>
-											<string>E668629B0D3242010051F65F</string>
-											<string>E668629C0D3242010051F65F</string>
-											<string>E66862A20D3242510051F65F</string>
-											<string>E66862A30D3242510051F65F</string>
 											<string>E66862A40D3242510051F65F</string>
-											<string>E66862AC0D3243080051F65F</string>
-											<string>E66862C40D3245440051F65F</string>
-											<string>E66862C50D3245440051F65F</string>
-											<string>E66862C60D3245440051F65F</string>
-											<string>E66862C70D3245440051F65F</string>
-											<string>E66862C80D3245440051F65F</string>
-											<string>E66862C90D3245440051F65F</string>
-											<string>E66862D30D32462B0051F65F</string>
 											<string>E66862D40D32462B0051F65F</string>
-											<string>E66862D50D32462B0051F65F</string>
-											<string>E66862D60D32462B0051F65F</string>
-											<string>E66862D70D32462B0051F65F</string>
-											<string>E66862D80D32462B0051F65F</string>
-											<string>E66862D90D32462B0051F65F</string>
-											<string>E66862DA0D32462B0051F65F</string>
-											<string>E66862DB0D32462B0051F65F</string>
-											<string>E66862E10D3246590051F65F</string>
-											<string>E66862E20D3246590051F65F</string>
-											<string>E66862E30D3246590051F65F</string>
-											<string>E66862E90D3246E80051F65F</string>
-											<string>E66862EA0D3246E80051F65F</string>
-											<string>E66862EB0D3246E80051F65F</string>
-											<string>E66862EC0D3246E80051F65F</string>
-											<string>E66862ED0D3246E80051F65F</string>
-											<string>E66862EE0D3246E80051F65F</string>
-											<string>E66862EF0D3246E80051F65F</string>
-											<string>E66862F00D3246E80051F65F</string>
-											<string>E66862F10D3246E80051F65F</string>
-											<string>E66862F20D3246E80051F65F</string>
-											<string>E66862F30D3246E80051F65F</string>
-											<string>E66862F40D3246E80051F65F</string>
-											<string>E66862F50D3246E80051F65F</string>
-											<string>E66862F60D3246E80051F65F</string>
-											<string>E66863110D3249D90051F65F</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -530,9 +471,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>E668624A0D323BAA0051F65F</string>
+				<string>E6F66DC60D324EA30093EC3F</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>E668624B0D323BAA0051F65F</string>
+				<string>E6F66DC70D324EA30093EC3F</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -651,7 +592,7 @@
 	<key>StatusbarIsVisible</key>
 	<true/>
 	<key>TimeStamp</key>
-	<real>221399573.485356</real>
+	<real>221400738.16144499</real>
 	<key>ToolbarDisplayMode</key>
 	<integer>1</integer>
 	<key>ToolbarIsVisible</key>
@@ -666,12 +607,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>E66862B90D3243D40051F65F</string>
-		<string>E66862BA0D3243D40051F65F</string>
-		<string>E66862BB0D3243D40051F65F</string>
-		<string>1CD10A99069EF8BA00B06720</string>
-		<string>E6816AEC0D322A2F0061EAD4</string>
-		<string>1C78EAAD065D492600B07095</string>
 		<string>/Users/tomi/svn/Projects/Shelf/PyShelf.xcodeproj</string>
 	</array>
 	<key>WindowString</key>

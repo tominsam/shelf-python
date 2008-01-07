@@ -21,11 +21,13 @@ class Provider( Thread ):
         self.provide()
     
     def changed(self):
-        self.delegate.providerUpdated_(self)
+        if self.running:
+            self.delegate.providerUpdated_(self)
     
     def stop(self):
         # not enforced, it's just a hint to the processor to stop
         self.running = False
+        self.atoms = []
     
     def provide( self ):
         pass
