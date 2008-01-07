@@ -13,7 +13,6 @@ class FlickrProvider( Provider ):
             self.username = re.search(r'/(photos|person)/([^/]+)', flickrs[0]).group(2)
             self.start()
 
-    
     def run(self):
         print("Running thread")
         pool = NSAutoreleasePool.alloc().init()        

@@ -132,7 +132,8 @@ class ShelfController (NSWindowController):
 
     def providerUpdated_(self, provider):
         print("Provider '%s' updated"%( provider ))
-        self.performSelectorOnMainThread_withObject_waitUntilDone_('updateWebview', None, False)
+        if provider in self.providers:
+            self.performSelectorOnMainThread_withObject_waitUntilDone_('updateWebview', None, False)
 
     # supress right-click menu
     def webView_contextMenuItemsForElement_defaultMenuItems_( self, webview, element, items ):
