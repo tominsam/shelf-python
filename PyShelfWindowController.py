@@ -97,8 +97,7 @@ class ShelfController (NSWindowController):
     def blank_info(self):
         self.nameView.setStringValue_( "" )
         self.companyView.setStringValue_( "" )
-        self.imageView.setImageFrameStyle_( NSImageFrameNone )
-        self.imageView.setImage_( None )
+        self.imageView.setImage_( NSImage.imageNamed_("NSUser") )
         self.window().setLevel_( NSNormalWindowLevel ) # stuff to 'on top'
         self.window().setHidesOnDeactivate_( True )
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
@@ -108,7 +107,6 @@ class ShelfController (NSWindowController):
     def update_info_for( self, person ):
         self.nameView.setStringValue_( person.displayName() )
         self.companyView.setStringValue_( person.companyName() )
-        self.imageView.setImageFrameStyle_( NSImageFrameNone )
         self.imageView.setImage_( person.image() ) # leak?
         self.window().setLevel_( NSFloatingWindowLevel ) # stuff to 'on top'
         self.window().setHidesOnDeactivate_( False )

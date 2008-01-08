@@ -26,7 +26,7 @@ class Clue(object):
     def image(self):
         if not self.nsimage:
             self.nsimage = NSImage.alloc().initWithData_( self.person.imageData() )
-        return self.nsimage
+        return self.nsimage or NSImage.imageNamed_("NSUser")
 
     def forename(self):
         return self.person.valueForProperty_(kABFirstNameProperty)
