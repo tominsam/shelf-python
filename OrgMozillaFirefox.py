@@ -12,8 +12,7 @@ class OrgMozillaFirefox( Extractor ):
         # thanks, mark
         script = """
             tell application "Firefox"
-                set myFirefox to properties of front window as list
-                get item 3 of myFirefox
+                get «class curl» of front window
             end tell
         """
 
