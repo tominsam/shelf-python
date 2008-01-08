@@ -3,10 +3,12 @@ from AppKit import *
 
 class OrgMozillaFirefox( Extractor ):
 
+    # Firefox completely refuses to cooperate with the scripting
+    # bridge. Annoying as hell.
+
     def __init__(self):
         super( OrgMozillaFirefox, self ).__init__()
 
-    def clues(self):
         # thanks, mark
         script = """
             tell application "Firefox"
@@ -15,7 +17,10 @@ class OrgMozillaFirefox( Extractor ):
             end tell
         """
 
-        ascript = NSAppleScript.alloc().initWithSource_( script )
-        [ ret, error ] = ascript.executeAndReturnError_()
+        self.ascript = NSAppleScript.alloc().initWithSource_( script )
+
+    def clues(self):
+        
+        [ ret, error ] = self.ascript.executeAndReturnError_()
         url = ret.stringValue()
         return self.clues_from_url( url )
