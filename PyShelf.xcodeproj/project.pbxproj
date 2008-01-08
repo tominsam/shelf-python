@@ -37,6 +37,7 @@
 		E6D37BFD0D316A0100557F3F /* autorss.py in Resources */ = {isa = PBXBuildFile; fileRef = E6D37BFC0D316A0100557F3F /* autorss.py */; };
 		E6D37C590D31765A00557F3F /* ComAppleSafari.py in Resources */ = {isa = PBXBuildFile; fileRef = E6D37C580D31765A00557F3F /* ComAppleSafari.py */; };
 		E6D37C910D3178AB00557F3F /* ComRancheroNetNewsWire.py in Resources */ = {isa = PBXBuildFile; fileRef = E6D37C900D3178AB00557F3F /* ComRancheroNetNewsWire.py */; };
+		E6EB2E980D337D6D003A7DDA /* OrgMozillaFirefox.py in Resources */ = {isa = PBXBuildFile; fileRef = E6EB2E970D337D6D003A7DDA /* OrgMozillaFirefox.py */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,6 +77,7 @@
 		E6D37BFC0D316A0100557F3F /* autorss.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = autorss.py; sourceTree = "<group>"; };
 		E6D37C580D31765A00557F3F /* ComAppleSafari.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = ComAppleSafari.py; sourceTree = "<group>"; };
 		E6D37C900D3178AB00557F3F /* ComRancheroNetNewsWire.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = ComRancheroNetNewsWire.py; sourceTree = "<group>"; };
+		E6EB2E970D337D6D003A7DDA /* OrgMozillaFirefox.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = OrgMozillaFirefox.py; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,6 +189,7 @@
 				E6B90EB30D317FC0002399DA /* ComAdiumXAdiumX.py */,
 				E692373B0D32720A00231B16 /* ComAppleIChat.py */,
 				E64930990D32894B00793315 /* ComAppleAddressBook.py */,
+				E6EB2E970D337D6D003A7DDA /* OrgMozillaFirefox.py */,
 			);
 			name = Extractors;
 			sourceTree = "<group>";
@@ -284,6 +287,7 @@
 				E649309A0D32894B00793315 /* ComAppleAddressBook.py in Resources */,
 				E64930C70D32B21100793315 /* TwitterProvider.py in Resources */,
 				E64931580D32CA0B00793315 /* xmltramp.py in Resources */,
+				E6EB2E980D337D6D003A7DDA /* OrgMozillaFirefox.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

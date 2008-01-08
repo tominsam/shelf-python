@@ -29,6 +29,11 @@ class ShelfController (NSWindowController):
     def applicationDidFinishLaunching_(self, sender):
         self.performSelector_withObject_afterDelay_( 'poll', None, 0 )
         self.blank_info()
+        
+        #NSNotificationCenter.defaultCenter().addObserver_selector_name_object_( self, "notification:", None, None )
+    
+    def notification_(self, thing):
+        print("NOTIFY:" + repr(thing))
 
     def handler_for( self, bundle ):
         if not bundle in self.handlers:
