@@ -1,5 +1,8 @@
 from Foundation import *
 from AppKit import *
+from ScriptingBridge import *
+from Extractor import *
+from AddressBook import *
 
 def dump( obj ):
     methods = dir(obj)
@@ -9,3 +12,5 @@ def dump( obj ):
     print( obj.__class__.__name__ )
     print( "\n".join(map(lambda x: " - %s"%x, methods) ) )
 
+def app(bundle):
+    return SBApplication.applicationWithBundleIdentifier_(bundle)

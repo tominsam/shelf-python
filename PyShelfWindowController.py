@@ -13,6 +13,7 @@ Provider.addProvider( "BasicProvider" )
 Provider.addProvider( "TwitterProvider" )
 Provider.addProvider( "DopplrProvider" )
 Provider.addProvider( "FlickrProvider" )
+# Order is important - FeedProvider must be _last_
 Provider.addProvider( "FeedProvider" )
 
 class ShelfController (NSWindowController):
@@ -30,10 +31,11 @@ class ShelfController (NSWindowController):
         self.performSelector_withObject_afterDelay_( 'poll', None, 0 )
         self.blank_info()
         
-        #NSNotificationCenter.defaultCenter().addObserver_selector_name_object_( self, "notification:", None, None )
-    
-    def notification_(self, thing):
-        print("NOTIFY:" + repr(thing))
+    def openRecord_(self, thing):
+        if self.current_person:
+            NSWorkspace.sharedWorkspace().openURL_(
+                NSURL.URLWithString_("addressbook://%s"%self.current_person.uniqueId())
+            )
 
     def handler_for( self, bundle ):
         if not bundle in self.handlers:
@@ -46,20 +48,20 @@ class ShelfController (NSWindowController):
                 cls = getattr( mod, classname )
                 self.handlers[ bundle ] = cls()
             except ImportError:
-                NSLog( "** Couldn't import file for %s"%( classname ) )
+                #NSLog( "** Couldn't import file for %s"%( classname ) )
                 self.handlers[ bundle ] = None
 
         return self.handlers[ bundle ]
 
     def poll(self):
-        #NSLog( "..polling.." )
-        
         # get bundle name of active application
         bundle = NSWorkspace.sharedWorkspace().activeApplication()['NSApplicationBundleIdentifier']
         handler = self.handler_for( bundle )
         
         # this app has no effect on the current context, otherwise activating
-        # the app makes it clear. oops.
+        # the app drops the current context. Also, XCode is special so I don't
+        # go crazy while debugging. This one should probably come out in the
+        # long term.
         if bundle.lower() in ["org.jerakeen.pyshelf", "com.apple.xcode"]:
             pass
         
@@ -124,9 +126,7 @@ class ShelfController (NSWindowController):
             except:
                 NSLog("Failed to create provider %s for person:"%cls)
                 print(traceback.format_exc())
-        
-        #self.updateWebview()
-            
+                    
     def updateWebview(self):
         info = []
         for provider in self.providers:
@@ -136,7 +136,7 @@ class ShelfController (NSWindowController):
         self.webView.mainFrame().loadHTMLString_baseURL_( "".join(info), base )
 
     def providerUpdated_(self, provider):
-        print("Provider '%s' updated"%( provider ))
+        #print("Provider '%s' updated"%( provider ))
         self.performSelectorOnMainThread_withObject_waitUntilDone_('updateWebview', None, False)
 
     # supress right-click menu

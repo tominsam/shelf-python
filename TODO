@@ -7,8 +7,6 @@ Look into PubSub framework (built into macos) instead of feedparser.
 
 persist cache between runs
 
-use stale cache data while fetching new data
-
 'no context' should be a little sticky - preserve the last ouser for a couple
 of polls - use cases, opening a new broswer window form a link, or following 
 a link from Shelf itself, loses context.
