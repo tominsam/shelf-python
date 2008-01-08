@@ -2,33 +2,32 @@ from FeedProvider import *
 
 class FlickrProvider( FeedProvider ):
 
-    def provide( self ):
-        flickrs = self.person.takeUrls(r'flickr\.com/(photos|person)/.')
-        if flickrs:
-            self.username = re.search(r'/(photos|person)/([^/]+)', flickrs[0]).group(2)
-            self.start()
+    def urls(self):
+        return self.person.takeUrls(r'flickr\.com/(photos|people)/.')
+        
+    def feed_for_url( self, url ):
+        username = re.search(r'/(photos|person)/([^/]+)', url).group(2)
+        return super( FlickrProvider, self ).feed_for_url("http://flickr.com/photos/%s/"%username)
 
-    def guardedRun(self):
-        pool = NSAutoreleasePool.alloc().init()        
+    def htmlForPending( self, url, stale = False ):
+        if stale:
+            spinner_html = "&nbsp;<img src='spinner.gif'>"
+        else:
+            spinner_html = ""
+        return "<h3><a href='%s'>Flickr</a>%s</h3>"%(url,spinner_html)
+    
+    def htmlForFeed( self, url, feed, stale = False ):
+        if stale:
+            spinner_html = "&nbsp;<img src='spinner.gif'>"
+        else:
+            spinner_html = ""
+        html = "<h3><a href='%s'>Flickr</a>%s</h3>"%( url, spinner_html )
 
-        self.atoms = [ "<h3><a href='http://flickr.com/photos/%s'>Flickr</a>&nbsp;<img src='spinner.gif'></h3>"%self.username, "<p>" ]
-        self.changed()
-        
-        # TODO - use API!
-        feed = self.getFeed( "http://flickr.com/photos/%s"%self.username )
-        
-        if not feed:
-            self.atoms.append("<p>No photos</p>")
-            self.changed()
-            return
-        
         entries = feed.entries
         for item in entries[0:4]:
             # ewwwwww
             img = re.search(r'"(http://[^"]*_m.jpg)"', item.content[0].value).group(1)
             img = re.sub(r'_m.jpg', '_s.jpg', img)
-            self.atoms.append("<a href='%s'><img src='%s' width='40' height='40' style='margin: 3px'></a>"%( item.link, img ) )
-        
-        self.atoms[0] = "<h3><a href='http://flickr.com/photos/%s'>Flickr</a></h3>"%self.username
-        self.atoms.append("</p>")
-        self.changed()
+            html += "<a href='%s'><img src='%s' width='40' height='40' style='margin: 3px'></a>"%( item.link, img )
+
+        return html
