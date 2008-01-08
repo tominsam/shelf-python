@@ -26,5 +26,8 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+
+    <key>SUFeedURL</key>
+    <string>http://jerakeen.org/code/shelf/feed/</string>
 </dict>
 </plist>
