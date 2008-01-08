@@ -5,7 +5,6 @@ from urllib import quote
 class BasicProvider( Provider ):
 
     def provide( self ):
-        self.atoms = []
         
         emails = ["<a href='mailto:%s'>%s</a>"%( email, email ) for email in self.person.emails()]
         if emails:

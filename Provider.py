@@ -40,10 +40,9 @@ class Provider( Thread ):
     def stop(self):
         # not enforced, it's just a hint to the processor to stop
         self.running = False
-        self.atoms = []
     
     def provide( self ):
-        pass
+        self.start()
         
     def guardedRun(self):
         pass
@@ -60,24 +59,35 @@ class Provider( Thread ):
 
     CACHE = {}
     CACHE_LOCK = Lock()
+    def staleUrl( self, url ):
+        if url in Provider.CACHE and 'value' in Provider.CACHE[url]:
+            return Provider.CACHE[url]['value']
+        
     def cacheUrl( self, url, timeout = 600 ):
         #print "cacheUrl( %s )"%url
         if url in Provider.CACHE:
-            while 'defer' in Provider.CACHE[url] and Provider.CACHE[url]['expires'] > time():
+            while 'defer' in Provider.CACHE[url] and Provider.CACHE[url]['defer'] and Provider.CACHE[url]['expires'] > time():
                 #print "  other thread is fetching %s"%url
                 sleep(0.5)
             if 'expires' in Provider.CACHE[url] and Provider.CACHE[url]['expires'] > time():
                 #print "  non-expired cache value for  %s"%url
-                return Provider.CACHE[url]['value']
-        
+                if 'value' in Provider.CACHE[url]:
+                    return Provider.CACHE[url]['value']
+
         # ok, the cached value has expired. Indicate that this thread
-        # will get the value anew. 30 second timeout on this promise.
+        # will get the value anew. There's a timeout on this promise.
         Provider.CACHE_LOCK.acquire()
-        Provider.CACHE[url] = { 'defer':True, 'expires':time() + 30 }
+        if not url in Provider.CACHE: Provider.CACHE[url] = {}
+        Provider.CACHE[url]['defer'] = True
+        Provider.CACHE[url]['expires'] = time() + 45
         Provider.CACHE_LOCK.release()
+
         data = urllib.urlopen(url).read()
-        #print "  got data for %s"%url
+
         Provider.CACHE_LOCK.acquire()
-        Provider.CACHE[url] = { 'expires':time() + timeout, 'value':data }
+        Provider.CACHE[url]['expires'] = time() + timeout
+        Provider.CACHE[url]['value'] = data
+        Provider.CACHE[url]['defer'] = False
         Provider.CACHE_LOCK.release()
+
         return Provider.CACHE[url]['value']

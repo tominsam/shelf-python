@@ -8,49 +8,89 @@ import urllib, urlparse
 class FeedProvider( Provider ):
 
     def provide( self ):
-        self.atoms = []
+        self.urls() # if we're pulling from boring_urls, do it first
         self.start()
-    
-    def guardedRun(self):
-        pool = NSAutoreleasePool.alloc().init()        
-
-        todo = self.person.boring_urls
-        done = []
         
-        def tick( doing = None ):
-            self.atoms = done + [ "<h3><a href='%s'>%s</a></h3>"%(url,url) for url in todo ]
-            if doing: self.atoms[0:0] = [ doing ]
+    def guardedRun(self):
+        pool = NSAutoreleasePool.alloc().init()
+
+        todo = self.urls()
+        if not todo: return
+
+        self.atoms = [ self.htmlForPending(url, False) for url in todo ]
+        
+        for index in range(0, len(todo)):
+            url = todo[index]
+
+            self.atoms[index] = self.htmlForPending(url, True)
             self.changed()
 
-        tick()
-
-        while todo:
-            url = todo[0]
-            todo = todo[1:]
+            stale = self.getFeed( url, stale = True )
+            if stale: # we've seen this before
+                self.atoms[index] = self.htmlForFeed( url, stale, True )
+            else:
+                self.atoms[index] = self.htmlForPending(url, True)
+            self.changed()
             
-            print("Looking at %s for feed"%url)
-            tick("<h3><a href='%s'>%s</a>&nbsp;<img src='spinner.gif'></h3>"%(url,url))
-            
-            feed = self.getFeed( url )
-            if feed:
-                html = "<h3><a href='%s'>%s</a></h3>"%( url, feed.feed.title )
-                entries = feed.entries
-                for item in entries[0:4]:
-                    html += '<p><a href="%s">%s</a></p>'%( item.link, item.title )
-                done.append(html)
+            fresh = self.getFeed( url, stale = False )
+            if fresh: # feed is good
+                self.atoms[index] = self.htmlForFeed( url, fresh, False )
+            else:
+                self.atoms[index] = ""
+            self.changed()
 
-            tick()
-        
-    def getFeed( self, url, rss = None, timeout = 1200 ):
+    def getFeed( self, url, stale = False ):
+        rss = self.feed_for_url( url )
         if not rss:
-            # it's very unlikely that the feed source will move
-            rss = getRSSLinkFromHTMLSource( self.cacheUrl( url, timeout = timeout * 100 ) )
-            rss = urlparse.urljoin( url, rss )
+            return None
+
+        if stale:
+            data = self.staleUrl( rss )
+        else:
+            data = self.cacheUrl( rss, timeout = self.timeout() )
+        if not data:
+            return
+
+        feed = feedparser.parse( data )
+        if feed and 'feed' in feed and 'title' in feed.feed:
+            return feed
+        else: 
+            return None
+
+
+
+
+
+    # override these
+    
+    def timeout(self):
+        return 60 * 20
         
-        if rss:
-            feed = feedparser.parse( self.cacheUrl( rss, timeout = timeout ) )
-            if feed and 'feed' in feed and 'title' in feed.feed:
-                return feed
-
-        return None
-
+    def feed_for_url( self, url ):
+        # it's very unlikely that the feed source will move
+        rss = getRSSLinkFromHTMLSource( self.cacheUrl( url, timeout = 3600 * 10 ) )
+        rss = urlparse.urljoin( url, rss )
+        return rss
+    
+    def urls(self):
+        return self.person.boring_urls
+        
+    def htmlForPending( self, url, stale = False ):
+        if stale:
+            spinner_html = "&nbsp;<img src='spinner.gif'>"
+        else:
+            spinner_html = ""
+        return "<h3><a href='%s'>%s%s</a></h3>"%(url,url,spinner_html)
+   
+    
+    def htmlForFeed( self, url, feed, stale = False ):
+        if stale:
+            spinner_html = "&nbsp;<img src='spinner.gif'>"
+        else:
+            spinner_html = ""
+        html = "<h3><a href='%s'>%s%s</a></h3>"%( url, feed.feed.title, spinner_html )
+        entries = feed.entries
+        for item in entries[0:4]:
+            html += '<p><a href="%s">%s</a></p>'%( item.link, item.title )
+        return html
+    

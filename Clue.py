@@ -12,11 +12,12 @@ class Clue(object):
     
     def takeUrls(self,pattern):
         interesting = []
-        for u in self.boring_urls:
+        for u in self.urls():
             if re.search(pattern, u):
                 interesting.append(u)
         for u in interesting:
-            self.boring_urls.remove(u)
+            if u in self.boring_urls:
+                self.boring_urls.remove(u)
         return interesting
     
     def uniqueId(self):

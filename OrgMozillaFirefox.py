@@ -24,5 +24,6 @@ class OrgMozillaFirefox( Extractor ):
         [ ret, error ] = self.ascript.executeAndReturnError_( None )
         if error:
             print("ERROR: %s"%repr(error))
+            return []
         url = ret.stringValue()
         return self.clues_from_url( url )
