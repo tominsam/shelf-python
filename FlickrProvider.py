@@ -24,7 +24,9 @@ class FlickrProvider( FeedProvider ):
         
         entries = feed.entries
         for item in entries[0:4]:
-            img = item.enclosures[0].href
+            print( item )
+            # ewwwwww
+            img = re.search(r'"(http://[^"]*_m.jpg)"', item.content[0].value).group(1)
             img = re.sub(r'_m.jpg', '_s.jpg', img)
             self.atoms.append("<a href='%s'><img src='%s' width='40' height='40' style='margin: 3px'></a>"%( item.link, img ) )
         

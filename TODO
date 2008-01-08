@@ -1,3 +1,11 @@
 special case the twitter sending in the adium cluepacket source - IMs from
 twitter should produce the twitterer, not twitter
 
+Can I get the source of the current firefox page, for microformat parsing?
+
+Look into PubSub framework (built into macos) instead of feedparser.
+
+persist cache between runs
+
+use stale cache data while fetching new data
+
