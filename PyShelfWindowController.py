@@ -125,7 +125,7 @@ class ShelfController (NSWindowController):
                 NSLog("Failed to create provider %s for person:"%cls)
                 print(traceback.format_exc())
         
-        self.updateWebview()
+        #self.updateWebview()
             
     def updateWebview(self):
         info = []

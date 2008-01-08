@@ -38,6 +38,7 @@
 		E6D37C590D31765A00557F3F /* ComAppleSafari.py in Resources */ = {isa = PBXBuildFile; fileRef = E6D37C580D31765A00557F3F /* ComAppleSafari.py */; };
 		E6D37C910D3178AB00557F3F /* ComRancheroNetNewsWire.py in Resources */ = {isa = PBXBuildFile; fileRef = E6D37C900D3178AB00557F3F /* ComRancheroNetNewsWire.py */; };
 		E6EB2E980D337D6D003A7DDA /* OrgMozillaFirefox.py in Resources */ = {isa = PBXBuildFile; fileRef = E6EB2E970D337D6D003A7DDA /* OrgMozillaFirefox.py */; };
+		E6EB2EA80D338EC3003A7DDA /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = E6EB2EA70D338EC3003A7DDA /* TODO */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +79,7 @@
 		E6D37C580D31765A00557F3F /* ComAppleSafari.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = ComAppleSafari.py; sourceTree = "<group>"; };
 		E6D37C900D3178AB00557F3F /* ComRancheroNetNewsWire.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = ComRancheroNetNewsWire.py; sourceTree = "<group>"; };
 		E6EB2E970D337D6D003A7DDA /* OrgMozillaFirefox.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = OrgMozillaFirefox.py; sourceTree = "<group>"; };
+		E6EB2EA70D338EC3003A7DDA /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,6 +168,7 @@
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165DFE840E0CC02AAC07 /* InfoPlist.strings */,
 				E67886B40D320F100024C8D6 /* Credits.html */,
+				E6EB2EA70D338EC3003A7DDA /* TODO */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -288,6 +291,7 @@
 				E64930C70D32B21100793315 /* TwitterProvider.py in Resources */,
 				E64931580D32CA0B00793315 /* xmltramp.py in Resources */,
 				E6EB2E980D337D6D003A7DDA /* OrgMozillaFirefox.py in Resources */,
+				E6EB2EA80D338EC3003A7DDA /* TODO in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
