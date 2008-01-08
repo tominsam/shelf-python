@@ -2,6 +2,7 @@ from Provider import *
 import urllib
 import re
 import xmltramp
+from datetime import datetime
 
 class DopplrProvider( Provider ):
 
@@ -23,9 +24,21 @@ class DopplrProvider( Provider ):
         xml = self.cacheUrl( url, timeout = 3600 * 2 )
         doc = xmltramp.parse( xml )
         
-        if doc:
-            self.atoms = [ "<h3><a href='http://www.dopplr.com/traveller/%s/'>Dopplr</a></h3><p>%s %s</p>"%( self.username, self.person.displayName(), doc.traveller.status ) ]
-        else:
+        if not doc:
             self.atoms = []
+            self.changed()
+            return
         
+        # strip timezone and parse. Ewwww
+        localtime = datetime.strptime( str(doc.traveller.current_city.localtime)[:19], "%Y-%m-%dT%H:%M:%S")
+        offset = str(doc.traveller.current_city.localtime)[19:]
+
+        status = "%s %s. Time in %s is %s (%s)."%(
+            self.person.displayName(),
+            doc.traveller.status,
+            doc.traveller.current_city.country,
+            localtime.strftime("%a %I:%M %p"),
+            offset
+        )
+        self.atoms = [ "<h3><a href='http://www.dopplr.com/traveller/%s/'>Dopplr</a></h3><p>%s</p>"%( self.username, status ) ]
         self.changed()
