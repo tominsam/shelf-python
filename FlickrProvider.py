@@ -24,7 +24,6 @@ class FlickrProvider( FeedProvider ):
         
         entries = feed.entries
         for item in entries[0:4]:
-            print( item )
             # ewwwwww
             img = re.search(r'"(http://[^"]*_m.jpg)"', item.content[0].value).group(1)
             img = re.sub(r'_m.jpg', '_s.jpg', img)
