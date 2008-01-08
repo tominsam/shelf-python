@@ -3,6 +3,7 @@ import urllib
 import re
 import xmltramp
 from datetime import datetime
+from time import sleep, time, strftime, gmtime
 
 class DopplrProvider( Provider ):
 
@@ -32,13 +33,28 @@ class DopplrProvider( Provider ):
         # strip timezone and parse. Ewwww
         localtime = datetime.strptime( str(doc.traveller.current_city.localtime)[:19], "%Y-%m-%dT%H:%M:%S")
         offset = str(doc.traveller.current_city.localtime)[19:]
+        seconds = int( offset[1:3] ) * 3600 + int( offset[4:6] ) * 60
+        if offset[0] != '+':
+            seconds = -1 * seconds
+            
 
-        status = "%s %s. Time in %s is %s (%s)."%(
+        self.atoms = []
+        self.atoms.append("<h3><a href='http://www.dopplr.com/traveller/%s/'>Dopplr</a></h3>"%( self.username ))
+        self.atoms.append("<p>%s %s.</p>"%(
             self.person.displayName(),
-            doc.traveller.status,
-            doc.traveller.current_city.country,
-            localtime.strftime("%a %I:%M %p"),
-            offset
-        )
-        self.atoms = [ "<h3><a href='http://www.dopplr.com/traveller/%s/'>Dopplr</a></h3><p>%s</p>"%( self.username, status ) ]
+            doc.traveller.status
+        ))
+        self.atoms.append("")
+        
         self.changed()
+        
+        while self.running:
+            epoch = time() + seconds
+            self.atoms[2] = "<p>Time in %s is %s&nbsp;(%s).</p>"%(
+                doc.traveller.current_city.country,
+                strftime("%a&nbsp;%l:%M&nbsp;%p", gmtime(epoch)),
+                offset
+            )
+            self.changed()
+            sleep(20)
+
