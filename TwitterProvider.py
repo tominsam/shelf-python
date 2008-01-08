@@ -28,7 +28,7 @@ class TwitterProvider( FeedProvider ):
             # TODO - escape
             auth = "%s:%s@"%( self.username, self.password )
             
-        feed = self.getFeed( self.urls[0], "http://%stwitter.com/statuses/user_timeline/%s.atom"%( auth, username ) )
+        feed = self.getFeed( self.urls[0], "http://%stwitter.com/statuses/user_timeline/%s.atom"%( auth, username ), timeout = 120 )
         if not feed or not feed.entries:
             self.atoms = []
             self.changed

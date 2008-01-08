@@ -42,13 +42,14 @@ class FeedProvider( Provider ):
 
             tick()
         
-    def getFeed( self, url, rss = None ):
+    def getFeed( self, url, rss = None, timeout = 1200 ):
         if not rss:
-            rss = getRSSLinkFromHTMLSource( self.cacheUrl( url ) )
+            # it's very unlikely that the feed source will move
+            rss = getRSSLinkFromHTMLSource( self.cacheUrl( url, timeout = timeout * 100 ) )
             rss = urlparse.urljoin( url, rss )
         
         if rss:
-            feed = feedparser.parse( self.cacheUrl( rss ) )
+            feed = feedparser.parse( self.cacheUrl( rss, timeout = timeout ) )
             if feed and 'feed' in feed and 'title' in feed.feed:
                 return feed
 

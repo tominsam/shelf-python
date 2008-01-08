@@ -21,7 +21,7 @@ class DopplrProvider( Provider ):
         pool = NSAutoreleasePool.alloc().init()
         
         url = "https://www.dopplr.com/api/traveller_info.xml?token=%s&traveller=%s"%( self.token, self.username )
-        xml = self.cacheUrl( url )
+        xml = self.cacheUrl( url, timeout = 3600 * 2 )
         doc = xmltramp.parse( xml )
         
         if doc:
