@@ -17,7 +17,6 @@ class DopplrProvider( Provider ):
         self.start()
     
     def guardedRun(self):
-        print("Running thread")
         pool = NSAutoreleasePool.alloc().init()
         
         url = "https://www.dopplr.com/api/traveller_info.xml?token=%s&traveller=%s"%( self.token, self.username )

@@ -12,7 +12,6 @@ class FeedProvider( Provider ):
         self.start()
     
     def guardedRun(self):
-        print("Running thread")
         pool = NSAutoreleasePool.alloc().init()        
 
         todo = self.person.boring_urls

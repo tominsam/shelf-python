@@ -9,7 +9,6 @@ class FlickrProvider( FeedProvider ):
             self.start()
 
     def guardedRun(self):
-        print("Running thread")
         pool = NSAutoreleasePool.alloc().init()        
 
         self.atoms = [ "<h3><a href='http://flickr.com/photos/%s'>Flickr</a>&nbsp;<img src='spinner.gif'></h3>"%self.username, "<p>" ]

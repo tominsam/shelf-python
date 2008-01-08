@@ -61,13 +61,13 @@ class Provider( Thread ):
     CACHE = {}
     CACHE_LOCK = Lock()
     def cacheUrl( self, url, timeout = 600 ):
-        print "cacheUrl( %s )"%url
+        #print "cacheUrl( %s )"%url
         if url in Provider.CACHE:
             while 'defer' in Provider.CACHE[url] and Provider.CACHE[url]['expires'] > time():
-                print "  other thread is fetching %s"%url
-                sleep(1)
+                #print "  other thread is fetching %s"%url
+                sleep(0.5)
             if 'expires' in Provider.CACHE[url] and Provider.CACHE[url]['expires'] > time():
-                print "  non-expired cache value for  %s"%url
+                #print "  non-expired cache value for  %s"%url
                 return Provider.CACHE[url]['value']
         
         # ok, the cached value has expired. Indicate that this thread
@@ -76,7 +76,7 @@ class Provider( Thread ):
         Provider.CACHE[url] = { 'defer':True, 'expires':time() + 30 }
         Provider.CACHE_LOCK.release()
         data = urllib.urlopen(url).read()
-        print "  got data for %s"%url
+        #print "  got data for %s"%url
         Provider.CACHE_LOCK.acquire()
         Provider.CACHE[url] = { 'expires':time() + timeout, 'value':data }
         Provider.CACHE_LOCK.release()

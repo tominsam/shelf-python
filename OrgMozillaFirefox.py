@@ -10,9 +10,10 @@ class OrgMozillaFirefox( Extractor ):
         super( OrgMozillaFirefox, self ).__init__()
 
         # thanks, mark
-        script = """
+        # DANGER - UTF8 here!
+        script = u"""
             tell application "Firefox"
-                get «class curl» of front window
+                get \u00ABclass curl\u00BB of front window
             end tell
         """
 
@@ -20,6 +21,8 @@ class OrgMozillaFirefox( Extractor ):
 
     def clues(self):
         
-        [ ret, error ] = self.ascript.executeAndReturnError_()
+        [ ret, error ] = self.ascript.executeAndReturnError_( None )
+        if error:
+            print("ERROR: %s"%repr(error))
         url = ret.stringValue()
         return self.clues_from_url( url )
