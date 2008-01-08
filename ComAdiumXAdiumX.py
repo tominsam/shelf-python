@@ -12,7 +12,6 @@ class ComAdiumXAdiumX(Extractor):
         if not chat.exists(): return []
         account_type = chat.ID().split(".")[0].lower()
         username = ".".join( chat.ID().split(".")[1:] )
-        print("%s / %s"%( account_type, username ))
         if account_type in ['aim', 'mac']:
             return self.clues_from_aim( username )
         elif account_type in ['jabber', 'gtalk', 'livejournal']:
