@@ -13,6 +13,7 @@
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		E61E42ED0D31419900C40C6E /* PyShelfWindowController.py in Resources */ = {isa = PBXBuildFile; fileRef = E61E42EC0D31419900C40C6E /* PyShelfWindowController.py */; };
+		E64615980D358A3600AB948A /* Shelf.icns in Resources */ = {isa = PBXBuildFile; fileRef = E64615970D358A3600AB948A /* Shelf.icns */; };
 		E649309A0D32894B00793315 /* ComAppleAddressBook.py in Resources */ = {isa = PBXBuildFile; fileRef = E64930990D32894B00793315 /* ComAppleAddressBook.py */; };
 		E64930C70D32B21100793315 /* TwitterProvider.py in Resources */ = {isa = PBXBuildFile; fileRef = E64930C60D32B21100793315 /* TwitterProvider.py */; };
 		E64931580D32CA0B00793315 /* xmltramp.py in Resources */ = {isa = PBXBuildFile; fileRef = E64931570D32CA0B00793315 /* xmltramp.py */; };
@@ -71,6 +72,7 @@
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Shelf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shelf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E61E42EC0D31419900C40C6E /* PyShelfWindowController.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = PyShelfWindowController.py; sourceTree = "<group>"; };
+		E64615970D358A3600AB948A /* Shelf.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Shelf.icns; sourceTree = "<group>"; };
 		E64930990D32894B00793315 /* ComAppleAddressBook.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = ComAppleAddressBook.py; sourceTree = "<group>"; };
 		E64930C60D32B21100793315 /* TwitterProvider.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = TwitterProvider.py; sourceTree = "<group>"; };
 		E64931570D32CA0B00793315 /* xmltramp.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = xmltramp.py; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 				E6816B7A0D32372C0061EAD4 /* spinner.gif */,
 				77C8C1F80C07829500965286 /* MainMenu.xib */,
 				8D1107310486CEB800E47090 /* Info.plist */,
+				E64615970D358A3600AB948A /* Shelf.icns */,
 				089C165DFE840E0CC02AAC07 /* InfoPlist.strings */,
 				E67886B40D320F100024C8D6 /* Credits.html */,
 				E6EB2EA70D338EC3003A7DDA /* TODO */,
@@ -311,6 +314,7 @@
 				E64931580D32CA0B00793315 /* xmltramp.py in Resources */,
 				E6EB2E980D337D6D003A7DDA /* OrgMozillaFirefox.py in Resources */,
 				E6EB2EA80D338EC3003A7DDA /* TODO in Resources */,
+				E64615980D358A3600AB948A /* Shelf.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
