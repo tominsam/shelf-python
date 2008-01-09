@@ -10,3 +10,7 @@ persist cache between runs
 'no context' should be a little sticky - preserve the last ouser for a couple
 of polls - use cases, opening a new broswer window form a link, or following 
 a link from Shelf itself, loses context.
+
+disambiguate the 'www' from the front of urls
+
+flickr userid / username disambiguation
