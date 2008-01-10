@@ -26,7 +26,12 @@ class Clue(object):
     def image(self):
         if not self.nsimage:
             self.nsimage = NSImage.alloc().initWithData_( self.person.imageData() )
-        return self.nsimage or NSImage.imageNamed_("NSUser")
+            if not self.nsimage:
+                if self.isCompany():
+                    self.nsimage = NSImage.imageNamed_("NSUserGroup")
+                else:
+                    self.nsimage = NSImage.imageNamed_("NSUser")
+        return self.nsimage
 
     def forename(self):
         return self.person.valueForProperty_(kABFirstNameProperty)
@@ -34,7 +39,12 @@ class Clue(object):
     def surname(self):
         return self.person.valueForProperty_(kABLastNameProperty)
 
+    def isCompany(self):
+        return ( self.person.valueForProperty_(kABPersonFlags) or 0 ) & kABShowAsCompany
+        
     def displayName(self):
+        if self.isCompany():
+            return self.person.valueForProperty_(kABOrganizationProperty)
         f = self.forename()
         s = self.surname()
         if s and f: return f + " " + s
@@ -43,6 +53,7 @@ class Clue(object):
         return ""
 
     def companyName(self):
+        if self.isCompany(): return ""
         c = self.person.valueForProperty_(kABOrganizationProperty)
         if c: return c
         return ""

@@ -1,5 +1,12 @@
-0.0.9
+0.0.8 (released 2008-01-10)
 
-Properly terminated DopplrProvider thread on app exit, so that Shelf actually
-_closes_ now rather than zombifying.
+New icon, thanks Rui.
+
+I'm sure there was something else. I decide I should start keeping a ChangeLog.
+
+0.0.9 (under development)
+
+Companies in the address book are recognised as such, and display the company
+name first. They have a different default icon.
+
 
