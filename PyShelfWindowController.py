@@ -44,6 +44,7 @@ class ShelfController (NSWindowController):
             )
 
     def handler_for( self, bundle ):
+        if not bundle: return None
         if not bundle in self.handlers:
             # convert bundlename to classname like 'ComAppleMail'
             classname = re.sub(r'\.(\w)', lambda m: m.group(1).upper(), bundle )
@@ -61,7 +62,12 @@ class ShelfController (NSWindowController):
 
     def poll(self):
         # get bundle name of active application
-        bundle = NSWorkspace.sharedWorkspace().activeApplication()['NSApplicationBundleIdentifier']
+        try:
+            bundle = NSWorkspace.sharedWorkspace().activeApplication()['NSApplicationBundleIdentifier']
+        except KeyError:
+            print "Inexplicable lack of 'NSApplicationBundleIdentifier' for %s"%repr( NSWorkspace.sharedWorkspace().activeApplication() )
+            bundle = ""
+
         handler = self.handler_for( bundle )
         
         # this app has no effect on the current context, otherwise activating
