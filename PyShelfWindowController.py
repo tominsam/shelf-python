@@ -7,6 +7,7 @@ from ScriptingBridge import *
 import objc
 import re
 import traceback
+import threading
 
 from Provider import *
 Provider.addProvider( "BasicProvider" )

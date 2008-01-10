@@ -1,0 +1,5 @@
+0.0.9
+
+Properly terminated DopplrProvider thread on app exit, so that Shelf actually
+_closes_ now rather than zombifying.
+
