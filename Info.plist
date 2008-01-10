@@ -16,16 +16,17 @@
 	<string>Shelf</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>0.0.9</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>0.0.9</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+
+	<key>CFBundleShortVersionString</key>
+	<string>0.0.8</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.8</string>
 
     <key>SUFeedURL</key>
     <string>http://jerakeen.org/code/shelf/appcast/</string>

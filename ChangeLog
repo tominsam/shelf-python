@@ -12,3 +12,6 @@ name first. They have a different default icon.
 Mattb had an odd crashing bug that I don't understand, but that I'm now
 guarding against anyway.
 
+The NetNewsWire clue provider now tries to find a person based on the target of
+the currently viewed headline first, then falls back to the feed URL, rather
+than just using the feed URL.
