@@ -1,10 +1,10 @@
-0.0.8 (released 2008-01-10)
+### 0.0.8 (released 2008-01-10)
 
 New icon, thanks Rui.
 
 I'm sure there was something else. I decide I should start keeping a ChangeLog.
 
-0.0.9 (under development)
+### 0.0.9 (under development)
 
 Companies in the address book are recognised as such, and display the company
 name first. They have a different default icon.
