@@ -30,6 +30,11 @@ class ShelfController (NSWindowController):
     def applicationDidFinishLaunching_(self, sender):
         self.performSelector_withObject_afterDelay_( 'poll', None, 0 )
         self.blank_info()
+    
+    def applicationWillTerminate_(self, sender):
+        for current in self.providers:
+            current.stop()
+        
         
     def openRecord_(self, thing):
         if self.current_person:
