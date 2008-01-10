@@ -15,3 +15,6 @@ guarding against anyway.
 The NetNewsWire clue provider now tries to find a person based on the target of
 the currently viewed headline first, then falls back to the feed URL, rather
 than just using the feed URL.
+
+The NetNewsWire provider now looks for Microformats in the body of the feed
+item before considering URLs. I may reconsider the ordering here, though.
