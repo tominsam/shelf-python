@@ -18,3 +18,6 @@ than just using the feed URL.
 
 The NetNewsWire provider now looks for Microformats in the body of the feed
 item before considering URLs. I may reconsider the ordering here, though.
+
+Hopefully better URL disambiguation now - www. on the beginning of addresses
+can be considered optional.

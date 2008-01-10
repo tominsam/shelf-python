@@ -82,12 +82,18 @@ class Provider( Thread ):
         Provider.CACHE[url]['expires'] = time() + 45
         Provider.CACHE_LOCK.release()
 
-        data = urllib.urlopen(url).read()
+        try:
+            data = urllib.urlopen(url).read()
+        except IOError:
+            data = None
 
         Provider.CACHE_LOCK.acquire()
-        Provider.CACHE[url]['expires'] = time() + timeout
         Provider.CACHE[url]['value'] = data
         Provider.CACHE[url]['defer'] = False
+        if data:
+            Provider.CACHE[url]['expires'] = time() + timeout
+        else:
+            Provider.CACHE[url]['expires'] = time() + 10
         Provider.CACHE_LOCK.release()
 
         return Provider.CACHE[url]['value']

@@ -27,12 +27,13 @@ class Extractor(object):
     
     def clues_from_url( self, url ):
         if not url: return []
+        url = re.sub(r'^\w+://(www\.)?','',url)
         #print("Looking for people with url '%s'"%url)
-        clues = self._search_for( url, "URLs" ) + self._search_for( url + "/", "URLs" ) 
-        while len(clues) == 0 and re.search(r'//.*?/', url):
+        clues = self._search_for( url, "URLs", kABSuffixMatchCaseInsensitive ) + self._search_for( url + "/", "URLs", kABSuffixMatchCaseInsensitive )
+        while len(clues) == 0 and re.search(r'/', url):
             url = re.sub(r'/[^/]*$','',url)
             #print("Looking for people with url '%s'"%url)
-            clues = self._search_for( url, "URLs" ) + self._search_for( url + "/", "URLs" ) 
+            clues = self._search_for( url, "URLs", kABSuffixMatchCaseInsensitive ) + self._search_for( url + "/", "URLs", kABSuffixMatchCaseInsensitive )
         return clues
 
     def clues_from_aim( self, username ):
@@ -59,11 +60,11 @@ class Extractor(object):
         return map(lambda a: Clue(a), self.addressBook.recordsMatchingSearchElement_( se ))
         
     
-    def _search_for( self, thing, type ):
+    def _search_for( self, thing, type, method = kABEqualCaseInsensitive ):
         if not thing or len(thing) == 0:
             return []
             
-        se = ABPerson.searchElementForProperty_label_key_value_comparison_( type, None, None, thing, kABEqualCaseInsensitive )
+        se = ABPerson.searchElementForProperty_label_key_value_comparison_( type, None, None, thing, method )
         return map(lambda a: Clue(a), self.addressBook.recordsMatchingSearchElement_( se ))
 
 
