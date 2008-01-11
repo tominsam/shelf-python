@@ -1,6 +1,6 @@
 from Provider import *
 from urllib import quote
-from Utilities import debug
+from Utilities import _info
 
 
 class BasicProvider( Provider ):

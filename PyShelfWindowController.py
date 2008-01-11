@@ -18,7 +18,7 @@ Provider.addProvider( "FlickrProvider" )
 # Order is important - FeedProvider must be _last_
 Provider.addProvider( "FeedProvider" )
 
-from Utilities import debug
+from Utilities import _info
 
 class ShelfController (NSWindowController):
     companyView = objc.IBOutlet()
@@ -81,13 +81,13 @@ class ShelfController (NSWindowController):
                 cls = getattr( mod, classname )
                 self.handlers[ bundle ] = cls()
             except ImportError:
-                debug( "** Couldn't import file for %s"%( classname ) )
+                _info( "** Couldn't import file for %s"%( classname ) )
                 self.handlers[ bundle ] = None
 
         return self.handlers[ bundle ]
 
     def poll(self):
-        debug( "poll start" )
+        _info( "poll start" )
         
         # get bundle name of active application
         try:
@@ -96,23 +96,23 @@ class ShelfController (NSWindowController):
             print( "Inexplicable lack of 'NSApplicationBundleIdentifier' for %s"%repr( NSWorkspace.sharedWorkspace().activeApplication() ) )
             bundle = ""
         
-        debug( "app is %s"%bundle )
+        _info( "app is %s"%bundle )
 
         handler = self.handler_for( bundle )
         
         # this app has no effect on the current context, otherwise activating
         # the app drops the current context. Also, XCode is special so I don't
-        # go crazy while debugging. This one should probably come out in the
+        # go crazy while _infoging. This one should probably come out in the
         # long term.
         if bundle.lower() in ["org.jerakeen.pyshelf", "com.apple.xcode"]:
-            debug("Ignoring myself")
+            _info("Ignoring myself")
             pass
         
         elif not handler:
-            debug("Can't get clues from %s"%bundle)
+            _info("Can't get clues from %s"%bundle)
             self.current_person = None
         else:
-            debug( "Looking for clues" )
+            _info( "Looking for clues" )
             clues = []
             try:
                 clues = handler.clues()
@@ -121,32 +121,32 @@ class ShelfController (NSWindowController):
                 print( traceback.format_exc() )
 
             if not clues:
-                debug("No clues from %s"%handler.__class__.__name__)
+                _info("No clues from %s"%handler.__class__.__name__)
                 self.current_person = None
 
             elif self.current_person and self.current_person.uniqueId() == clues[0].uniqueId():
-                debug("Context has not changed")
+                _info("Context has not changed")
                 pass
 
             else:
                 # person has changed
-                debug("New context - %s"%clues[0].displayName())
+                _info("New context - %s"%clues[0].displayName())
                 self.current_person = clues[0]
                 self.decay = 3
                 self.update_info_for( clues[0] )
-                debug("update complete")
+                _info("update complete")
 
         # rather than removing the window as soon as we lose context, have
         # the display persist a little. Use case here is clicking on a link
         # in the webview - without this we lose context for a tick while the
         # browser thinks about it.
         if not self.current_person and self.decay > 0:
-            debug("decaying context")
+            _info("decaying context")
             self.decay -= 1
             if self.decay == 0:
                 self.blank_info()
 
-        debug( "poll complete" )
+        _info( "poll complete" )
 
         if self.running:
             self.performSelector_withObject_afterDelay_( 'poll', None, 1 )
@@ -164,7 +164,7 @@ class ShelfController (NSWindowController):
 
 
     def update_info_for( self, person ):
-        debug("updating header")
+        _info("updating header")
         self.nameView.setStringValue_( person.displayName() )
         self.companyView.setStringValue_( person.companyName() )
         self.imageView.setImage_( person.image() ) # leak?
@@ -174,11 +174,11 @@ class ShelfController (NSWindowController):
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
         self.setWebContent( "<p>thinking..</p>" )
 
-        debug( "stopping %s old providers"%len( self.providers ) )
+        _info( "stopping %s old providers"%len( self.providers ) )
         for current in self.providers:
             current.stop()
 
-        debug( "creating new providers" )
+        _info( "creating new providers" )
         self.providers = []
         for cls in Provider.providers():
             try:
@@ -186,10 +186,10 @@ class ShelfController (NSWindowController):
             except:
                 print("Failed to create provider %s for person:"%cls)
                 print(traceback.format_exc())
-        debug( "update done" )
+        _info( "update done" )
 
     def updateWebview(self):
-        debug( "updating webview" )
+        _info( "updating webview" )
         info = []
         for provider in self.providers:
             info += provider.atoms
@@ -211,10 +211,10 @@ class ShelfController (NSWindowController):
             "style.css", # live
             html
         ), base )
-        debug( "webview update complete" )
+        _info( "webview update complete" )
 
     def providerUpdated_(self, provider):
-        debug("Provider '%s' updated"%( provider ))
+        _info("Provider '%s' updated"%( provider ))
         self.performSelectorOnMainThread_withObject_waitUntilDone_('updateWebview', None, False)
 
     # supress right-click menu

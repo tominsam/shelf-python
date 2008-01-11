@@ -121,8 +121,8 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				7790198E0C07548A00326F66 /* PyShelfAppDelegate.py */,
 				E61E42EC0D31419900C40C6E /* PyShelfWindowController.py */,
+				7790198E0C07548A00326F66 /* PyShelfAppDelegate.py */,
 				E68417440D314AC00002A660 /* Extractor.py */,
 				E68418140D315C950002A660 /* Provider.py */,
 				E68418680D315F4D0002A660 /* Utilities.py */,

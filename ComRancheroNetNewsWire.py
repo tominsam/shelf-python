@@ -1,6 +1,6 @@
 from ScriptingBridge import *
 from Extractor import *
-from Utilities import debug
+from Utilities import _info
 
 class ComRancheroNetNewsWire(Extractor):
 

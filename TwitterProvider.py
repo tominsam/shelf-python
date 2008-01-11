@@ -1,5 +1,5 @@
 from FeedProvider import *
-from Utilities import debug
+from Utilities import _info
 
 # cunning subclassing of feedprovider here as a demo.
 class TwitterProvider( FeedProvider ):

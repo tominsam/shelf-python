@@ -1,7 +1,6 @@
 from Foundation import *
 from AppKit import *
 from ScriptingBridge import *
-from Extractor import *
 from AddressBook import *
 
 def dump( obj ):
@@ -15,7 +14,7 @@ def dump( obj ):
 def app(bundle):
     return SBApplication.applicationWithBundleIdentifier_(bundle)
 
-def debug(stuff):
+def _info(stuff):
     if NSUserDefaults.standardUserDefaults().boolForKey_("debug"):
         print(stuff)
 

@@ -14,4 +14,4 @@ import PyShelfWindowController
 
 class PyShelfAppDelegate(NSObject):
     def applicationDidFinishLaunching_(self, sender):
-        NSLog("Application did finish launching.")
+        pass

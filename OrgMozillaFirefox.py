@@ -1,6 +1,6 @@
 from Extractor import *
 from AppKit import *
-from Utilities import debug
+from Utilities import _info
 
 class OrgMozillaFirefox( Extractor ):
 

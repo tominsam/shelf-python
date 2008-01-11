@@ -1,7 +1,7 @@
 from ScriptingBridge import *
 from Extractor import *
 from AddressBook import *
-from Utilities import debug
+from Utilities import _info
 
 class ComAppleAddressBook( Extractor ):
 

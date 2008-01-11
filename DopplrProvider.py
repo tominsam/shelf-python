@@ -5,7 +5,7 @@ import xmltramp
 from datetime import datetime
 from time import sleep, time, strftime, gmtime
 
-from Utilities import debug
+from Utilities import _info
 
 class DopplrProvider( Provider ):
 
