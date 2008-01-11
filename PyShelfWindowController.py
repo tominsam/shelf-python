@@ -32,6 +32,15 @@ class ShelfController (NSWindowController):
         self.window().setAllowsToolTipsWhenApplicationIsInactive_( 1 )
         #self.window().setAlphaValue_( 0.9 )
         
+        bg = self.window().backgroundColor().colorUsingColorSpaceName_( NSCalibratedRGBColorSpace )
+        rgb = "%x%x%x"%(
+            bg.redComponent() * 255.999999,
+            bg.greenComponent() * 255.999999,
+            bg.blueComponent() * 255.999999
+        )
+        # TODO - ok. Now do something with this information. Specifically,
+        # get it into the CSS.
+        
         # evil. Alter the webkit view object so that it'll accept a clickthrough
         # - this si very handy, as the window is on top and full of context.
         # Alas, right now, the hover doesn't percolate through, so you don't
