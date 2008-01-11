@@ -9,9 +9,10 @@ class ComAppleAddressBook( Extractor ):
         self.ab = SBApplication.applicationWithBundleIdentifier_("com.apple.AddressBook")
 
     def clues(self):
-        if not self.ab.selection().count() > 0: return []
+        selection = self.ab.selection()
+        if !selection.exists() or selection.count() == 0: return []
 
-        selected_id = self.ab.selection()[0].id()
+        selected_id = selection[0].id()
         
         person = ABAddressBook.sharedAddressBook().recordForUniqueId_( selected_id )
         return [ Clue( person ) ]

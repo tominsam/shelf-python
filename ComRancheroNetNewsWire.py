@@ -8,10 +8,11 @@ class ComRancheroNetNewsWire(Extractor):
         self.nnw = SBApplication.applicationWithBundleIdentifier_("com.ranchero.NetNewsWire")
 
     def clues(self):
-        if self.nnw.selectedHeadline().exists() == 0: return [] 
+        selected = self.nnw.selectedHeadline()
+        if selected.exists() == 0: return [] 
 
         return (
-          self.clues_from_microformats( self.nnw.selectedHeadline().objectDescription() )
-          + self.clues_from_url( self.nnw.selectedHeadline().URL() )
-          + self.clues_from_url( self.nnw.selectedHeadline().subscription().homeURL() )
+          self.clues_from_microformats( selected.objectDescription() )
+          + self.clues_from_url( selected.URL() )
+          + self.clues_from_url( selected.subscription().homeURL() )
         )
