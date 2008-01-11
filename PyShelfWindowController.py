@@ -18,6 +18,8 @@ Provider.addProvider( "FlickrProvider" )
 # Order is important - FeedProvider must be _last_
 Provider.addProvider( "FeedProvider" )
 
+from Utilities import debug
+
 class ShelfController (NSWindowController):
     companyView = objc.IBOutlet()
     imageView = objc.IBOutlet()
@@ -29,7 +31,9 @@ class ShelfController (NSWindowController):
         self.providers = []
         self.current_person = None
         self.decay = 0
-        self.window().setAllowsToolTipsWhenApplicationIsInactive_( 1 )
+        self.running = True
+
+        #self.window().setAllowsToolTipsWhenApplicationIsInactive_( 1 )
         #self.window().setAlphaValue_( 0.9 )
         
         bg = self.window().backgroundColor().colorUsingColorSpaceName_( NSCalibratedRGBColorSpace )
@@ -56,6 +60,7 @@ class ShelfController (NSWindowController):
     def applicationWillTerminate_(self, sender):
         for current in self.providers:
             current.stop()
+        self.running = False
         
     # callback from the little right-pointing arrow
     def openRecord_(self, thing):
@@ -76,22 +81,22 @@ class ShelfController (NSWindowController):
                 cls = getattr( mod, classname )
                 self.handlers[ bundle ] = cls()
             except ImportError:
-                #print( "** Couldn't import file for %s"%( classname ) )
+                debug( "** Couldn't import file for %s"%( classname ) )
                 self.handlers[ bundle ] = None
 
         return self.handlers[ bundle ]
 
     def poll(self):
-        print "poll start"
+        debug( "poll start" )
         
         # get bundle name of active application
         try:
             bundle = NSWorkspace.sharedWorkspace().activeApplication()['NSApplicationBundleIdentifier']
         except KeyError:
-            print "Inexplicable lack of 'NSApplicationBundleIdentifier' for %s"%repr( NSWorkspace.sharedWorkspace().activeApplication() )
+            print( "Inexplicable lack of 'NSApplicationBundleIdentifier' for %s"%repr( NSWorkspace.sharedWorkspace().activeApplication() ) )
             bundle = ""
         
-        print "app is %s"%bundle
+        debug( "app is %s"%bundle )
 
         handler = self.handler_for( bundle )
         
@@ -100,14 +105,14 @@ class ShelfController (NSWindowController):
         # go crazy while debugging. This one should probably come out in the
         # long term.
         if bundle.lower() in ["org.jerakeen.pyshelf", "com.apple.xcode"]:
-            print("Ignoring myself")
+            debug("Ignoring myself")
             pass
         
         elif not handler:
-            print("Can't get clues from %s"%bundle)
+            debug("Can't get clues from %s"%bundle)
             self.current_person = None
         else:
-            print "Looking for clues"
+            debug( "Looking for clues" )
             clues = []
             try:
                 clues = handler.clues()
@@ -116,33 +121,35 @@ class ShelfController (NSWindowController):
                 print( traceback.format_exc() )
 
             if not clues:
-                print("No clues from %s"%handler.__class__.__name__)
+                debug("No clues from %s"%handler.__class__.__name__)
                 self.current_person = None
 
             elif self.current_person and self.current_person.uniqueId() == clues[0].uniqueId():
-                print("Context has not changed")
+                debug("Context has not changed")
                 pass
 
             else:
                 # person has changed
-                print("New context - %s"%clues[0].displayName())
+                debug("New context - %s"%clues[0].displayName())
                 self.current_person = clues[0]
                 self.decay = 3
                 self.update_info_for( clues[0] )
-                print("update complete")
+                debug("update complete")
 
         # rather than removing the window as soon as we lose context, have
         # the display persist a little. Use case here is clicking on a link
         # in the webview - without this we lose context for a tick while the
         # browser thinks about it.
         if not self.current_person and self.decay > 0:
-            print("decaying context")
+            debug("decaying context")
             self.decay -= 1
             if self.decay == 0:
                 self.blank_info()
 
-        self.performSelector_withObject_afterDelay_( 'poll', None, 1 )
-        print "poll complete"
+        debug( "poll complete" )
+
+        if self.running:
+            self.performSelector_withObject_afterDelay_( 'poll', None, 1 )
 
 
     
@@ -157,7 +164,7 @@ class ShelfController (NSWindowController):
 
 
     def update_info_for( self, person ):
-        print("updating header")
+        debug("updating header")
         self.nameView.setStringValue_( person.displayName() )
         self.companyView.setStringValue_( person.companyName() )
         self.imageView.setImage_( person.image() ) # leak?
@@ -167,11 +174,11 @@ class ShelfController (NSWindowController):
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
         self.setWebContent( "<p>thinking..</p>" )
 
-        print "stopping %s old providers"%len( self.providers )
+        debug( "stopping %s old providers"%len( self.providers ) )
         for current in self.providers:
             current.stop()
 
-        print "creating new providers"
+        debug( "creating new providers" )
         self.providers = []
         for cls in Provider.providers():
             try:
@@ -179,10 +186,10 @@ class ShelfController (NSWindowController):
             except:
                 print("Failed to create provider %s for person:"%cls)
                 print(traceback.format_exc())
-        print "update done"
+        debug( "update done" )
 
     def updateWebview(self):
-        print "updating webview"
+        debug( "updating webview" )
         info = []
         for provider in self.providers:
             info += provider.atoms
@@ -204,16 +211,15 @@ class ShelfController (NSWindowController):
             "style.css", # live
             html
         ), base )
-        print "webview update complete"
+        debug( "webview update complete" )
 
     def providerUpdated_(self, provider):
-        print("Provider '%s' updated"%( provider ))
+        debug("Provider '%s' updated"%( provider ))
         self.performSelectorOnMainThread_withObject_waitUntilDone_('updateWebview', None, False)
 
     # supress right-click menu
     def webView_contextMenuItemsForElement_defaultMenuItems_( self, webview, element, items ):
-        print repr(items)
-        return filter( lambda i: i.title != "Reload", items )
+        return filter( lambda i: i.title() != "Reload", items )
 
     # stolen from djangokit
     def webView_decidePolicyForNavigationAction_request_frame_decisionListener_( self, webview, action, request, frame, listener):

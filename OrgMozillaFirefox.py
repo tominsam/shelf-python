@@ -1,5 +1,6 @@
 from Extractor import *
 from AppKit import *
+from Utilities import debug
 
 class OrgMozillaFirefox( Extractor ):
 

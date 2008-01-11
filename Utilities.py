@@ -14,3 +14,8 @@ def dump( obj ):
 
 def app(bundle):
     return SBApplication.applicationWithBundleIdentifier_(bundle)
+
+def debug(stuff):
+    if NSUserDefaults.standardUserDefaults().boolForKey_("debug"):
+        print(stuff)
+

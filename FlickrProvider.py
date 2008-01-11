@@ -1,4 +1,5 @@
 from FeedProvider import *
+from Utilities import debug
 
 class FlickrProvider( FeedProvider ):
 

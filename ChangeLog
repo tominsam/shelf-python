@@ -34,3 +34,5 @@ to a resource about the same person.
 
 Mattb had an odd crashing bug that I don't understand, where there seemed to be
 no 'active application'. I'm now guarding against this case.
+
+Shelf now stops correctly when quit. oops.

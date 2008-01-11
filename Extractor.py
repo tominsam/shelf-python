@@ -3,6 +3,7 @@ from AppKit import *
 from WebKit import *
 from AddressBook import *
 from ScriptingBridge import *
+from Utilities import debug
 
 import re
 from email.utils import parseaddr
@@ -22,30 +23,30 @@ class Extractor(object):
     def clues_from_email( self, email ):
         # email look like 'Name <email>' sometimes.
         name, email = parseaddr( email )
-        #print("Looking for people with email '%s'"%email)
+        debug("Looking for people with email '%s'"%email)
         return self._search_for( email, "Email" )
     
     def clues_from_url( self, url ):
         if not url: return []
         url = re.sub(r'^\w+://(www\.)?','',url)
-        #print("Looking for people with url '%s'"%url)
+        debug("Looking for people with url '%s'"%url)
         clues = self._search_for( url, "URLs", kABSuffixMatchCaseInsensitive ) + self._search_for( url + "/", "URLs", kABSuffixMatchCaseInsensitive )
         while len(clues) == 0 and re.search(r'/', url):
             url = re.sub(r'/[^/]*$','',url)
-            #print("Looking for people with url '%s'"%url)
+            debug("Looking for people with url '%s'"%url)
             clues = self._search_for( url, "URLs", kABSuffixMatchCaseInsensitive ) + self._search_for( url + "/", "URLs", kABSuffixMatchCaseInsensitive )
         return clues
 
     def clues_from_aim( self, username ):
-        #print("Looking for people with AIM %s"%username)
+        debug("Looking for people with AIM %s"%username)
         return self._search_for( username, kABAIMInstantProperty )
     
     def clues_from_jabber( self, username ):
-        #print("Looking for people with Jabber %s"%username)
+        debug("Looking for people with Jabber %s"%username)
         return self._search_for( username, kABJabberInstantProperty )
     
     def clues_from_yahoo( self, username ):
-        #print("Looking for people with Yahoo! %s"%username)
+        debug("Looking for people with Yahoo! %s"%username)
         return self._search_for( username, kABYahooInstantProperty )
     
     def clues_from_name( self, name ):
@@ -53,7 +54,7 @@ class Extractor(object):
         return self.clues_from_names( names[0], names[-1] )
 
     def clues_from_names( self, forename, surname ):
-        #print("Looking for people called '%s' '%s'"%( forename, surname ))
+        debug("Looking for people called '%s' '%s'"%( forename, surname ))
         forename_search = ABPerson.searchElementForProperty_label_key_value_comparison_( kABFirstNameProperty, None, None, forename, kABPrefixMatchCaseInsensitive )
         surname_search = ABPerson.searchElementForProperty_label_key_value_comparison_( kABLastNameProperty, None, None, surname, kABEqualCaseInsensitive )
         se = ABSearchElement.searchElementForConjunction_children_( kABSearchAnd, [ forename_search, surname_search ] )
@@ -111,7 +112,7 @@ class Extractor(object):
              clues += self.clues_from_name( card['fn'] )
 
         if len(clues) == 0:
-            print "Can't get anything useful from %s"%(repr(card))
+            debug( "Can't get anything useful from %s"%(repr(card)) )
         
         return clues
 

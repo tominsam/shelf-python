@@ -5,6 +5,8 @@ import feedparser
 from autorss import getRSSLinkFromHTMLSource
 import urllib, urlparse
 
+from Utilities import debug
+
 class FeedProvider( Provider ):
 
     def provide( self ):

@@ -1,6 +1,7 @@
 from ScriptingBridge import *
 from Extractor import *
 from AddressBook import *
+from Utilities import debug
 
 class ComAppleAddressBook( Extractor ):
 

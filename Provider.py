@@ -4,6 +4,8 @@ from WebKit import *
 from AddressBook import *
 import urllib
 
+from Utilities import debug
+
 import re
 from time import time, sleep
 import traceback
@@ -64,13 +66,13 @@ class Provider( Thread ):
             return Provider.CACHE[url]['value']
         
     def cacheUrl( self, url, timeout = 600 ):
-        #print "cacheUrl( %s )"%url
+        #debug "cacheUrl( %s )"%url
         if url in Provider.CACHE:
             while 'defer' in Provider.CACHE[url] and Provider.CACHE[url]['defer'] and Provider.CACHE[url]['expires'] > time():
-                #print "  other thread is fetching %s"%url
+                #debug "  other thread is fetching %s"%url
                 sleep(0.5)
             if 'expires' in Provider.CACHE[url] and Provider.CACHE[url]['expires'] > time():
-                #print "  non-expired cache value for  %s"%url
+                #debug "  non-expired cache value for  %s"%url
                 if 'value' in Provider.CACHE[url]:
                     return Provider.CACHE[url]['value']
 
