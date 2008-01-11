@@ -37,6 +37,8 @@ class ShelfController (NSWindowController):
         # Alas, right now, the hover doesn't percolate through, so you don't
         # get mouseover effects. But clicks work.
         objc.classAddMethod( WebHTMLView, "acceptsFirstMouse:", lambda a,b: 1 )
+        # ps - when I say 'evil', I mean it. Really, _really_ evil. TODO -
+        # subclass the thing and do it properly.
         
     def applicationDidFinishLaunching_(self, sender):
         self.performSelector_withObject_afterDelay_( 'poll', None, 0 )
