@@ -28,14 +28,14 @@ class TwitterProvider( FeedProvider ):
 
     def htmlForPending( self, url, stale = False ):
         if stale:
-            spinner_html = "&nbsp;<img src='spinner.gif'>"
+            spinner_html = "&nbsp;" + self.spinner()
         else:
             spinner_html = ""
         return "<h3><a href='%s'>Twitter</a>%s</h3>"%(url,spinner_html)
     
     def htmlForFeed( self, url, feed, stale = False ):
         if stale:
-            spinner_html = "&nbsp;<img src='spinner.gif'>"
+            spinner_html = "&nbsp;" + self.spinner()
         else:
             spinner_html = ""
         html = "<h3><a href='%s'>Twitter</a>%s</h3>"%( url, spinner_html )

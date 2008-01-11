@@ -97,3 +97,7 @@ class Provider( Thread ):
         Provider.CACHE_LOCK.release()
 
         return Provider.CACHE[url]['value']
+
+    def spinner(self):
+        return "<img src='spinner.gif' class='spinner'>"
+        

@@ -20,6 +20,7 @@
 		E64931580D32CA0B00793315 /* xmltramp.py in Resources */ = {isa = PBXBuildFile; fileRef = E64931570D32CA0B00793315 /* xmltramp.py */; };
 		E66862540D323D9A0051F65F /* DopplrProvider.py in Resources */ = {isa = PBXBuildFile; fileRef = E66862530D323D9A0051F65F /* DopplrProvider.py */; };
 		E66862CC0D3245BA0051F65F /* FlickrProvider.py in Resources */ = {isa = PBXBuildFile; fileRef = E66862CB0D3245BA0051F65F /* FlickrProvider.py */; };
+		E66B6DAC0D37DD4F00FE3A33 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = E66B6DAB0D37DD4F00FE3A33 /* style.css */; };
 		E678866F0D3192A90024C8D6 /* microformatparser.py in Resources */ = {isa = PBXBuildFile; fileRef = E678866E0D3192A90024C8D6 /* microformatparser.py */; };
 		E67886B50D320F100024C8D6 /* Credits.html in Resources */ = {isa = PBXBuildFile; fileRef = E67886B40D320F100024C8D6 /* Credits.html */; };
 		E67886BA0D3223520024C8D6 /* Clue.py in Resources */ = {isa = PBXBuildFile; fileRef = E67886B90D3223520024C8D6 /* Clue.py */; };
@@ -80,6 +81,7 @@
 		E64931570D32CA0B00793315 /* xmltramp.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = xmltramp.py; sourceTree = "<group>"; };
 		E66862530D323D9A0051F65F /* DopplrProvider.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = DopplrProvider.py; sourceTree = "<group>"; };
 		E66862CB0D3245BA0051F65F /* FlickrProvider.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = FlickrProvider.py; sourceTree = "<group>"; };
+		E66B6DAB0D37DD4F00FE3A33 /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		E678866E0D3192A90024C8D6 /* microformatparser.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = microformatparser.py; sourceTree = "<group>"; };
 		E67886B40D320F100024C8D6 /* Credits.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Credits.html; sourceTree = "<group>"; };
 		E67886B90D3223520024C8D6 /* Clue.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = Clue.py; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 				E6816B7A0D32372C0061EAD4 /* spinner.gif */,
 				77C8C1F80C07829500965286 /* MainMenu.xib */,
 				8D1107310486CEB800E47090 /* Info.plist */,
+				E66B6DAB0D37DD4F00FE3A33 /* style.css */,
 				E64615970D358A3600AB948A /* Shelf.icns */,
 				089C165DFE840E0CC02AAC07 /* InfoPlist.strings */,
 				E67886B40D320F100024C8D6 /* Credits.html */,
@@ -319,6 +322,7 @@
 				E6EB2EA80D338EC3003A7DDA /* TODO in Resources */,
 				E64615980D358A3600AB948A /* Shelf.icns in Resources */,
 				E64615EE0D361A2300AB948A /* ChangeLog in Resources */,
+				E66B6DAC0D37DD4F00FE3A33 /* style.css in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

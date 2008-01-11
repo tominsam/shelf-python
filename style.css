@@ -1,0 +1,46 @@
+* {
+    margin:0;
+    padding:0;
+}
+
+body {
+    font-family: "Lucida Grande";
+    font-size: 11px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    overflow: hidden;
+}
+
+p, img {
+    margin: 5px 0 0 5px;
+}
+
+h3 {
+    padding: 1px 0 1px 5px;
+    margin-top: 5px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    background-color: #ccc;
+    white-space: nowrap;
+}
+
+h3,p h3,a {
+    text-decoration: none;
+}
+
+h3 a:hover, p a:hover {
+    text-decoration: underline;
+}
+
+h3 img.spinner {
+    margin: 0;
+    padding: 0;
+    float: right;
+    margin-right: 5px;
+}
+
+img.flickr-image {
+    width :75px;
+    height: 75px;
+    border: 1px solid black;
+}

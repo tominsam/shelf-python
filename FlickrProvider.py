@@ -11,14 +11,14 @@ class FlickrProvider( FeedProvider ):
 
     def htmlForPending( self, url, stale = False ):
         if stale:
-            spinner_html = "&nbsp;<img src='spinner.gif'>"
+            spinner_html = "&nbsp;" + self.spinner()
         else:
             spinner_html = ""
         return "<h3><a href='%s'>Flickr</a>%s</h3>"%(url,spinner_html)
     
     def htmlForFeed( self, url, feed, stale = False ):
         if stale:
-            spinner_html = "&nbsp;<img src='spinner.gif'>"
+            spinner_html = "&nbsp;" + self.spinner()
         else:
             spinner_html = ""
         html = "<h3><a href='%s'>Flickr</a>%s</h3>"%( url, spinner_html )
@@ -28,6 +28,6 @@ class FlickrProvider( FeedProvider ):
             # ewwwwww
             img = re.search(r'"(http://[^"]*_m.jpg)"', item.content[0].value).group(1)
             img = re.sub(r'_m.jpg', '_s.jpg', img)
-            html += "<a href='%s'><img src='%s' width='75' height='75' style='margin: 3px'></a>"%( item.link, img )
+            html += "<a href='%s'><img src='%s' class='flickr-image'></a>"%( item.link, img )
 
         return html

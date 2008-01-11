@@ -74,10 +74,10 @@ class FeedProvider( Provider ):
     
     def urls(self):
         return self.person.boring_urls
-        
+    
     def htmlForPending( self, url, stale = False ):
         if stale:
-            spinner_html = "&nbsp;<img src='spinner.gif'>"
+            spinner_html = "&nbsp;" + self.spinner()
         else:
             spinner_html = ""
         return "<h3><a href='%s'>%s%s</a></h3>"%(url,url,spinner_html)
@@ -85,7 +85,7 @@ class FeedProvider( Provider ):
     
     def htmlForFeed( self, url, feed, stale = False ):
         if stale:
-            spinner_html = "&nbsp;<img src='spinner.gif'>"
+            spinner_html = "&nbsp;" + self.spinner()
         else:
             spinner_html = ""
         html = "<h3><a href='%s'>%s%s</a></h3>"%( url, feed.feed.title, spinner_html )
