@@ -10,7 +10,7 @@ class ComAppleAddressBook( Extractor ):
 
     def clues(self):
         selection = self.ab.selection()
-        if !selection.exists() or selection.count() == 0: return []
+        if selection.count() == 0: return []
 
         selected_id = selection[0].id()
         

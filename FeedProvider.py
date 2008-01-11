@@ -18,7 +18,7 @@ class FeedProvider( Provider ):
         if not todo: return
 
         self.atoms = [ self.htmlForPending(url, False) for url in todo ]
-        
+
         for index in range(0, len(todo)):
             url = todo[index]
 

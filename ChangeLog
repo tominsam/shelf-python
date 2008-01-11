@@ -9,8 +9,8 @@ I'm sure there was something else. I decide I should start keeping a ChangeLog.
 Companies in the address book are recognised as such, and display the company
 name first. They have a different default icon.
 
-Mattb had an odd crashing bug that I don't understand, but that I'm now
-guarding against anyway.
+Mattb had an odd crashing bug that I don't understand, where there seemed to be
+no 'active application'. I'm now guarding against this case.
 
 The NetNewsWire clue provider now tries to find a person based on the target of
 the currently viewed headline first, then falls back to the feed URL, rather
@@ -21,3 +21,7 @@ item before considering URLs. I may reconsider the ordering here, though.
 
 Hopefully better URL disambiguation now - www. on the beginning of addresses
 can be considered optional.
+
+The display will hang around a little longer if it thinks you're no longer
+looking at someone interesting, to try to bridge the gap if you're navigating
+to a resource about the same person.

@@ -27,6 +27,7 @@ class ShelfController (NSWindowController):
         self.handlers = {}
         self.providers = []
         self.current_person = None
+        self.decay = 0
         
     def applicationDidFinishLaunching_(self, sender):
         self.performSelector_withObject_afterDelay_( 'poll', None, 0 )
@@ -36,7 +37,7 @@ class ShelfController (NSWindowController):
         for current in self.providers:
             current.stop()
         
-        
+    # callback from the little right-pointing arrow
     def openRecord_(self, thing):
         if self.current_person:
             NSWorkspace.sharedWorkspace().openURL_(
@@ -80,7 +81,6 @@ class ShelfController (NSWindowController):
         elif not handler:
             #NSLog("Can't get clues from %s"%bundle)
             self.current_person = None
-            self.blank_info()
         else:
             clues = []
             try:
@@ -92,15 +92,26 @@ class ShelfController (NSWindowController):
             if not clues:
                 #NSLog("No clues from %s"%handler.__class__.__name__)
                 self.current_person = None
-                self.blank_info()
+
             elif self.current_person and self.current_person.uniqueId() == clues[0].uniqueId():
-                pass
                 #NSLog("Context has not changed")
+                pass
+
             else:
-                NSLog("New context - %s"%clues[0].displayName())
                 # person has changed
+                NSLog("New context - %s"%clues[0].displayName())
                 self.current_person = clues[0]
+                self.decay = 3
                 self.update_info_for( clues[0] )
+
+        # rather than removing the window as soon as we lose context, have
+        # the display persist a little. Use case here is clicking on a link
+        # in the webview - without this we lose context for a tick while the
+        # browser thinks about it.
+        if not self.current_person and self.decay > 0:
+            self.decay -= 1
+            if self.decay == 0:
+                self.blank_info()
 
         self.performSelector_withObject_afterDelay_( 'poll', None, 1 )
 
