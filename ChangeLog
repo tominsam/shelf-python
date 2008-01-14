@@ -44,3 +44,6 @@ heading.
 
 Use urllib2 to get urls - this lets me do the right thing for feeds that
 need authentication.
+
+Cache now persists between runs. Maybe.
+

@@ -8,6 +8,7 @@ import objc
 import re
 import traceback
 import threading
+import os
 from time import time as epoch_time
 
 from Provider import *
@@ -54,14 +55,21 @@ class ShelfController (NSWindowController):
         # subclass the thing and do it properly.
         
     def applicationDidFinishLaunching_(self, sender):
-        Provider.load_cache( "/tmp/shelf_cache" )
+        folder = os.path.join( os.environ['HOME'], "Library", "Application Support", "Shelf" )
+        if not os.path.exists( folder ):
+            os.mkdir( folder )
+        Provider.load_cache( os.path.join( folder, "cache" ) )
         self.performSelector_withObject_afterDelay_( 'poll', None, 0 )
         self.blank_info()
     
     def applicationWillTerminate_(self, sender):
         for current in self.providers:
             current.stop()
+
+        folder = os.path.join( os.environ['HOME'], "Library", "Application Support", "Shelf" )
+        Provider.load_cache( os.path.join( folder, "cache" ) )
         Provider.store_cache( "/tmp/shelf_cache" )
+
         self.running = False
         
     # callback from the little right-pointing arrow
