@@ -97,13 +97,14 @@ class Provider( Thread ):
         if username or password:
             base64string = base64.encodestring('%s:%s' % (username, password))[:-1]
             req.add_header("Authorization", "Basic %s" % base64string)        
+        needs_auth = False
         try:
             data = urllib2.urlopen(req).read()
         except IOError, e:
             if e.code == 401:
                 # needs auth. Meh.
                 _info("url needs auth - ignoring")
-                pass
+                needs_auth = True
             else:
                 print("Error getting url: %s"%e)
             data = None
@@ -111,7 +112,7 @@ class Provider( Thread ):
         Provider.CACHE_LOCK.acquire()
         Provider.CACHE[key]['value'] = data
         Provider.CACHE[key]['defer'] = False
-        if data:
+        if data or needs_auth:
             Provider.CACHE[key]['expires'] = time() + timeout
         else:
             Provider.CACHE[key]['expires'] = time() + 10

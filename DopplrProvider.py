@@ -52,7 +52,7 @@ class DopplrProvider( Provider ):
         
         while self.running:
             epoch = time() + seconds
-            self.atoms[2] = "<p>Time in %s is %s&nbsp;(%s).</p>"%(
+            self.atoms[2] = "<p class='time'>Time in %s is %s&nbsp;(%s).</p>"%(
                 doc.traveller.current_city.country,
                 strftime("%a&nbsp;%l:%M&nbsp;%p", gmtime(epoch)),
                 offset

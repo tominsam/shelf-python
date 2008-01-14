@@ -42,4 +42,5 @@ Shelf now stops correctly when quit. oops.
 Feed provider now displays the first 10 words of the blog entry under the
 heading.
 
-
+Use urllib2 to get urls - this lets me do the right thing for feeds that
+need authentication.
