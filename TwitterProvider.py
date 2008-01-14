@@ -20,12 +20,7 @@ class TwitterProvider( FeedProvider ):
         # deriving the feed url from the username is faster than
         # fetching the HTML first.
         username = re.search(r'twitter\.com/([^/]+)', url).group(1)
-        auth = ""
-        if self.username() and self.password():
-            # TODO - escape
-            auth = "%s:%s@"%( self.username(), self.password() )
-            
-        return "http://%stwitter.com/statuses/user_timeline/%s.atom"%( auth, username )
+        return "http://twitter.com/statuses/user_timeline/%s.atom"%(username ), self.username(), self.password()
 
     def htmlForPending( self, url, stale = False ):
         if stale:

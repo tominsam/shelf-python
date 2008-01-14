@@ -44,3 +44,9 @@ img.flickr-image {
     height: 75px;
     border: 1px solid black;
 }
+
+p.feed-content {
+    color: #444;
+    font-size: 80%;
+    margin-top: 2px;
+}

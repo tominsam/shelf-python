@@ -42,14 +42,14 @@ class FeedProvider( Provider ):
             self.changed()
 
     def getFeed( self, url, stale = False ):
-        rss = self.feed_for_url( url )
+        rss, username, password = self.feed_for_url( url )
         if not rss:
             return None
 
         if stale:
-            data = self.staleUrl( rss )
+            data = self.staleUrl( rss, username = username, password = password )
         else:
-            data = self.cacheUrl( rss, timeout = self.timeout() )
+            data = self.cacheUrl( rss, timeout = self.timeout(), username = username, password = password )
         if not data:
             return
 
@@ -72,7 +72,7 @@ class FeedProvider( Provider ):
         # it's very unlikely that the feed source will move
         rss = getRSSLinkFromHTMLSource( self.cacheUrl( url, timeout = 3600 * 10 ) )
         rss = urlparse.urljoin( url, rss )
-        return rss
+        return rss, None, None
     
     def urls(self):
         return self.person.boring_urls
@@ -93,6 +93,15 @@ class FeedProvider( Provider ):
         html = "<h3><a href='%s'>%s%s</a></h3>"%( url, feed.feed.title, spinner_html )
         entries = feed.entries
         for item in entries[0:4]:
-            html += '<p><a href="%s">%s</a></p>'%( item.link, item.title )
+            html += '<p class="feed-title"><a href="%s">%s</a></p>'%( item.link, item.title )
+            detail = None
+            if 'content' in item and len(item.content) > 0:
+                detail = item.content[0].value
+            elif 'summary' in item and len(item.summary) > 0:
+                detail = item.summary
+            if detail:
+                raw = re.sub(r'<.*?>', '', detail) # strip tags
+                trimmed = " ".join( re.split(r'\s+', raw.strip())[0:10] )
+                html += '<p class="feed-content">%s&nbsp;<a href="%s">...</a></p>'%( trimmed, item.link )
         return html
     
