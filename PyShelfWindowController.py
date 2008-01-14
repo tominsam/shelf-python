@@ -54,12 +54,14 @@ class ShelfController (NSWindowController):
         # subclass the thing and do it properly.
         
     def applicationDidFinishLaunching_(self, sender):
+        Provider.load_cache( "/tmp/shelf_cache" )
         self.performSelector_withObject_afterDelay_( 'poll', None, 0 )
         self.blank_info()
     
     def applicationWillTerminate_(self, sender):
         for current in self.providers:
             current.stop()
+        Provider.store_cache( "/tmp/shelf_cache" )
         self.running = False
         
     # callback from the little right-pointing arrow

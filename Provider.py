@@ -4,6 +4,8 @@ from WebKit import *
 from AddressBook import *
 import urllib, urllib2
 import base64
+import shelve
+import os
 
 from Utilities import _info
 
@@ -16,7 +18,7 @@ from threading import Thread, Lock
 class Provider( Thread ):
     
     PROVIDERS = []
-
+    
     @classmethod
     def addProvider( myClass, classname ):
         cls = __import__(classname, globals(), locals(), [''])
@@ -60,9 +62,27 @@ class Provider( Thread ):
             self.changed()
 
 
-    CACHE = {}
+    CACHE = None
     CACHE_LOCK = Lock()
-    
+
+    @classmethod
+    def store_cache( myClass, filename ):
+        Provider.CACHE_LOCK.acquire()
+        Provider.CACHE.close()
+        Provider.CACHE_LOCK.release()
+
+    @classmethod
+    def load_cache( myClass, filename ):
+        Provider.CACHE_LOCK.acquire()
+        try:
+            Provider.CACHE = shelve.open( filename, writeback = True )
+        except Exception:
+            print("cache file bad - invalidating")
+            os.unlink( filename + ".db" )
+            Provider.CACHE = shelve.open( filename, writeback = True )
+
+        Provider.CACHE_LOCK.release()
+
     def keyForUrlUsernamePassword( self, url, username, password ):
         return url + (username or "") + (password or "")
 
