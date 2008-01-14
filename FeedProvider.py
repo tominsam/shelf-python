@@ -4,6 +4,7 @@ from urllib import quote
 import feedparser
 from autorss import getRSSLinkFromHTMLSource
 import urllib, urlparse
+import time
 
 from Utilities import _info
 
@@ -93,6 +94,8 @@ class FeedProvider( Provider ):
         html = "<h3><a href='%s'>%s%s</a></h3>"%( url, feed.feed.title, spinner_html )
         entries = feed.entries
         for item in entries[0:4]:
+            if 'published_parsed' in item:
+                html += '<span class="feed-date">%s</span>'%( time.strftime("%b %d", item.published_parsed ) )
             html += '<p class="feed-title"><a href="%s">%s</a></p>'%( item.link, item.title )
             detail = None
             if 'content' in item and len(item.content) > 0:

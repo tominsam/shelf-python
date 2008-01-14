@@ -45,6 +45,13 @@ img.flickr-image {
     border: 1px solid black;
 }
 
+span.feed-date {
+    float: right;
+    color: #444;
+    font-size: 80%;
+    margin-top: 5px;
+}
+    
 p.feed-content {
     color: #444;
     font-size: 80%;
