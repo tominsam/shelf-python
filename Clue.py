@@ -1,6 +1,7 @@
 import objc
 from AddressBook import *
 import re
+import time
 
 class Clue(object):
     
@@ -69,8 +70,11 @@ class Clue(object):
 
     def email(self): 
         return self.emails()[0]
-
         
+    def birthday(self):
+        if self.person.valueForProperty_( kABBirthdayProperty ):
+            return time.gmtime( self.person.valueForProperty_( kABBirthdayProperty ).timeIntervalSince1970() )
+        return None
 
 
     def _multi_to_list(self, multi):

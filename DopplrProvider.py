@@ -21,24 +21,23 @@ class DopplrProvider( Provider ):
         self.start()
     
     def guardedRun(self):
-        pool = NSAutoreleasePool.alloc().init()
         
-        url = "https://www.dopplr.com/api/traveller_info.xml?token=%s&traveller=%s"%( self.token, self.username )
-        xml = self.cacheUrl( url, timeout = 3600 * 2 )
-        doc = xmltramp.parse( xml )
+        try:
+            url = "https://www.dopplr.com/api/traveller_info.xml?token=%s&traveller=%s"%( self.token, self.username )
+            xml = self.cacheUrl( url, timeout = 3600 * 2 )
+            print(xml)
+            doc = xmltramp.parse( xml )
+            doc.traveller.status
+        except AttributeError:
+            return # no service?
         
         if not doc:
             self.atoms = []
             self.changed()
             return
         
-        # strip timezone and parse. Ewwww
-        localtime = datetime.strptime( str(doc.traveller.current_city.localtime)[:19], "%Y-%m-%dT%H:%M:%S")
-        offset = str(doc.traveller.current_city.localtime)[19:]
-        seconds = int( offset[1:3] ) * 3600 + int( offset[4:6] ) * 60
-        if offset[0] != '+':
-            seconds = -1 * seconds
-            
+        # dopplr api coveniently provides offset from UTC :-)
+        seconds = int(str(doc.traveller.current_city.utcoffset))
 
         self.atoms = []
         self.atoms.append("<h3><a href='http://www.dopplr.com/traveller/%s/'>Dopplr</a></h3>"%( self.username ))
@@ -52,10 +51,9 @@ class DopplrProvider( Provider ):
         
         while self.running:
             epoch = time() + seconds
-            self.atoms[2] = "<p class='time'>Time in %s is %s&nbsp;(%s).</p>"%(
+            self.atoms[2] = "<p class='time'>Time in %s is %s.</p>"%(
                 doc.traveller.current_city.country,
-                strftime("%a&nbsp;%l:%M&nbsp;%p", gmtime(epoch)),
-                offset
+                strftime("%a&nbsp;%l:%M&nbsp;%p", gmtime(epoch))
             )
             self.changed()
             sleep(20)

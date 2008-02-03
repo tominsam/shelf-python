@@ -4,7 +4,13 @@ from WebKit import *
 from AddressBook import *
 import urllib, urllib2
 import base64
+
+# force shelve to use the native python pickler
 import shelve
+import pickle
+shelve.Pickler = pickle.Pickler
+shelve.Unpickler = pickle.Unpickler
+
 import os
 
 from Utilities import _info
@@ -53,12 +59,13 @@ class Provider( Thread ):
         pass
         
     def run(self):
+        pool = NSAutoreleasePool.alloc().init()
         try:
             self.guardedRun()
-        except:
+        except Exception, e:
             print("EPIC FAIL in %s"%self.__class__.__name__)
             print(traceback.format_exc())
-            self.atoms = ["<h3>EPIC FAIL in %s</h3>"%self.__class__.__name__,"<pre>%s</pre>"%traceback.format_exc() ]
+            self.atoms = ["<h3>EPIC FAIL in %s</h3>"%self.__class__.__name__,"<pre>%s</pre>"%e ]
             self.changed()
 
 
@@ -67,20 +74,21 @@ class Provider( Thread ):
 
     @classmethod
     def store_cache( myClass, filename ):
-        Provider.CACHE_LOCK.acquire()
-        Provider.CACHE.close()
-        Provider.CACHE_LOCK.release()
+        pass
+        #Provider.CACHE_LOCK.acquire()
+        #Provider.CACHE.close()
+        #Provider.CACHE_LOCK.release()
 
     @classmethod
     def load_cache( myClass, filename ):
         Provider.CACHE_LOCK.acquire()
-        try:
-            Provider.CACHE = shelve.open( filename, writeback = True )
-        except Exception:
-            print("cache file bad - invalidating")
-            os.unlink( filename + ".db" )
-            Provider.CACHE = shelve.open( filename, writeback = True )
-
+        #try:
+        #    Provider.CACHE = shelve.open( filename, writeback = True )
+        #except Exception:
+        #    print("cache file bad - invalidating")
+        #    os.unlink( filename + ".db" )
+        #    Provider.CACHE = shelve.open( filename, writeback = True )
+        Provider.CACHE = {}
         Provider.CACHE_LOCK.release()
 
     def keyForUrlUsernamePassword( self, url, username, password ):
@@ -88,6 +96,7 @@ class Provider( Thread ):
 
     def staleUrl( self, url, username = None, password = None ):
         key = self.keyForUrlUsernamePassword(url, username, password)
+        print(key)
         if key in Provider.CACHE and 'value' in Provider.CACHE[key]:
             return Provider.CACHE[key]['value']
         
@@ -121,6 +130,7 @@ class Provider( Thread ):
         try:
             data = urllib2.urlopen(req).read()
         except IOError, e:
+            print e.__class__.__name__
             if e.code == 401:
                 # needs auth. Meh.
                 _info("url needs auth - ignoring")

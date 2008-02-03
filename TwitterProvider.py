@@ -4,12 +4,6 @@ from Utilities import _info
 # cunning subclassing of feedprovider here as a demo.
 class TwitterProvider( FeedProvider ):
 
-    def username(self):
-        return NSUserDefaults.standardUserDefaults().stringForKey_("twitterUsername")
-    
-    def password(self):
-        return NSUserDefaults.standardUserDefaults().stringForKey_("twitterPassword")
-    
     def timeout(self):
         return 180
 
@@ -20,7 +14,11 @@ class TwitterProvider( FeedProvider ):
         # deriving the feed url from the username is faster than
         # fetching the HTML first.
         username = re.search(r'twitter\.com/([^/]+)', url).group(1)
-        return "http://twitter.com/statuses/user_timeline/%s.atom"%(username ), self.username(), self.password()
+        return (
+            "http://twitter.com/statuses/user_timeline/%s.atom"%(username),
+            NSUserDefaults.standardUserDefaults().stringForKey_("twitterUsername"),
+            NSUserDefaults.standardUserDefaults().stringForKey_("twitterPassword")
+        )
 
     def htmlForPending( self, url, stale = False ):
         if stale:

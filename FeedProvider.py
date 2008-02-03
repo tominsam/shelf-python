@@ -15,7 +15,6 @@ class FeedProvider( Provider ):
         self.start()
         
     def guardedRun(self):
-        pool = NSAutoreleasePool.alloc().init()
 
         todo = self.urls()
         if not todo: return
@@ -71,6 +70,7 @@ class FeedProvider( Provider ):
         
     def feed_for_url( self, url ):
         # it's very unlikely that the feed source will move
+        # TODO - check stale cache first. Man, the feed provider is too complicated.
         rss = getRSSLinkFromHTMLSource( self.cacheUrl( url, timeout = 3600 * 10 ) )
         rss = urlparse.urljoin( url, rss )
         return rss, None, None
@@ -96,6 +96,8 @@ class FeedProvider( Provider ):
         for item in entries[0:4]:
             if 'published_parsed' in item:
                 html += '<span class="feed-date">%s</span>'%( time.strftime("%b %d", item.published_parsed ) )
+            elif 'updated_parsed' in item:
+                html += '<span class="feed-date">%s</span>'%( time.strftime("%b %d", item.updated_parsed ) )
             html += '<p class="feed-title"><a href="%s">%s</a></p>'%( item.link, item.title )
             detail = None
             if 'content' in item and len(item.content) > 0:

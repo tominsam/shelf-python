@@ -11,6 +11,11 @@ import microformatparser
 import sgmllib
 from HTMLParser import HTMLParseError
 
+import urllib, urlparse, urllib2
+from urllib import quote
+
+import simplejson
+
 from Clue import *
 
 class Extractor(object):
@@ -31,10 +36,19 @@ class Extractor(object):
         url = re.sub(r'^\w+://(www\.)?','',url)
         _info("Looking for people with url '%s'"%url)
         clues = self._search_for( url, "URLs", kABSuffixMatchCaseInsensitive ) + self._search_for( url + "/", "URLs", kABSuffixMatchCaseInsensitive )
-        while len(clues) == 0 and re.search(r'/', url):
-            url = re.sub(r'/[^/]*$','',url)
-            _info("Looking for people with url '%s'"%url)
-            clues = self._search_for( url, "URLs", kABSuffixMatchCaseInsensitive ) + self._search_for( url + "/", "URLs", kABSuffixMatchCaseInsensitive )
+        
+        truncate = url
+        while len(clues) == 0 and re.search(r'/', truncate):
+            truncate = re.sub(r'/[^/]*$','',truncate)
+            _info("Looking for people with url '%s'"%truncate)
+            clues = self._search_for( truncate, "URLs", kABSuffixMatchCaseInsensitive ) + self._search_for( url + "/", "URLs", kABSuffixMatchCaseInsensitive )
+        
+        if len(clues) == 0:
+            graph_urls = self.social_graph_urls_for( url )
+            for graph_url in graph_urls:
+                _info("Looking for people with url (from social graph) '%s'"%graph_url)
+                clues += self._search_for( graph_url, "URLs", kABSuffixMatchCaseInsensitive ) + self._search_for( graph_url + "/", "URLs", kABSuffixMatchCaseInsensitive )
+
         return clues
 
     def clues_from_aim( self, username ):
@@ -115,4 +129,22 @@ class Extractor(object):
             _info( "Can't get anything useful from %s"%(repr(card)) )
         
         return clues
+
+    def social_graph_urls_for( self, url ):
+        api = "http://socialgraph.apis.google.com/lookup?pretty=1&fme=1"
+        api += "&q=" + quote( url )
+        _info("Social graph API call to " + api )
+        req = urllib2.Request(api)
+        io = urllib2.urlopen(req)
+        data = simplejson.load( io )
+        _info( repr( data ) )
+        urls = data['nodes'].keys()
+        extra = []
+        for u in urls:
+            if 'unverified_claiming_nodes' in data['nodes'][u]:
+                extra += data['nodes'][u]['unverified_claiming_nodes']
+        urls += extra # TODO _ weed dupes
+        if url in urls:
+            urls.remove( url ) # don't care about this one
+        return urls 
 
