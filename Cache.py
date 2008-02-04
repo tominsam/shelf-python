@@ -20,14 +20,14 @@ class Cache( object ):
             return None
 
         while 'defer' in Cache.CACHE[key] and Cache.CACHE[key]['defer'] and Cache.CACHE[key]['expires'] > time():
-            _info( "  other thread is fetching %s"%url )
+            _info( "  other thread is fetching %s"%key )
             sleep(0.5)
 
         if 'expires' in Cache.CACHE[key] and Cache.CACHE[key]['expires'] > time():
-            #_info( "  non-expired cache value for  %s"%url )
+            #_info( "  non-expired cache value for  %s"%key )
             if 'value' in Cache.CACHE[key]:
                 return Cache.CACHE[key]['value']
-        
+
         return None
     
     @classmethod
