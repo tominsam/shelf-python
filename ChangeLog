@@ -55,3 +55,7 @@ have a non-blocking extractor. But more seriously, (b) it sends every url
 you look at, every feed url you look at, and the homepages of everyone you get
 tweets from, to google. Bad? Probably. So this needs to be a preference. It
 also _really_ needs caching.
+
+Converted build process to use py2app rather than xcode, because I know how
+to make py2app dance to my tunes. Specifically, I know how to make it pull
+in external libraries and bundle them properly.
