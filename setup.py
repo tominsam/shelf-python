@@ -25,7 +25,7 @@ plist = dict(
 
 setup(
     app=["main.py",],
-    data_files= glob("*.nib") + glob("*.html") + glob("*.gif") + glob("*.py") + glob("*.css"),
+    data_files= glob("*.nib") + glob("*.html") + glob("html/*.gif") + glob("*.py") + glob("*/*.py") + glob("html/*.css"),
     options=dict(py2app=dict(
         plist=plist,
         iconfile="Icon.icns",
