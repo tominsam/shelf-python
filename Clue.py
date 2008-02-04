@@ -11,6 +11,12 @@ class Clue(object):
         self.boring_urls = self.urls()
         self.cache = {}
     
+    def __eq__(self, other):
+        return self.uniqueId() == other.uniqueId()
+    
+    def __str__(self):
+        return "<Clue %s>"%self.displayName()
+    
     def takeUrls(self,pattern):
         interesting = []
         for u in self.urls():

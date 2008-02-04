@@ -31,7 +31,6 @@ class ShelfController (NSWindowController):
         self.handlers = {}
         self.providers = []
         self.current_person = None
-        self.decay = 0
         self.running = True
 
         #self.window().setAllowsToolTipsWhenApplicationIsInactive_( 1 )
@@ -47,12 +46,13 @@ class ShelfController (NSWindowController):
         # get it into the CSS.
         
         # evil. Alter the webkit view object so that it'll accept a clickthrough
-        # - this si very handy, as the window is on top and full of context.
+        # - this is very handy, as the window is on top and full of context.
         # Alas, right now, the hover doesn't percolate through, so you don't
         # get mouseover effects. But clicks work.
         objc.classAddMethod( WebHTMLView, "acceptsFirstMouse:", lambda a,b: 1 )
         # ps - when I say 'evil', I mean it. Really, _really_ evil. TODO -
         # subclass the thing and do it properly.
+
         
     def applicationDidFinishLaunching_(self, sender):
         folder = os.path.join( os.environ['HOME'], "Library", "Application Support", "Shelf" )
@@ -60,7 +60,7 @@ class ShelfController (NSWindowController):
             os.mkdir( folder )
         Provider.load_cache( os.path.join( folder, "cache" ) )
         self.performSelector_withObject_afterDelay_( 'poll', None, 0 )
-        self.blank_info()
+        self.fade()
     
     def applicationWillTerminate_(self, sender):
         for current in self.providers:
@@ -97,73 +97,63 @@ class ShelfController (NSWindowController):
         return self.handlers[ bundle ]
 
     def poll(self):
-        _info( "poll start" )
+        _info( "\n---- poll start ----" )
         
+        # First thing I do, schedule the next poll event, so that I can just return with impunity later
+        if self.running:
+            self.performSelector_withObject_afterDelay_( 'poll', None, 2 )
+
+
         # get bundle name of active application
         try:
             bundle = NSWorkspace.sharedWorkspace().activeApplication()['NSApplicationBundleIdentifier']
         except KeyError:
+            # have seen this in the real world. Can't explain it.
             print( "Inexplicable lack of 'NSApplicationBundleIdentifier' for %s"%repr( NSWorkspace.sharedWorkspace().activeApplication() ) )
-            bundle = ""
-        
-        _info( "app is %s"%bundle )
+            return
+
+        _info( "current app is %s"%bundle )
+
+        # this app has no effect on the current context, otherwise activating
+        # the app drops the current context.
+        if bundle.lower() in ["org.jerakeen.pyshelf"]:
+            _info("Ignoring myself")
+            return
 
         handler = self.handler_for( bundle )
         
-        # this app has no effect on the current context, otherwise activating
-        # the app drops the current context. Also, XCode is special so I don't
-        # go crazy while _infoging. This one should probably come out in the
-        # long term.
-        if bundle.lower() in ["org.jerakeen.pyshelf", "com.apple.xcode"]:
-            _info("Ignoring myself")
-            pass
-        
-        elif not handler:
-            _info("Can't get clues from %s"%bundle)
-            self.current_person = None
+        if not handler:
+            _info("Don't know how to get clues from %s"%bundle)
+            return
         else:
-            _info( "Looking for clues" )
-            clues = []
-            try:
-                clues = handler.clues()
-            except:
-                print("Error getting clues from %s!"%bundle)
-                print( traceback.format_exc() )
+            _info( "Looking for clues using %s"%handler )
+            handler.getClue( self )
+            self.deferFade() # if nothing happens for 5 seconds, hide context
 
-            if not clues:
-                _info("No clues from %s"%handler.__class__.__name__)
-                self.current_person = None
+    # fade the active context if we don't recieve any context for a while
+    def deferFade(self):
+        _info("deferring fade")
+        NSObject.cancelPreviousPerformRequestsWithTarget_selector_object_( self, "fade", None )
+        self.performSelector_withObject_afterDelay_('fade', None, 5 )
+    
+    # callback from getClue on the handler function
+    def gotClue(self, person):
+        
+        if self.current_person and self.current_person == person:
+            _info("Context has not changed")
+            self.deferFade() # put off the context fade
+            return
 
-            elif self.current_person and self.current_person.uniqueId() == clues[0].uniqueId():
-                _info("Context has not changed")
-                pass
-
-            else:
-                # person has changed
-                _info("New context - %s"%clues[0].displayName())
-                self.current_person = clues[0]
-                self.decay = 3
-                self.update_info_for( clues[0] )
-                _info("update complete")
-
-        # rather than removing the window as soon as we lose context, have
-        # the display persist a little. Use case here is clicking on a link
-        # in the webview - without this we lose context for a tick while the
-        # browser thinks about it.
-        if not self.current_person and self.decay > 0:
-            _info("decaying context")
-            self.decay -= 1
-            if self.decay == 0:
-                self.blank_info()
-
-        _info( "poll complete" )
-
-        if self.running:
-            self.performSelector_withObject_afterDelay_( 'poll', None, 1 )
-
+        # person has changed
+        _info("New context - %s"%person)
+        self.current_person = person
+        self.update_info_for( person )
+        _info("update complete")
 
     
-    def blank_info(self):
+    def fade(self):
+        _info("fading context")
+        self.current_person = None
         self.nameView.setStringValue_( "" )
         self.companyView.setStringValue_( "" )
         self.imageView.setImage_( NSImage.imageNamed_("NSUser") )

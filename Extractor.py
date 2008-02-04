@@ -24,6 +24,12 @@ class Extractor(object):
         #NSLog("** Extractor '%s' init"%self.__class__.__name__)
         super( Extractor, self ).__init__()
         self.addressBook = ABAddressBook.sharedAddressBook()
+        
+    def getClue( self, caller ):
+        clues = self.clues()
+        if clues:
+            caller.gotClue( clues[0] )
+
 
     def clues_from_email( self, email ):
         # email look like 'Name <email>' sometimes.

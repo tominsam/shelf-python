@@ -28,7 +28,7 @@ setup(
     data_files= glob("*.nib") + glob("*.html") + glob("*.gif") + glob("*.py") + glob("*.css"),
     options=dict(py2app=dict(
         plist=plist,
-        iconfile="Shelf.icns",
+        iconfile="Icon.icns",
         frameworks=glob("*.framework"),
     )),
 )
