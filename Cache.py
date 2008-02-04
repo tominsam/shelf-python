@@ -1,56 +1,103 @@
+from Foundation import *
+from AppKit import *
+from WebKit import *
+
 from threading import Thread, Lock
 from time import time, sleep
+import base64
+import urllib
+import os
 
 from Utilities import _info
 
-class Cache( object ):
+CACHE = {}
+CACHE_LOCK = Lock()
 
-    CACHE = {}
-    CACHE_LOCK = Lock()
+def keyForUrlUsernamePassword( url, username, password ):
+    return "%s:::%s:::%s"%( url, username, password )
+
+def filenameForKey( key ):
+    folder = os.path.join( os.environ['HOME'], "Library", "Application Support", "Shelf", "cache" )
+    try:
+        os.makedirs( folder )
+    except OSError:
+        pass
+    filename = urllib.quote( key, '' )
+    return os.path.join( folder, filename )
+
+def getStale( key ):
+    if key in CACHE and 'value' in CACHE[key]:
+        return CACHE[key]['value']
     
-    @classmethod
-    def getStale( cls, key ):
-        if key in Cache.CACHE and 'value' in Cache.CACHE[key]:
-            return Cache.CACHE[key]['value']
-        
-
-    @classmethod
-    def getFresh( cls, key ):
-        if not key in Cache.CACHE:
-            return None
-
-        while 'defer' in Cache.CACHE[key] and Cache.CACHE[key]['defer'] and Cache.CACHE[key]['expires'] > time():
-            _info( "  other thread is fetching %s"%key )
-            sleep(0.5)
-
-        if 'expires' in Cache.CACHE[key] and Cache.CACHE[key]['expires'] > time():
-            #_info( "  non-expired cache value for  %s"%key )
-            if 'value' in Cache.CACHE[key]:
-                return Cache.CACHE[key]['value']
-
+def getFresh( key ):
+    if not key in CACHE:
         return None
-    
-    @classmethod
-    def set( cls, key, value, defer = False ):
-        cls.lock()
-        if not key in Cache.CACHE: Cache.CACHE[key] = {}
-        Cache.CACHE[key]['expires'] = time() + 45
-        if defer:
-            Cache.CACHE[key]['defer'] = True
-        else:
-            Cache.CACHE[key]['defer'] = False
-        if value:
-            Cache.CACHE[key]['value'] = value
-        cls.unlock()
-    
-    @classmethod
-    def defer( cls, key ):
-        cls.set( key, None, True )
 
-    @classmethod
-    def lock(cls):
-        Cache.CACHE_LOCK.acquire()
+    while 'defer' in CACHE[key] and CACHE[key]['defer'] and CACHE[key]['expires'] > time():
+        _info( "  other thread is fetching %s"%key )
+        sleep(0.5)
 
-    @classmethod
-    def unlock(cls):
-        Cache.CACHE_LOCK.release()
+    if 'expires' in CACHE[key] and CACHE[key]['expires'] > time():
+        #_info( "  non-expired cache value for  %s"%key )
+        if 'value' in CACHE[key]:
+            return CACHE[key]['value']
+
+    return None
+
+def set( key, value, defer = False ):
+    lock()
+    if not key in CACHE: CACHE[key] = {}
+    CACHE[key]['expires'] = time() + 45
+    if defer:
+        CACHE[key]['defer'] = True
+    else:
+        CACHE[key]['defer'] = False
+    if value:
+        CACHE[key]['value'] = value
+    unlock()
+
+def defer( key ):
+    set( key, None, True )
+
+def lock():
+    CACHE_LOCK.acquire()
+
+def unlock():
+    CACHE_LOCK.release()
+
+def getContentOfUrlAndCallback( caller, value, url, username = None, password = None ):
+    
+    filename = filenameForKey( keyForUrlUsernamePassword( url, username, password ) )
+    _info("fetching %s to %s"%( url, filename ))
+
+    req = NSMutableURLRequest.requestWithURL_( NSURL.URLWithString_( url ) )
+    if username or password:
+        base64string = base64.encodestring('%s:%s' % (username, password))[:-1]
+        req.setValue_forHTTPHeaderField_("Basic %s"%base64string, "Authorization")
+    
+    delegate = DownloadDelegate.alloc().initWithDelegate_value_filename_url_( caller, value, filename, url )
+    downloader = NSURLDownload.alloc().initWithRequest_delegate_( req, delegate )
+    downloader.setDestination_allowOverwrite_( filename, True )
+
+
+class DownloadDelegate(NSObject):
+    
+    def initWithDelegate_value_filename_url_(self, delegate, value, filename, url):
+        self.delegate = delegate
+        self.value = value
+        self.filename = filename
+        self.url = url
+        return self
+    
+    def downloadDidBegin_(self, downloader):
+        print("*** begun download of %s"%self.url)
+    
+    def downloadDidFinish_(self, downloader):
+        print("*** finished download of %s"%self.url)
+        data = file( self.filename ).read()
+        print(data)
+        self.delegate.gotContentsOfUrlWithValue( self.url, self.value, data )
+    
+    def download_didFailWithError_(self, downloader, error):
+        print("*** ERROR! %s"%error)
+

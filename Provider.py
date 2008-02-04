@@ -11,7 +11,7 @@ from time import time, sleep
 import traceback
 
 from Utilities import _info
-from Cache import Cache
+import Cache
 
 
 from threading import Thread
@@ -50,7 +50,7 @@ class Provider( Thread ):
     
     def provide( self ):
         self.start()
-        
+
     def guardedRun(self):
         pass
         
@@ -71,7 +71,7 @@ class Provider( Thread ):
         key = self.keyForUrlUsernamePassword(url, username, password)
         return Cache.getStale( key )
         
-    def cacheUrl( self, url, timeout = 600, username = None, password = None ):
+    def cacheUrl( self, url, timeout = 600, username = None, password = None ):        
         key = self.keyForUrlUsernamePassword(url, username, password)
         _info( "cacheUrl( %s )"%url )
         cached = Cache.getFresh( key )
