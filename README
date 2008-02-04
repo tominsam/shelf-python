@@ -1,0 +1,17 @@
+Building (for development)
+
+  python setup.py py2app -A
+  
+Building (for deployment)
+
+  python setup.py py2app
+
+Dependencies:
+
+  simplejson
+
+Notes:
+
+Don't be fooled by the fact that the files are in folders. When packaged,
+they're all in one big flat folder. They're only in folders in the source
+so that I can organise them a little.
