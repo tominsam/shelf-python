@@ -58,18 +58,16 @@ class ShelfController (NSWindowController):
         folder = os.path.join( os.environ['HOME'], "Library", "Application Support", "Shelf" )
         if not os.path.exists( folder ):
             os.mkdir( folder )
-        Provider.load_cache( os.path.join( folder, "cache" ) )
         self.performSelector_withObject_afterDelay_( 'poll', None, 0 )
         self.fade()
-    
+
+
     def applicationWillTerminate_(self, sender):
         for current in self.providers:
             current.stop()
 
-        folder = os.path.join( os.environ['HOME'], "Library", "Application Support", "Shelf" )
-        Provider.load_cache( os.path.join( folder, "cache" ) )
-        Provider.store_cache( "/tmp/shelf_cache" )
-
+        # kill the poller and any other long-running things
+        NSObject.cancelPreviousPerformRequestsWithTarget_( self )
         self.running = False
         
     # callback from the little right-pointing arrow
@@ -115,7 +113,7 @@ class ShelfController (NSWindowController):
         _info( "current app is %s"%bundle )
 
         # this app has no effect on the current context, otherwise activating
-        # the app drops the current context.
+        # the app drops the current context. TODO - don't hard-code bundle name
         if bundle.lower() in ["org.jerakeen.pyshelf"]:
             _info("Ignoring myself")
             return
@@ -138,7 +136,7 @@ class ShelfController (NSWindowController):
     
     # callback from getClue on the handler function
     def gotClue(self, person):
-        
+
         if self.current_person and self.current_person == person:
             _info("Context has not changed")
             self.deferFade() # put off the context fade

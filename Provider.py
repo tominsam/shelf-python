@@ -2,24 +2,19 @@ from Foundation import *
 from AppKit import *
 from WebKit import *
 from AddressBook import *
+
 import urllib, urllib2
 import base64
-
-# force shelve to use the native python pickler
-import shelve
-import pickle
-shelve.Pickler = pickle.Pickler
-shelve.Unpickler = pickle.Unpickler
-
 import os
-
-from Utilities import _info
-
 import re
 from time import time, sleep
 import traceback
 
-from threading import Thread, Lock
+from Utilities import _info
+from Cache import Cache
+
+
+from threading import Thread
 
 class Provider( Thread ):
     
@@ -50,6 +45,7 @@ class Provider( Thread ):
     
     def stop(self):
         # not enforced, it's just a hint to the processor to stop
+        NSObject.cancelPreviousPerformRequestsWithTarget_( self )
         self.running = False
     
     def provide( self ):
@@ -68,57 +64,21 @@ class Provider( Thread ):
             self.atoms = ["<h3>EPIC FAIL in %s</h3>"%self.__class__.__name__,"<pre>%s</pre>"%e ]
             self.changed()
 
-
-    CACHE = None
-    CACHE_LOCK = Lock()
-
-    @classmethod
-    def store_cache( myClass, filename ):
-        pass
-        #Provider.CACHE_LOCK.acquire()
-        #Provider.CACHE.close()
-        #Provider.CACHE_LOCK.release()
-
-    @classmethod
-    def load_cache( myClass, filename ):
-        Provider.CACHE_LOCK.acquire()
-        #try:
-        #    Provider.CACHE = shelve.open( filename, writeback = True )
-        #except Exception:
-        #    print("cache file bad - invalidating")
-        #    os.unlink( filename + ".db" )
-        #    Provider.CACHE = shelve.open( filename, writeback = True )
-        Provider.CACHE = {}
-        Provider.CACHE_LOCK.release()
-
     def keyForUrlUsernamePassword( self, url, username, password ):
         return url + (username or "") + (password or "")
 
     def staleUrl( self, url, username = None, password = None ):
         key = self.keyForUrlUsernamePassword(url, username, password)
-        print(key)
-        if key in Provider.CACHE and 'value' in Provider.CACHE[key]:
-            return Provider.CACHE[key]['value']
+        return Cache.getStale( key )
         
     def cacheUrl( self, url, timeout = 600, username = None, password = None ):
         key = self.keyForUrlUsernamePassword(url, username, password)
         _info( "cacheUrl( %s )"%url )
-        if key in Provider.CACHE:
-            while 'defer' in Provider.CACHE[key] and Provider.CACHE[key]['defer'] and Provider.CACHE[key]['expires'] > time():
-                #_info( "  other thread is fetching %s"%url )
-                sleep(0.5)
-            if 'expires' in Provider.CACHE[key] and Provider.CACHE[key]['expires'] > time():
-                #_info( "  non-expired cache value for  %s"%url )
-                if 'value' in Provider.CACHE[key]:
-                    return Provider.CACHE[key]['value']
+        cached = Cache.getFresh( key )
 
         # ok, the cached value has expired. Indicate that this thread
         # will get the value anew. There's a timeout on this promise.
-        Provider.CACHE_LOCK.acquire()
-        if not key in Provider.CACHE: Provider.CACHE[key] = {}
-        Provider.CACHE[key]['defer'] = True
-        Provider.CACHE[key]['expires'] = time() + 45
-        Provider.CACHE_LOCK.release()
+        Cache.defer( key )
 
         # use urllib2 here because urllib prompts on stdout if
         # the feed needs auth. Stupid.
@@ -138,17 +98,10 @@ class Provider( Thread ):
             else:
                 print("Error getting url: %s"%e)
             data = None
+        
+        Cache.set( key, data )
 
-        Provider.CACHE_LOCK.acquire()
-        Provider.CACHE[key]['value'] = data
-        Provider.CACHE[key]['defer'] = False
-        if data or needs_auth:
-            Provider.CACHE[key]['expires'] = time() + timeout
-        else:
-            Provider.CACHE[key]['expires'] = time() + 10
-        Provider.CACHE_LOCK.release()
-
-        return Provider.CACHE[key]['value']
+        return data
 
     def spinner(self):
         return "<img src='spinner.gif' class='spinner'>"
