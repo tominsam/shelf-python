@@ -50,17 +50,15 @@ need authentication.
 Add 'birthday' to the list of simple information displayed about a user
 
 Trunk currently contains experimental Google Social Graph code. This is
-possibly bad - (a) it blocks the discovery thread, so I need to re-arch to
-have a non-blocking extractor. But more seriously, (b) it sends every url
-you look at, every feed url you look at, and the homepages of everyone you get
-tweets from, to google. Bad? Probably. So this needs to be a preference. It
-also _really_ needs caching.
+possibly bad - it sends every url you look at, every feed url you look at, and
+the homepages of everyone you get tweets from, to Google. Bad? Probably. So
+this needs to be a preference.
 
-Converted build process to use py2app rather than xcode, because I know how
-to make py2app dance to my tunes. Specifically, I know how to make it pull
-in external libraries and bundle them properly. Not really a feature, I know.
+Converted build process to use py2app rather than xcode, because I know how to
+make py2app dance to my tunes. Specifically, I know how to make it pull in
+external libraries and bundle them properly. Reorganised source files into
+folders so I can keep track of where things are.
 
-Reorganized source files into folders so I can keep track of where things
-are. Again, this isn't a feature. And yet you're looking at this anyway. Sorry.
-
-
+Huge great internal re-write. The Extractor code-path is now much more
+message-passing based, and can do things in the background. The Google Social
+stuff uses this, so no longer blocks the foreground thread. Provider is next.

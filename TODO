@@ -10,3 +10,32 @@ flickr userid / username disambiguation
 Dopplr:
 * weather
 * exchange rate
+
+
+
+
+22:56 <@muttley> I actually want something passive
+22:57 <@blech> how?
+22:57 <@muttley> then I can either highlight something or not
+22:57 <@muttley> and then hit a key combo and it would bring up the window with
+                 the clues
+22:58 <@muttley> I think a constant stream of clues might end up being too
+                 distracting
+22:58 <@blech> jerakeen: good lord you weren't kidding
+22:59 <@blech> muttley: I see
+22:59 <@muttley> I'm wondering if Shelf could be redone so you could have an
+                 Expose like system
+22:59 <@blech> it's not that you don't want it accessing the web, it's that you
+               only want it to scan for context when asked
+22:59 <@muttley> so when you hit Apple-S or whatever
+23:00 <@muttley> you can an Exposes like overlay with all the clues arranged in
+                 a grid
+23:00 <@muttley> blech: it could either scan continuously or not
+23:00 <@blech> muttley: right, but you want that option
+23:00 <@blech> at the moment it's always active
+23:00 <@muttley> I'm wondering if you could have a backend
+23:01 <@muttley> and then you could either have a window that's constantly
+                 updating
+23:01 <@muttley> or an Exposes style system
+23:01 <@muttley> that's either constantly updating or on demand
+23:01 <@muttley> jerakeen: you refactored it to be a more clue based system?
