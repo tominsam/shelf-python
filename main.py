@@ -23,6 +23,14 @@ base_path = os.path.join(os.path.dirname(os.getcwd()), 'Frameworks')
 bundle_path = os.path.abspath(os.path.join(base_path, 'Sparkle.framework'))
 objc.loadBundle('Sparkle', globals(), bundle_path=bundle_path)
 
+NSUserDefaults.standardUserDefaults().registerDefaults_({
+    'googleSocial':False,
+    'bringAppForward':True,
+    'alwaysOnTop':True,
+    'debug':False
+})
+
+
 # import modules containing classes required to start application and load MainMenu.nib
 import PyShelfAppDelegate
 

@@ -45,7 +45,8 @@ class Extractor(object):
     def clues_from_url( self, url ):
         if not url: return
         original = url # preserve
-        
+
+        url = re.sub(r'^\w+://', '', url)
         clues = self._search_for_url( url )
 
         while not clues and re.search(r'/', url):
@@ -55,7 +56,7 @@ class Extractor(object):
         if clues:
             self.addClues( clues )
 
-        else:
+        elif NSUserDefaults.standardUserDefaults().boolForKey_("googleSocial"):
             # this is a background process, calls us back later
             # order is a little sensitive for now, as if the cache is good,
             # the clues are updated _Before_ this function returns.

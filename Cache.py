@@ -37,7 +37,6 @@ def getContentOfUrlAndCallback( callback, url, username = None, password = None,
     filename = filenameForKey( keyForUrlUsernamePassword( url, username, password ) )
 
     if os.path.exists(filename):
-        print "** file is %s old"%( time() - os.path.getmtime( filename ) )
         if time() - os.path.getmtime( filename ) < timeout:
             _info("cached file is still fresh")
             callback( file( filename ).read(), False )
@@ -71,14 +70,14 @@ class DownloadDelegate(object):
         self.failure = failure
     
     def downloadDidBegin_(self, downloader):
-        print("*** begun download of %s"%downloader.request())
+        _info("Begun download of %s"%downloader.request())
     
     def download_didCreateDestination_(self, downloader, filename):
-        print("*** downloader created file %s"%filename)
+        _info("downloader created file %s"%filename)
         self.filename = filename
     
     def downloadDidFinish_(self, downloader):
-        print("*** finished download of %s"%downloader.request())
+        _info("finished download of %s"%downloader.request())
         # the downloader sets the mtime to be the web server's idea of
         # when the file was last updated. Which is cute. But useless to us.
         # I want to know when I fetched it.
@@ -87,7 +86,7 @@ class DownloadDelegate(object):
         self.callback( data, False )
 
     def download_didFailWithError_(self, downloader, error):
-        print("*** ERROR downloading %s: %s"%( downloader.request(), error ))
+        _info("ERROR downloading %s: %s"%( downloader.request(), error ))
         if self.failure:
             self.failure( error )
 

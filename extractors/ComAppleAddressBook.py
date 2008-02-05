@@ -16,5 +16,4 @@ class ComAppleAddressBook( Extractor ):
         selected_id = selection[0].id()
         
         person = self.addressBook.recordForUniqueId_( selected_id )
-        print(repr(self))
         self.addClues( [ Clue( person ) ] )

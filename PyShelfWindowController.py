@@ -52,6 +52,8 @@ class ShelfController (NSWindowController):
         objc.classAddMethod( WebHTMLView, "acceptsFirstMouse:", lambda a,b: 1 )
         # ps - when I say 'evil', I mean it. Really, _really_ evil. TODO -
         # subclass the thing and do it properly.
+        
+        self.showWindow_(self)
 
         
     def applicationDidFinishLaunching_(self, sender):
@@ -126,7 +128,6 @@ class ShelfController (NSWindowController):
         else:
             _info( "Looking for clues using %s"%handler )
             handler.getClue( self )
-            self.deferFade() # if nothing happens for 5 seconds, hide context
 
     # fade the active context if we don't recieve any context for a while
     def deferFade(self):
@@ -155,8 +156,9 @@ class ShelfController (NSWindowController):
         self.nameView.setStringValue_( "" )
         self.companyView.setStringValue_( "" )
         self.imageView.setImage_( NSImage.imageNamed_("NSUser") )
-        self.window().setLevel_( NSNormalWindowLevel ) # stuff to 'on top'
-        self.window().setHidesOnDeactivate_( True )
+        self.window().setLevel_( NSNormalWindowLevel ) # unstuff from 'on top'
+        self.window().setHidesOnDeactivate_( True ) # hide window if we have nothing
+
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
         self.setWebContent( "<p>No context</p>" )
 
@@ -166,9 +168,19 @@ class ShelfController (NSWindowController):
         self.nameView.setStringValue_( person.displayName() )
         self.companyView.setStringValue_( person.companyName() )
         self.imageView.setImage_( person.image() ) # leak?
-        self.window().setLevel_( NSFloatingWindowLevel ) # stuff to 'on top'
+
+        # always safe
         self.window().setHidesOnDeactivate_( False )
-        self.showWindow_(self)
+        
+        if NSUserDefaults.standardUserDefaults().boolForKey_("bringAppForward"):
+            # TODO = doesn't seem to work 100%
+            self.showWindow_(self)
+            self.window().display()
+            self.window().orderFrontRegardless()
+
+        if NSUserDefaults.standardUserDefaults().boolForKey_("alwaysOnTop"):
+            self.window().setLevel_( NSFloatingWindowLevel ) # stuff to 'on top'
+
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
         self.setWebContent( "<p>thinking..</p>" )
 
