@@ -7,15 +7,13 @@ import urllib, urllib2
 import base64
 import os
 import re
-from time import time, sleep
+from time import time
 import traceback
 
 from Utilities import _info
 import Cache
 
-from threading import Thread
-
-class Provider( Thread ):
+class Provider( object ):
     
     PROVIDERS = []
     
@@ -37,69 +35,21 @@ class Provider( Thread ):
         self.delegate = delegate
         self.provide()
     
+    def content(self):
+        return "".join(self.atoms)
+    
     def changed(self):
         if self.running:
             self.delegate.providerUpdated_(self)
+
+    def provide( self ):
+        pass
     
     def stop(self):
         # not enforced, it's just a hint to the processor to stop
         NSObject.cancelPreviousPerformRequestsWithTarget_( self )
         self.running = False
     
-    def provide( self ):
-        self.start()
-
-    def guardedRun(self):
-        pass
-        
-    def run(self):
-        pool = NSAutoreleasePool.alloc().init()
-        try:
-            self.guardedRun()
-        except Exception, e:
-            print("EPIC FAIL in %s"%self.__class__.__name__)
-            print(traceback.format_exc())
-            self.atoms = ["<h3>EPIC FAIL in %s</h3>"%self.__class__.__name__,"<pre>%s</pre>"%e ]
-            self.changed()
-
-    def keyForUrlUsernamePassword( self, url, username, password ):
-        return url + (username or "") + (password or "")
-
-    def staleUrl( self, url, username = None, password = None ):
-        key = self.keyForUrlUsernamePassword(url, username, password)
-        return Cache.getStale( key )
-        
-    def cacheUrl( self, url, timeout = 600, username = None, password = None ):        
-        key = self.keyForUrlUsernamePassword(url, username, password)
-        _info( "cacheUrl( %s )"%url )
-        cached = Cache.getFresh( key )
-
-        # ok, the cached value has expired. Indicate that this thread
-        # will get the value anew. There's a timeout on this promise.
-        Cache.defer( key )
-
-        # use urllib2 here because urllib prompts on stdout if
-        # the feed needs auth. Stupid.
-        req = urllib2.Request(url)
-        if username or password:
-            base64string = base64.encodestring('%s:%s' % (username, password))[:-1]
-            req.add_header("Authorization", "Basic %s" % base64string)        
-        needs_auth = False
-        try:
-            data = urllib2.urlopen(req).read()
-        except IOError, e:
-            print e.__class__.__name__
-            if e.code == 401:
-                # needs auth. Meh.
-                _info("url needs auth - ignoring")
-                needs_auth = True
-            else:
-                print("Error getting url: %s"%e)
-            data = None
-        
-        Cache.set( key, data )
-
-        return data
 
     def spinner(self):
         return "<img src='spinner.gif' class='spinner'>"

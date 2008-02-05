@@ -7,7 +7,6 @@ from ScriptingBridge import *
 import objc
 import re
 import traceback
-import threading
 import os
 from time import time as epoch_time
 
@@ -16,7 +15,8 @@ Provider.addProvider( "BasicProvider" )
 Provider.addProvider( "TwitterProvider" )
 Provider.addProvider( "DopplrProvider" )
 Provider.addProvider( "FlickrProvider" )
-# Order is important - FeedProvider must be _last_
+# Order is important - FeedProvider must be _last_, because it uses all
+# urls in the address book card not claimed by another provider
 Provider.addProvider( "FeedProvider" )
 
 from Utilities import _info
@@ -99,7 +99,7 @@ class ShelfController (NSWindowController):
         
         # First thing I do, schedule the next poll event, so that I can just return with impunity later
         if self.running:
-            self.performSelector_withObject_afterDelay_( 'poll', None, 2 )
+            self.performSelector_withObject_afterDelay_( 'poll', None, 1 )
 
 
         # get bundle name of active application
@@ -188,10 +188,10 @@ class ShelfController (NSWindowController):
 
     def updateWebview(self):
         _info( "updating webview" )
-        info = []
+        content = ""
         for provider in self.providers:
-            info += provider.atoms
-        self.setWebContent( "".join(info) )
+            content += provider.content()
+        self.setWebContent( content )
     
     def setWebContent(self, html):
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
@@ -213,7 +213,7 @@ class ShelfController (NSWindowController):
 
     def providerUpdated_(self, provider):
         _info("Provider '%s' updated"%( provider ))
-        self.performSelectorOnMainThread_withObject_waitUntilDone_('updateWebview', None, False)
+        self.performSelector_withObject_afterDelay_('updateWebview', None, 0)
 
     # supress right-click menu
     def webView_contextMenuItemsForElement_defaultMenuItems_( self, webview, element, items ):

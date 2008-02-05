@@ -3,9 +3,10 @@ import urllib
 import re
 import xmltramp
 from datetime import datetime
-from time import sleep, time, strftime, gmtime
+from time import time, strftime, gmtime
 
 from Utilities import _info
+import Cache
 
 class DopplrProvider( Provider ):
 
@@ -18,25 +19,22 @@ class DopplrProvider( Provider ):
         self.atoms = [ "<h3><a href='http://www.dopplr.com/traveller/%s/'>Dopplr</a>&nbsp;%s</h3>"%( self.username, self.spinner() ) ]
         self.changed()
 
-        self.start()
+        url = "https://www.dopplr.com/api/traveller_info.xml?token=%s&traveller=%s"%( self.token, self.username )
+        Cache.getContentOfUrlAndCallback( self.gotDopplrData, url, timeout = 3600, wantStale = True, failure = self.failed )
     
-    def guardedRun(self):
-        
+    def failed(self, error):
+        self.atoms[1:] = [ unicode(error) ]
+        self.changed()
+    
+    def gotDopplrData(self, data, stale):
         try:
-            url = "https://www.dopplr.com/api/traveller_info.xml?token=%s&traveller=%s"%( self.token, self.username )
-            xml = self.cacheUrl( url, timeout = 3600 * 2 )
-            doc = xmltramp.parse( xml )
+            doc = xmltramp.parse( data )
             doc.traveller.status
         except AttributeError:
             return # no service?
         
-        if not doc:
-            self.atoms = []
-            self.changed()
-            return
-        
         # dopplr api coveniently provides offset from UTC :-)
-        seconds = int(str(doc.traveller.current_city.utcoffset))
+        self.offset = int(str(doc.traveller.current_city.utcoffset))
 
         self.atoms = []
         self.atoms.append("<h3><a href='http://www.dopplr.com/traveller/%s/'>Dopplr</a></h3>"%( self.username ))
@@ -45,15 +43,18 @@ class DopplrProvider( Provider ):
             doc.traveller.status
         ))
         self.atoms.append("")
+
+        self.performSelector_withObject_afterDelay_( 'updateClock', None, 0 )
         
         self.changed()
-        
-        while self.running:
-            epoch = time() + seconds
-            self.atoms[2] = "<p class='time'>Time in %s is %s.</p>"%(
-                doc.traveller.current_city.country,
-                strftime("%a&nbsp;%l:%M&nbsp;%p", gmtime(epoch))
-            )
-            self.changed()
-            sleep(20)
+
+    def updateClock(self):
+        self.performSelector_withObject_afterDelay_( 'updateClock', None, 20 )
+
+        epoch = time() + self.offset
+        self.atoms[2] = "<p class='time'>Time in %s is %s.</p>"%(
+            doc.traveller.current_city.country,
+            strftime("%a&nbsp;%l:%M&nbsp;%p", gmtime(epoch))
+        )
+        self.changed()
 

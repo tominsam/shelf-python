@@ -1,25 +1,18 @@
 from FeedProvider import *
 from Utilities import _info
 
-class FlickrProvider( FeedProvider ):
-
-    def urls(self):
-        return self.person.takeUrls(r'flickr\.com/(photos|people)/.')
-        
-    def feed_for_url( self, url ):
-        username = re.search(r'/(photos|person)/([^/]+)', url).group(2)
-        return super( FlickrProvider, self ).feed_for_url("http://flickr.com/photos/%s/"%username)
+class FlickrAtom( FeedAtom ):
 
     def htmlForPending( self, url, stale = False ):
         if stale:
-            spinner_html = "&nbsp;" + self.spinner()
+            spinner_html = "&nbsp;" + self.provider.spinner()
         else:
             spinner_html = ""
         return "<h3><a href='%s'>Flickr</a>%s</h3>"%(url,spinner_html)
     
     def htmlForFeed( self, url, feed, stale = False ):
         if stale:
-            spinner_html = "&nbsp;" + self.spinner()
+            spinner_html = "&nbsp;" + self.provider.spinner()
         else:
             spinner_html = ""
         html = "<h3><a href='%s'>Flickr</a>%s</h3>"%( url, spinner_html )
@@ -32,3 +25,12 @@ class FlickrProvider( FeedProvider ):
             html += "<a href='%s'><img src='%s' class='flickr-image'></a>"%( item.link, img )
 
         return html
+
+class FlickrProvider( FeedProvider ):
+
+    def atomClass(self):
+        return FlickrAtom
+
+    def urls(self):
+        return self.person.takeUrls(r'flickr\.com/(photos|people)/.')
+        
