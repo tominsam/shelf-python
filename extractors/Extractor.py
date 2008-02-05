@@ -52,10 +52,16 @@ class Extractor(object):
             url = re.sub(r'/[^/]*$','',url)
             clues += self._search_for_url( url )
 
-        if not clues:
+        if clues:
+            self.addClues( clues )
+
+        else:
+            # this is a background process, calls us back later
+            # order is a little sensitive for now, as if the cache is good,
+            # the clues are updated _Before_ this function returns.
+            # I consider this a bug in the implementation.
             graph_urls = self.getSocialGraphFor( original )
 
-        self.addClues( clues )
     
     def _search_for_url( self, url ):
         url = re.sub(r'^\w+://(www\.)?','',url) # strip leanding http:// and www (if present)
@@ -151,10 +157,9 @@ class Extractor(object):
         api = "http://socialgraph.apis.google.com/lookup?pretty=1&fme=1"
         api += "&q=" + quote( url )
         _info("Social graph API call to " + api )
-        Cache.getContentOfUrlAndCallback( self.gotSocialGraphData, api )
+        Cache.getContentOfUrlAndCallback( self.gotSocialGraphData, api, timeout = 3600 * 12 ) # huge timeout here
     
-    def gotSocialGraphData( self, raw ):
-        print("got %s"%raw)
+    def gotSocialGraphData( self, raw, isStale ):
         data = simplejson.loads( raw )
         urls = data['nodes'].keys()
         extra = []
@@ -164,6 +169,6 @@ class Extractor(object):
         urls += extra # TODO _ weed dupes
 
         for graph_url in urls:
-            _info("Looking for people with url (from social graph) '%s'"%graph_url)
+            _info("Google Social Graph URL '%s'"%graph_url)
             self.addClues( self._search_for_url( graph_url ) )
 

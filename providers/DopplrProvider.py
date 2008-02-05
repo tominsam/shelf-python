@@ -25,7 +25,6 @@ class DopplrProvider( Provider ):
         try:
             url = "https://www.dopplr.com/api/traveller_info.xml?token=%s&traveller=%s"%( self.token, self.username )
             xml = self.cacheUrl( url, timeout = 3600 * 2 )
-            print(xml)
             doc = xmltramp.parse( xml )
             doc.traveller.status
         except AttributeError:

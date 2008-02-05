@@ -7,6 +7,7 @@ from time import time, sleep
 import base64
 import urllib
 import os
+import os.path
 
 from Utilities import _info
 
@@ -65,9 +66,22 @@ def lock():
 def unlock():
     CACHE_LOCK.release()
 
-def getContentOfUrlAndCallback( callback, url, username = None, password = None ):
+def getContentOfUrlAndCallback( callback, url, username = None, password = None, wantStale = False, timeout = 600 ):
     
     filename = filenameForKey( keyForUrlUsernamePassword( url, username, password ) )
+    
+    if os.path.exists(filename):
+        if time() - os.path.getmtime( filename ) < timeout:
+            _info("cached file is still fresh")
+            callback( file( filename ).read(), False )
+            return # no need to get the URL
+        
+        elif wantStale:
+            # call the callback immediately with the stale data.
+            _info("We have stale data")
+            callback( file( filename ).read(), True )
+            # don't return - we still want to fetch the file
+    
     _info("fetching %s to %s"%( url, filename ))
 
     req = NSMutableURLRequest.requestWithURL_( NSURL.URLWithString_( url ) )
@@ -79,7 +93,6 @@ def getContentOfUrlAndCallback( callback, url, username = None, password = None 
     downloader = NSURLDownload.alloc().initWithRequest_delegate_( req, delegate )
     downloader.setDestination_allowOverwrite_( filename, True )
 
-
 class DownloadDelegate(object):
     
     def __init__(self, callback):
@@ -89,15 +102,14 @@ class DownloadDelegate(object):
         print("*** begun download of %s"%downloader.request())
     
     def download_didCreateDestination_(self, downloader, filename):
-        print("*** downlaoder created %s"%filename)
+        print("*** downloader created file %s"%filename)
         self.filename = filename
     
     def downloadDidFinish_(self, downloader):
         print("*** finished download of %s"%downloader.request())
         data = file( self.filename ).read()
-        print(data)
-        self.callback( data )
+        self.callback( data, False )
 
     def download_didFailWithError_(self, downloader, error):
-        print("*** ERROR! %s"%error)
+        print("*** ERROR downloadign %s: %s"%( downloader.request(), error ))
 

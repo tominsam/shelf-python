@@ -13,7 +13,6 @@ import traceback
 from Utilities import _info
 import Cache
 
-
 from threading import Thread
 
 class Provider( Thread ):
@@ -28,7 +27,6 @@ class Provider( Thread ):
     @classmethod
     def providers( myClass ):
         return Provider.PROVIDERS
-
 
     def __init__(self, person, delegate):
         #NSLog("** Provider '%s' init"%self.__class__.__name__)
