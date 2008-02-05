@@ -26,59 +26,74 @@ class Extractor(object):
         self.addressBook = ABAddressBook.sharedAddressBook()
         
     def getClue( self, caller ):
-        clues = self.clues()
-        if clues:
-            caller.gotClue( clues[0] )
+        NSObject.cancelPreviousPerformRequestsWithTarget_( self )
+        self.caller = caller
+        self.clues() # implemented in subclasses. Calls addClues
 
+    def addClues( self, clues ):
+        if clues and self.caller:
+            _info("found a clue!")
+            self.caller.gotClue( clues[0] )
+            self.caller = None
+            NSObject.cancelPreviousPerformRequestsWithTarget_( self )
 
     def clues_from_email( self, email ):
         # email look like 'Name <email>' sometimes.
         name, email = parseaddr( email )
         _info("Looking for people with email '%s'"%email)
-        return self._search_for( email, "Email" )
+        self.addClues( self._search_for( email, "Email" ) )
     
     def clues_from_url( self, url ):
-        if not url: return []
-        url = re.sub(r'^\w+://(www\.)?','',url)
-        _info("Looking for people with url '%s'"%url)
-        clues = self._search_for( url, "URLs", kABSuffixMatchCaseInsensitive ) + self._search_for( url + "/", "URLs", kABSuffixMatchCaseInsensitive )
+        if not url: return
+        original = url # preserve
         
-        truncate = url
-        while len(clues) == 0 and re.search(r'/', truncate):
-            truncate = re.sub(r'/[^/]*$','',truncate)
-            _info("Looking for people with url '%s'"%truncate)
-            clues = self._search_for( truncate, "URLs", kABSuffixMatchCaseInsensitive ) + self._search_for( url + "/", "URLs", kABSuffixMatchCaseInsensitive )
+        clues = self._search_for_url( url )
+
+        while len(clues) == 0 and re.search(r'/', url):
+            url = re.sub(r'/[^/]*$','',url)
+            clues += self._search_for_url( url )
         
         if len(clues) == 0:
-            graph_urls = self.social_graph_urls_for( url )
+            graph_urls = self.social_graph_urls_for( original )
             for graph_url in graph_urls:
                 _info("Looking for people with url (from social graph) '%s'"%graph_url)
-                clues += self._search_for( graph_url, "URLs", kABSuffixMatchCaseInsensitive ) + self._search_for( graph_url + "/", "URLs", kABSuffixMatchCaseInsensitive )
+                clues += self._search_for_url( graph_url )
 
+        self.addClues( clues )
+    
+    def _search_for_url( self, url ):
+        url = re.sub(r'^\w+://(www\.)?','',url) # strip leanding http:// and www (if present)
+        url = re.sub(r'/+$', '', url) # strip trailing slash
+        
+        _info("Looking for people with URL '%s'"%url)
+
+        # search for url, plus url with trailing slash
+        clues =  self._search_for( url, "URLs", kABSuffixMatchCaseInsensitive )
+        clues += self._search_for( url + "/", "URLs", kABSuffixMatchCaseInsensitive )
         return clues
 
     def clues_from_aim( self, username ):
         _info("Looking for people with AIM %s"%username)
-        return self._search_for( username, kABAIMInstantProperty )
+        self.addClues( self._search_for( username, kABAIMInstantProperty ) )
     
     def clues_from_jabber( self, username ):
         _info("Looking for people with Jabber %s"%username)
-        return self._search_for( username, kABJabberInstantProperty )
+        self.addClues( self._search_for( username, kABJabberInstantProperty ) )
     
     def clues_from_yahoo( self, username ):
         _info("Looking for people with Yahoo! %s"%username)
-        return self._search_for( username, kABYahooInstantProperty )
+        self.addClues( self._search_for( username, kABYahooInstantProperty ) )
     
     def clues_from_name( self, name ):
         names = re.split(r'\s+', name)
-        return self.clues_from_names( names[0], names[-1] )
+        self.addClues( self.clues_from_names( names[0], names[-1] ) )
 
     def clues_from_names( self, forename, surname ):
         _info("Looking for people called '%s' '%s'"%( forename, surname ))
         forename_search = ABPerson.searchElementForProperty_label_key_value_comparison_( kABFirstNameProperty, None, None, forename, kABPrefixMatchCaseInsensitive )
         surname_search = ABPerson.searchElementForProperty_label_key_value_comparison_( kABLastNameProperty, None, None, surname, kABEqualCaseInsensitive )
         se = ABSearchElement.searchElementForConjunction_children_( kABSearchAnd, [ forename_search, surname_search ] )
-        return map(lambda a: Clue(a), self.addressBook.recordsMatchingSearchElement_( se ))
+        self.addClues( map(lambda a: Clue(a), self.addressBook.recordsMatchingSearchElement_( se )) )
         
     
     def _search_for( self, thing, type, method = kABEqualCaseInsensitive ):
@@ -134,7 +149,7 @@ class Extractor(object):
         if len(clues) == 0:
             _info( "Can't get anything useful from %s"%(repr(card)) )
         
-        return clues
+        self.addClues( clues )
 
     def social_graph_urls_for( self, url ):
         api = "http://socialgraph.apis.google.com/lookup?pretty=1&fme=1"

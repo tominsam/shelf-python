@@ -12,16 +12,15 @@ class ComAppleSafari(Extractor):
     def clues(self):
         clues = []
 
-        # window 0 is always the foreground window?
+        # window 0 is always the foreground window? Seems it.
         tab = self.safari.windows()[ 0 ].currentTab()
-        clues += self.clues_from_url( tab.URL() )
-        # TODO - look for embedded hcard?
+        self.clues_from_url( tab.URL() )
         
-        if len(clues) == 0 and tab.source():
-            clues += self.clues_from_microformats( tab.source() )
+        if tab.source():
+            # look for microformats
+            self.clues_from_microformats( tab.source() )
 
-        if len(clues) == 0 and tab.source():
-            # no microformats
+            # look for rel="me" links
             relme = RelMeParser()
             relme.feed( tab.source() )
             _info("Found rel='me' links: %s"%( ",".join(relme.hrefs) ) )
@@ -32,17 +31,11 @@ class ComAppleSafari(Extractor):
                 # to a page that contains enough microformats that we
                 # might be able to work out who they are, but I really
                 # don't want to have to _fetch_ the page, not here.
-                clues += self.clues_from_url( profile )
-                
-        return clues
-    
+                self.clues_from_url( profile )
+
     # I'm sure the microformats output format makes sense _somewhere_
     def tree_to_dict(tree):
         pass
-
-
-
-
 
 
 
@@ -56,5 +49,4 @@ class RelMeParser(SGMLParser):
     def do_a( self, attrs ):
         if not ('rel', 'me') in attrs: return
         self.hrefs += filter( lambda l: re.match(r'http', l), [e[1] for e in attrs if e[0]=='href'] )
-        
-    
+

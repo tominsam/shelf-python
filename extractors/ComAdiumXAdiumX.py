@@ -14,9 +14,8 @@ class ComAdiumXAdiumX(Extractor):
         account_type = chat.ID().split(".")[0].lower()
         username = ".".join( chat.ID().split(".")[1:] )
         if account_type in ['aim', 'mac']:
-            return self.clues_from_aim( username )
+            self.clues_from_aim( username )
         elif account_type in ['jabber', 'gtalk', 'livejournal']:
-            return self.clues_from_jabber( username )
+            self.clues_from_jabber( username )
         elif account_type in ['yahoo!']:
-            return self.clues_from_yahoo( username )
-        return []
+            self.clues_from_yahoo( username )

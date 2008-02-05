@@ -10,10 +10,9 @@ class ComRancheroNetNewsWire(Extractor):
 
     def clues(self):
         selected = self.nnw.selectedHeadline()
-        if selected.exists() == 0: return [] 
+        if not selected.exists(): return
 
-        return (
-          self.clues_from_microformats( selected.objectDescription() or "" )
-          + self.clues_from_url( selected.URL() )
-          + self.clues_from_url( selected.subscription().homeURL() )
-        )
+        if selected.objectDescription():
+            self.clues_from_microformats( selected.objectDescription() )
+        self.clues_from_url( selected.URL() )
+        self.clues_from_url( selected.subscription().homeURL() )

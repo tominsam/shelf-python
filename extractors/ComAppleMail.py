@@ -14,9 +14,4 @@ class ComAppleMail( Extractor ):
         if self.mail.windows()[0].id() in map( lambda v: v.window().id(), self.mail.messageViewers() ):
             messages = self.mail.selection()
             if messages.count() > 0:
-                return self.clues_from_email( messages[0].sender() )
-    
-        # composer?
-        else:
-            return []
-
+                self.clues_from_email( messages[0].sender() )
