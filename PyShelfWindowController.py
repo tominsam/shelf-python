@@ -133,7 +133,7 @@ class ShelfController (NSWindowController):
     def deferFade(self):
         _info("deferring fade")
         NSObject.cancelPreviousPerformRequestsWithTarget_selector_object_( self, "fade", None )
-        self.performSelector_withObject_afterDelay_('fade', None, 5 )
+        self.performSelector_withObject_afterDelay_('fade', None, 3 )
     
     # callback from getClue on the handler function
     def gotClue(self, person):
