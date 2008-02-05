@@ -6,13 +6,14 @@ from autorss import getRSSLinkFromHTMLSource
 import urllib, urlparse
 import time
 
-from Utilities import _info
+from Utilities import _info, html_escape
 import Cache
 
 class FeedAtom(object):
     def __init__(self, provider, url):
         self.provider = provider
         self.url = url
+        self.name = url
         self.feed = None
         self.stale = True
         self.error = None
@@ -42,6 +43,7 @@ class FeedAtom(object):
         if feed and 'feed' in feed and 'title' in feed.feed:
             self.feed = feed
             self.stale = stale
+            self.name = feed.feed.title
             self.provider.changed()
         else:
             self.dead = True
@@ -49,38 +51,37 @@ class FeedAtom(object):
         
     def failed( self, error ):
         self.error = error
+        self.stale = False
         self.provider.changed()
 
     def content(self):
         if self.dead:
             return ""
         elif self.error:
-            return "<pre>%s</pre>"%urllib.quote( self.error )
+            return self.title() + "<pre>%s</pre>"%html_escape(unicode( self.error ))
         elif self.feed:
-            return self.htmlForFeed( url = self.url, feed = self.feed, stale = self.stale )
+            return self.title() + self.htmlForFeed( url = self.url, feed = self.feed, stale = self.stale )
         else:
-            return self.htmlForPending( url = self.url, stale = self.stale )
-
-
+            return self.title() + self.htmlForPending( url = self.url, stale = self.stale )
+    
+    
+    def title(self):
+        if self.stale:
+            spinner_html = "&nbsp;" + self.provider.spinner()
+        else:
+            spinner_html = ""
+        return "<h3><a href='%s'>%s%s</a></h3>"%(self.url,self.name,spinner_html)
 
 
     def timeout(self):
         return 60 * 20
 
     def htmlForPending( self, url, stale = False ):
-        if stale:
-            spinner_html = "&nbsp;" + self.provider.spinner()
-        else:
-            spinner_html = ""
-        return "<h3><a href='%s'>%s%s</a></h3>"%(url,url,spinner_html)
+        return ""
    
     
     def htmlForFeed( self, url, feed, stale = False ):
-        if stale:
-            spinner_html = "&nbsp;" + self.provider.spinner()
-        else:
-            spinner_html = ""
-        html = "<h3><a href='%s'>%s%s</a></h3>"%( url, feed.feed.title, spinner_html )
+        html = ""
         entries = feed.entries
         for item in entries[0:4]:
             if 'published_parsed' in item:

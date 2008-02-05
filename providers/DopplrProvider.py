@@ -5,7 +5,7 @@ import xmltramp
 from datetime import datetime
 from time import time, strftime, gmtime
 
-from Utilities import _info
+from Utilities import _info, html_escape
 import Cache
 
 class DopplrProvider( Provider ):
@@ -23,7 +23,7 @@ class DopplrProvider( Provider ):
         Cache.getContentOfUrlAndCallback( self.gotDopplrData, url, timeout = 3600, wantStale = True, failure = self.failed )
     
     def failed(self, error):
-        self.atoms[1:] = [ unicode(error) ]
+        self.atoms[1:] = [ html_escape(unicode(error)) ]
         self.changed()
     
     def gotDopplrData(self, data, stale):

@@ -3,19 +3,8 @@ from Utilities import _info
 
 class FlickrAtom( FeedAtom ):
 
-    def htmlForPending( self, url, stale = False ):
-        if stale:
-            spinner_html = "&nbsp;" + self.provider.spinner()
-        else:
-            spinner_html = ""
-        return "<h3><a href='%s'>Flickr</a>%s</h3>"%(url,spinner_html)
-    
     def htmlForFeed( self, url, feed, stale = False ):
-        if stale:
-            spinner_html = "&nbsp;" + self.provider.spinner()
-        else:
-            spinner_html = ""
-        html = "<h3><a href='%s'>Flickr</a>%s</h3>"%( url, spinner_html )
+        html = ""
 
         entries = feed.entries
         for item in entries[0:4]:

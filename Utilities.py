@@ -3,6 +3,8 @@ from AppKit import *
 from ScriptingBridge import *
 from AddressBook import *
 
+import re
+
 def dump( obj ):
     methods = dir(obj)
     for x in dir(object()) + dir(NSObject.alloc().init()):
@@ -18,3 +20,9 @@ def _info(stuff):
     if NSUserDefaults.standardUserDefaults().boolForKey_("debug"):
         print(stuff)
 
+def html_escape( s ):
+    s = re.sub(r"&", "&amp;", s)
+    s = re.sub(r"<", "&lt;", s)
+    s = re.sub(r">", "&gt;", s)
+    return s
+    

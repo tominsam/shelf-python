@@ -30,7 +30,7 @@ class ShelfController (NSWindowController):
     def awakeFromNib(self):
         self.handlers = {}
         self.providers = []
-        self.current_person = None
+        self.current_clue = None
         self.running = True
 
         #self.window().setAllowsToolTipsWhenApplicationIsInactive_( 1 )
@@ -74,9 +74,9 @@ class ShelfController (NSWindowController):
         
     # callback from the little right-pointing arrow
     def openRecord_(self, thing):
-        if self.current_person:
+        if self.current_clue:
             NSWorkspace.sharedWorkspace().openURL_(
-                NSURL.URLWithString_("addressbook://%s"%self.current_person.uniqueId())
+                NSURL.URLWithString_("addressbook://%s"%self.current_clue.uniqueId())
             )
 
     def handler_for( self, bundle ):
@@ -118,6 +118,7 @@ class ShelfController (NSWindowController):
         # the app drops the current context. TODO - don't hard-code bundle name
         if bundle.lower() in ["org.jerakeen.pyshelf"]:
             _info("Ignoring myself")
+            self.deferFade()
             return
 
         handler = self.handler_for( bundle )
@@ -136,23 +137,23 @@ class ShelfController (NSWindowController):
         self.performSelector_withObject_afterDelay_('fade', None, 3 )
     
     # callback from getClue on the handler function
-    def gotClue(self, person):
+    def gotClue(self, clue):
 
-        if self.current_person and self.current_person == person:
+        if self.current_clue and self.current_clue == clue:
             _info("Context has not changed")
             self.deferFade() # put off the context fade
             return
 
-        # person has changed
-        _info("New context - %s"%person)
-        self.current_person = person
-        self.update_info_for( person )
+        # clue has changed
+        _info("New context - %s"%clue)
+        self.current_clue = clue
+        self.update_info_for( clue )
         _info("update complete")
 
     
     def fade(self):
         _info("fading context")
-        self.current_person = None
+        self.current_clue = None
         self.nameView.setStringValue_( "" )
         self.companyView.setStringValue_( "" )
         self.imageView.setImage_( NSImage.imageNamed_("NSUser") )
@@ -163,17 +164,19 @@ class ShelfController (NSWindowController):
         self.setWebContent( "<p>No context</p>" )
 
 
-    def update_info_for( self, person ):
+    def update_info_for( self, clue ):
         _info("updating header")
-        self.nameView.setStringValue_( person.displayName() )
-        self.companyView.setStringValue_( person.companyName() )
-        self.imageView.setImage_( person.image() ) # leak?
+        self.nameView.setStringValue_( clue.displayName() )
+        self.companyView.setStringValue_( clue.companyName() )
+        self.imageView.setImage_( clue.image() ) # leak?
+
+        base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
+        self.setWebContent( "<p>thinking..</p>" )
 
         # always safe
         self.window().setHidesOnDeactivate_( False )
         
         if NSUserDefaults.standardUserDefaults().boolForKey_("bringAppForward"):
-            # TODO = doesn't seem to work 100%
             self.showWindow_(self)
             self.window().display()
             self.window().orderFrontRegardless()
@@ -181,8 +184,6 @@ class ShelfController (NSWindowController):
         if NSUserDefaults.standardUserDefaults().boolForKey_("alwaysOnTop"):
             self.window().setLevel_( NSFloatingWindowLevel ) # stuff to 'on top'
 
-        base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
-        self.setWebContent( "<p>thinking..</p>" )
 
         _info( "stopping %s old providers"%len( self.providers ) )
         for current in self.providers:
@@ -192,9 +193,9 @@ class ShelfController (NSWindowController):
         self.providers = []
         for cls in Provider.providers():
             try:
-                self.providers.append( cls( person, self ) )
+                self.providers.append( cls( clue, self ) )
             except:
-                print("Failed to create provider %s for person:"%cls)
+                print("Failed to create provider %s for clue:"%cls)
                 print(traceback.format_exc())
         _info( "update done" )
 
