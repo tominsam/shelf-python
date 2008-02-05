@@ -65,7 +65,7 @@ def lock():
 def unlock():
     CACHE_LOCK.release()
 
-def getContentOfUrlAndCallback( caller, value, url, username = None, password = None ):
+def getContentOfUrlAndCallback( callback, url, username = None, password = None ):
     
     filename = filenameForKey( keyForUrlUsernamePassword( url, username, password ) )
     _info("fetching %s to %s"%( url, filename ))
@@ -75,29 +75,29 @@ def getContentOfUrlAndCallback( caller, value, url, username = None, password = 
         base64string = base64.encodestring('%s:%s' % (username, password))[:-1]
         req.setValue_forHTTPHeaderField_("Basic %s"%base64string, "Authorization")
     
-    delegate = DownloadDelegate.alloc().initWithDelegate_value_filename_url_( caller, value, filename, url )
+    delegate = DownloadDelegate( callback )
     downloader = NSURLDownload.alloc().initWithRequest_delegate_( req, delegate )
     downloader.setDestination_allowOverwrite_( filename, True )
 
 
-class DownloadDelegate(NSObject):
+class DownloadDelegate(object):
     
-    def initWithDelegate_value_filename_url_(self, delegate, value, filename, url):
-        self.delegate = delegate
-        self.value = value
-        self.filename = filename
-        self.url = url
-        return self
+    def __init__(self, callback):
+        self.callback = callback
     
     def downloadDidBegin_(self, downloader):
-        print("*** begun download of %s"%self.url)
+        print("*** begun download of %s"%downloader.request())
+    
+    def download_didCreateDestination_(self, downloader, filename):
+        print("*** downlaoder created %s"%filename)
+        self.filename = filename
     
     def downloadDidFinish_(self, downloader):
-        print("*** finished download of %s"%self.url)
+        print("*** finished download of %s"%downloader.request())
         data = file( self.filename ).read()
         print(data)
-        self.delegate.gotContentsOfUrlWithValue( self.url, self.value, data )
-    
+        self.callback( data )
+
     def download_didFailWithError_(self, downloader, error):
         print("*** ERROR! %s"%error)
 

@@ -3,19 +3,18 @@ from AppKit import *
 from WebKit import *
 from AddressBook import *
 from ScriptingBridge import *
-from Utilities import _info
 
 import re
 from email.utils import parseaddr
 import microformatparser
 import sgmllib
 from HTMLParser import HTMLParseError
-
 import urllib, urlparse, urllib2
 from urllib import quote
-
 import simplejson
 
+import Cache
+from Utilities import _info
 from Clue import *
 
 class Extractor(object):
@@ -49,15 +48,12 @@ class Extractor(object):
         
         clues = self._search_for_url( url )
 
-        while len(clues) == 0 and re.search(r'/', url):
+        while not clues and re.search(r'/', url):
             url = re.sub(r'/[^/]*$','',url)
             clues += self._search_for_url( url )
-        
-        if len(clues) == 0:
-            graph_urls = self.social_graph_urls_for( original )
-            for graph_url in graph_urls:
-                _info("Looking for people with url (from social graph) '%s'"%graph_url)
-                clues += self._search_for_url( graph_url )
+
+        if not clues:
+            graph_urls = self.getSocialGraphFor( original )
 
         self.addClues( clues )
     
@@ -151,21 +147,23 @@ class Extractor(object):
         
         self.addClues( clues )
 
-    def social_graph_urls_for( self, url ):
+    def getSocialGraphFor( self, url ):
         api = "http://socialgraph.apis.google.com/lookup?pretty=1&fme=1"
         api += "&q=" + quote( url )
         _info("Social graph API call to " + api )
-        req = urllib2.Request(api)
-        io = urllib2.urlopen(req)
-        data = simplejson.load( io )
-        _info( repr( data ) )
+        Cache.getContentOfUrlAndCallback( self.gotSocialGraphData, api )
+    
+    def gotSocialGraphData( self, raw ):
+        print("got %s"%raw)
+        data = simplejson.loads( raw )
         urls = data['nodes'].keys()
         extra = []
         for u in urls:
             if 'unverified_claiming_nodes' in data['nodes'][u]:
                 extra += data['nodes'][u]['unverified_claiming_nodes']
         urls += extra # TODO _ weed dupes
-        if url in urls:
-            urls.remove( url ) # don't care about this one
-        return urls 
+
+        for graph_url in urls:
+            _info("Looking for people with url (from social graph) '%s'"%graph_url)
+            self.addClues( self._search_for_url( graph_url ) )
 
