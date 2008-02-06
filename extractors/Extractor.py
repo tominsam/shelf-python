@@ -163,7 +163,12 @@ class Extractor(object):
             self.clues_from_name( card['fn'] )
 
 
+    SOCIAL_GRAPH_CACHE = {}
     def getSocialGraphFor( self, url ):
+        if url in Extractor.SOCIAL_GRAPH_CACHE:
+            print_info("using cached social graph data")
+            self.addClues( Extractor.SOCIAL_GRAPH_CACHE[url] )
+            return
         api = "http://socialgraph.apis.google.com/lookup?pretty=1&fme=1&edo=1&edi=1"
         api += "&q=" + quote( url )
         print_info("Social graph API call to " + api )
@@ -174,6 +179,7 @@ class Extractor(object):
             data = simplejson.loads( raw )
         except ValueError:
             return # meh
+        original_url = data['canonical_mapping'].keys()[0]
         urls = data['nodes'].keys()
         extra = []
         for u in urls:
@@ -185,5 +191,8 @@ class Extractor(object):
             print_info("Google Social Graph URL '%s'"%graph_url)
             clues = self._search_for_url( graph_url )
             self.addClues( clues )
-            if clues: return # done
+            if clues:
+                Extractor.SOCIAL_GRAPH_CACHE[ original_url ] = clues
+                return # done
 
+        Extractor.SOCIAL_GRAPH_CACHE[ original_url ] = []
