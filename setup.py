@@ -9,7 +9,7 @@ from distutils.core import setup
 import py2app
 from glob import glob
 
-version = "0.0.11"
+version = "0.0.12"
 
 plist = dict(
   CFBundleName="Shelf",
