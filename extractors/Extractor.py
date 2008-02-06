@@ -25,6 +25,7 @@ class Extractor(object):
         self.addressBook = ABAddressBook.sharedAddressBook()
         
     def getClue( self, caller ):
+        self.done = False
         NSObject.cancelPreviousPerformRequestsWithTarget_( self )
         self.caller = caller
         self.clues() # implemented in subclasses. Calls addClues
@@ -34,9 +35,11 @@ class Extractor(object):
             print_info("found a clue!")
             self.caller.gotClue( clues[0] )
             self.caller = None
+            self.done = True
             NSObject.cancelPreviousPerformRequestsWithTarget_( self )
 
     def clues_from_email( self, email ):
+        if self.done: return
         # email look like 'Name <email>' sometimes.
         name, email = parseaddr( email )
         print_info("Looking for people with email '%s'"%email)
@@ -44,6 +47,7 @@ class Extractor(object):
     
     def clues_from_url( self, url ):
         if not url: return
+        if self.done: return
         original = url # preserve
         
         if re.match(r'xmpp:', url):
@@ -79,27 +83,32 @@ class Extractor(object):
         return clues
 
     def clues_from_aim( self, username ):
+        if self.done: return
         print_info("Looking for people with AIM %s"%username)
         self.addClues( self._search_for( username, kABAIMInstantProperty ) )
     
     def clues_from_jabber( self, username ):
+        if self.done: return
         print_info("Looking for people with Jabber %s"%username)
         self.addClues( self._search_for( username, kABJabberInstantProperty ) )
     
     def clues_from_yahoo( self, username ):
+        if self.done: return
         print_info("Looking for people with Yahoo! %s"%username)
         self.addClues( self._search_for( username, kABYahooInstantProperty ) )
     
     def clues_from_name( self, name ):
+        if self.done: return
         names = re.split(r'\s+', name)
         self.addClues( self.clues_from_names( names[0], names[-1] ) )
 
     def clues_from_names( self, forename, surname ):
+        if self.done: return
         print_info("Looking for people called '%s' '%s'"%( forename, surname ))
         forename_search = ABPerson.searchElementForProperty_label_key_value_comparison_( kABFirstNameProperty, None, None, forename, kABPrefixMatchCaseInsensitive )
         surname_search = ABPerson.searchElementForProperty_label_key_value_comparison_( kABLastNameProperty, None, None, surname, kABEqualCaseInsensitive )
         se = ABSearchElement.searchElementForConjunction_children_( kABSearchAnd, [ forename_search, surname_search ] )
-        self.addClues( map(lambda a: Clue(a), self.addressBook.recordsMatchingSearchElement_( se )) )
+        self.addClues( map(lambda a: Clue.forPerson(a), self.addressBook.recordsMatchingSearchElement_( se )) )
         
     
     def _search_for( self, thing, type, method = kABEqualCaseInsensitive ):
@@ -107,10 +116,11 @@ class Extractor(object):
             return []
             
         se = ABPerson.searchElementForProperty_label_key_value_comparison_( type, None, None, thing, method )
-        return map(lambda a: Clue(a), self.addressBook.recordsMatchingSearchElement_( se ))
+        return map(lambda a: Clue.forPerson(a), self.addressBook.recordsMatchingSearchElement_( se ))
 
 
     def clues_from_microformats( self, source ):
+        if self.done: return
         try:
             feeds = microformatparser.parse( source )
         except HTMLParseError:
@@ -154,13 +164,16 @@ class Extractor(object):
 
 
     def getSocialGraphFor( self, url ):
-        api = "http://socialgraph.apis.google.com/lookup?pretty=1&fme=1"
+        api = "http://socialgraph.apis.google.com/lookup?pretty=1&fme=1&edo=1&edi=1"
         api += "&q=" + quote( url )
         print_info("Social graph API call to " + api )
-        Cache.getContentOfUrlAndCallback( self.gotSocialGraphData, api, timeout = 3600 * 12 ) # huge timeout here
-    
+        Cache.getContentOfUrlAndCallback( self.gotSocialGraphData, api, timeout = 3600 * 48 ) # huge timeout here
+
     def gotSocialGraphData( self, raw, isStale ):
-        data = simplejson.loads( raw )
+        try:
+            data = simplejson.loads( raw )
+        except ValueError:
+            return # meh
         urls = data['nodes'].keys()
         extra = []
         for u in urls:
@@ -170,5 +183,7 @@ class Extractor(object):
 
         for graph_url in urls:
             print_info("Google Social Graph URL '%s'"%graph_url)
-            self.addClues( self._search_for_url( graph_url ) )
+            clues = self._search_for_url( graph_url )
+            self.addClues( clues )
+            if clues: return # done
 

@@ -10,6 +10,16 @@ import simplejson
 
 class Clue(object):
     
+    CACHE = {}
+    @classmethod
+    def forPerson( cls, person ):
+        if person.uniqueId() in Clue.CACHE:
+            print_info("person is cached")
+            return Clue.CACHE[ person.uniqueId() ]
+        print_info("creating new person")
+        Clue.CACHE[ person.uniqueId() ] = Clue( person )
+        return Clue.CACHE[ person.uniqueId() ]
+
     def __init__(self, person):
         self.person = person
         self.nsimage = None
@@ -21,38 +31,53 @@ class Clue(object):
         self.delegate = delegate
     
     def getInfo(self):
-        for current in self.providers:
-            current.stop()
-
         self.boring_urls = self.urls()
-        self.providers = []
-        for cls in Provider.providers():
-            try:
-                self.providers.append( cls( self ) )
-            except:
-                print("Failed to create provider %s for clue:"%cls)
-                print(traceback.format_exc())
+
+        if not self.providers:
+            for cls in Provider.providers():
+                try:
+                    self.providers.append( cls( self ) )
+                except:
+                    print("Failed to create provider %s for clue:"%cls)
+                    print(traceback.format_exc())
+
+            # on the first inflate of this person, ask google for more urls.
+            if NSUserDefaults.standardUserDefaults().boolForKey_("googleSocialContext"):
+                self.getMoreUrls()
+
+        
+        for provider in self.providers:
+            provider.provide()
 
         # just in case any providers (basicprovider, I'm looking at you)
         # are done already
-        self.delegate.setWebContent( self.content() )
+        self.delegate.setWebContent_( self.content() )
 
     def getMoreUrls( self ):
         if not self.ab_urls(): return # no point
         api = "http://socialgraph.apis.google.com/lookup?pretty=1&fme=1"
         api += "&q=" + ",".join([ quote(url) for url in self.ab_urls() ])
         print_info("Social graph API call to " + api )
-        Cache.getContentOfUrlAndCallback( self.gotSocialGraphData, api, timeout = 3600 * 12 ) # huge timeout here
+        Cache.getContentOfUrlAndCallback( self.gotSocialGraphData, api, timeout = 3600 * 48 ) # huge timeout here
 
     def gotSocialGraphData( self, raw, isStale ):
-        data = simplejson.loads( raw )
+        try:
+            data = simplejson.loads( raw )
+        except ValueError:
+            return # meh
         urls = data['nodes'].keys()
+        self.addExtraUrls( urls )
+    
+    def addExtraUrls( self, urls ):
         all_extra_urls = self.extra_urls + urls
         dedupe = {}
         for url in all_extra_urls:
-            dedupe[ normalize_url( url ) ] = url
+            if re.match(r'http', url): # HTTP only
+                # respect existing normalizartion forms
+                if not normalize_url( url ) in dedupe:
+                    dedupe[ normalize_url( url ) ] = url
         self.extra_urls = dedupe.values()
-        
+
         # remove all the urls we already know about
         known_urls = [ normalize_url( url ) for url in self.ab_urls() ]
         for url in [ u for u in self.extra_urls ]: # cheap copy, as we're mutating the array
@@ -67,7 +92,8 @@ class Clue(object):
     def providerUpdated_(self, provider):
         print_info("Update for %s from %s"%( self, provider ))
         if provider in self.providers:
-            self.delegate.setWebContent( self.content() )
+            self.delegate.setWebContent_( self.content() )
+            #self.delegate.performSelector_withObject_afterDelay_("setWebContent_", self.content(), 0.1)
     
     def content(self):
         content = ""

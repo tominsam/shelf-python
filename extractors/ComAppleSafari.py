@@ -15,10 +15,12 @@ class ComAppleSafari(Extractor):
         # window 0 is always the foreground window? Seems it.
         tab = self.safari.windows()[ 0 ].currentTab()
         self.clues_from_url( tab.URL() )
+        if self.done: return
         
         if tab.source():
             # look for microformats
             self.clues_from_microformats( tab.source() )
+            if self.done: return
 
             # look for rel="me" links
             relme = RelMeParser()

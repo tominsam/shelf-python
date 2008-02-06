@@ -16,7 +16,7 @@ from Provider import *
 
 Provider.addProvider( "BasicProvider" )
 Provider.addProvider( "TwitterProvider" )
-Provider.addProvider( "DopplrProvider" )
+# SSL failure Provider.addProvider( "DopplrProvider" )
 Provider.addProvider( "FlickrProvider" )
 # Order is important - FeedProvider must be _last_, because it uses all
 # urls in the address book card not claimed by another provider
@@ -129,12 +129,10 @@ class ShelfController (NSWindowController):
             print_info("Don't know how to get clues from %s"%bundle)
             return
         else:
-            print_info( "Looking for clues using %s"%handler )
             handler.getClue( self )
 
     # fade the active context if we don't recieve any context for a while
     def deferFade(self):
-        print_info("deferring fade")
         NSObject.cancelPreviousPerformRequestsWithTarget_selector_object_( self, "fade", None )
         self.performSelector_withObject_afterDelay_('fade', None, 3 )
     
@@ -142,7 +140,6 @@ class ShelfController (NSWindowController):
     def gotClue(self, clue):
 
         if self.current_clue and self.current_clue == clue:
-            print_info("Context has not changed")
             self.deferFade() # put off the context fade
             return
 
@@ -151,7 +148,6 @@ class ShelfController (NSWindowController):
         if self.current_clue: self.current_clue.stop()
         self.current_clue = clue
         self.updateInfo()
-        print_info("update complete")
 
     
     def fade(self):
@@ -166,7 +162,7 @@ class ShelfController (NSWindowController):
         self.companyView.setStringValue_( "" )
         self.imageView.setImage_( NSImage.imageNamed_("NSUser") )
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
-        self.setWebContent( "<p>No context</p>" )
+        self.setWebContent_( "<p>No context</p>" )
 
     def updateInfo(self):
         clue = self.current_clue
@@ -175,7 +171,7 @@ class ShelfController (NSWindowController):
         self.companyView.setStringValue_( clue.companyName() )
         self.imageView.setImage_( clue.image() ) # leak?
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
-        self.setWebContent( "<p>thinking..</p>" )
+        self.setWebContent_( "<p>thinking..</p>" )
 
         # always safe
         self.window().setHidesOnDeactivate_( False )
@@ -191,10 +187,7 @@ class ShelfController (NSWindowController):
         clue.setDelegate_(self)
         clue.getInfo()
 
-        if NSUserDefaults.standardUserDefaults().boolForKey_("googleSocialContext"):
-            clue.getMoreUrls()
-
-    def setWebContent(self, html):
+    def setWebContent_(self, html):
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
         self.webView.mainFrame().loadHTMLString_baseURL_( """
             <html>
@@ -210,7 +203,6 @@ class ShelfController (NSWindowController):
             "style.css", # live
             html
         ), base )
-        print_info( "webview update complete" )
 
     # supress right-click menu
     def webView_contextMenuItemsForElement_defaultMenuItems_( self, webview, element, items ):

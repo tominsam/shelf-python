@@ -42,7 +42,6 @@ def getContentOfUrlAndCallback( callback, url, username = None, password = None,
 
     if os.path.exists(filename):
         if time() - os.path.getmtime( filename ) < timeout:
-            print_info("cached file is still fresh")
             callback( file( filename ).read(), False )
             return # no need to get the URL
         
@@ -86,7 +85,7 @@ class DownloadDelegate(object):
         self.callback( data, False )
 
     def download_didFailWithError_(self, downloader, error):
-        print_info("ERROR downloading %s: %s"%( downloader.request(), error ))
+        print_info("error downloading %s: %s"%( downloader.request(), error ))
         if self.failure:
             self.failure( error )
 

@@ -13,6 +13,7 @@ class ComIconfactoryTwitterrific(Extractor):
 
         url = self.twitterific.selection().userUrl()
         self.clues_from_url( url )
+        if self.done: return
 
         username = self.twitterific.selection().screenName()
         self.clues_from_url("http://twitter.com/%s"%( username ) )

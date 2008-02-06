@@ -81,14 +81,14 @@ class FeedAtom(object):
    
     
     def htmlForFeed( self, url, feed, stale = False ):
-        html = ""
+        html = u""
         entries = feed.entries
         for item in entries[0:4]:
             if 'published_parsed' in item:
-                html += '<span class="feed-date">%s</span>'%( time.strftime("%b %d", item.published_parsed ) )
+                html += u'<span class="feed-date">%s</span>'%( time.strftime("%b %d", item.published_parsed ) )
             elif 'updated_parsed' in item:
-                html += '<span class="feed-date">%s</span>'%( time.strftime("%b %d", item.updated_parsed ) )
-            html += '<p class="feed-title"><a href="%s">%s</a></p>'%( item.link, item.title )
+                html += u'<span class="feed-date">%s</span>'%( time.strftime("%b %d", item.updated_parsed ) )
+            html += u'<p class="feed-title"><a href="%s">%s</a></p>'%( item.link, item.title )
             detail = None
             if 'content' in item and len(item.content) > 0:
                 detail = item.content[0].value
@@ -96,8 +96,11 @@ class FeedAtom(object):
                 detail = item.summary
             if detail:
                 raw = re.sub(r'<.*?>', '', detail) # strip tags
-                trimmed = " ".join( re.split(r'\s+', raw.strip())[0:10] )
-                html += '<p class="feed-content">%s&nbsp;<a href="%s">...</a></p>'%( trimmed, item.link )
+                try:
+                    trimmed = u" ".join( re.split(r'\s+', raw.strip())[0:10] )
+                except UnicodeDecodeError:
+                    trimmed = u"invalid unicode content"
+                html += u'<p class="feed-content">%s&nbsp;<a href="%s">...</a></p>'%( trimmed, item.link )
         return html
 
 

@@ -14,5 +14,10 @@ class ComRancheroNetNewsWire(Extractor):
 
         if selected.objectDescription():
             self.clues_from_microformats( selected.objectDescription() )
+            if self.done: return
+
         self.clues_from_url( selected.URL() )
+        if self.done: return
+
         self.clues_from_url( selected.subscription().homeURL() )
+        if self.done: return
