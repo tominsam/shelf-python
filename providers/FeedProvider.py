@@ -63,9 +63,11 @@ class FeedAtom(object):
     def failed( self, error ):
         if self.feed:
             # never mind, we have _something_
-            return
-        self.error = error
-        self.stale = False
+            self.stale = False
+        else:
+            # no old feed, just display error
+            self.error = error
+            self.stale = False
         self.provider.changed()
 
     def content(self):

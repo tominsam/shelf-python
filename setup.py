@@ -14,6 +14,7 @@ version = "0.0.12" # update in Cache.py as well, for the User-Agent string
 plist = dict(
   CFBundleName="Shelf",
   NSMainNibFile="MainMenu",
+  NSPrincipalClass='PyShelfApplication',
   CFBundleIdentifier="org.jerakeen.pyshelf", # historical
   CFBundleShortVersionString=version,
   CFBundleVersion=version,

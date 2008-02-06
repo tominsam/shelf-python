@@ -93,9 +93,9 @@ class DownloadDelegate(object):
             self.failure( error )
 
 # incredibly evil - ignore https cert errors (doesn't work!)
-#from objc import Category, YES
+#from objc import Category
 #class NSURLRequest(Category(NSURLRequest)):
 #    @classmethod
 #    def allowsAnyHTTPSCertificateForHost_(cls, host):
-#        return YES
+#        return True
 
