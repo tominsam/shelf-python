@@ -14,6 +14,8 @@ class DopplrProvider( Provider ):
         self.token = NSUserDefaults.standardUserDefaults().stringForKey_("dopplrToken")
         dopplrs = self.person.takeUrls(r'dopplr\.com/traveller')
         if not dopplrs or not self.token: return
+        
+        return # We have an SSL error right now - can't do anything.
     
         self.username = re.search(r'/traveller/([^/]+)', dopplrs[0]).group(1)
         self.atoms = [ "<h3><a href='http://www.dopplr.com/traveller/%s/'>Dopplr</a>&nbsp;%s</h3>"%( self.username, self.spinner() ) ]

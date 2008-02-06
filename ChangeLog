@@ -78,3 +78,12 @@ message-passing based, and can do things in the background. The Google Social
 stuff uses this, so no longer blocks the foreground thread.
 
 ### 0.0.12 (in development)
+
+Added many docs to the source code.
+
+Shelf now sends a proper User-Agent to remote servers when fetching feeds.
+
+Removed the xmltramp library, using simplejson to parse the Dopplr API files
+instead.
+
+Messed with the flickr photo display style to include titles, and have smaller thumbnails. I think I prefer this way.
