@@ -11,6 +11,7 @@ class ComAppleSafari(Extractor):
 
     def clues(self):
         clues = []
+        if not self.safari.windows().count(): return
 
         # window 0 is always the foreground window? Seems it.
         tab = self.safari.windows()[ 0 ].currentTab()

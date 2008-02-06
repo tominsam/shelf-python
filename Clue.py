@@ -52,8 +52,12 @@ class Clue(object):
     # Kick off all the providers to start getting information on the person.
     # providers call back to this object when they have something.
     def getInfo(self):
+        # the 'interesting' providers - flickr, twitter, etc - extract urls
+        # from the boring_urls list based on regular expressions. The FeedProvider
+        # wakes up right at the end, and turns everything left over into feeds.
         self.boring_urls = self.urls()
 
+        # first run for this Clue?
         if not self.providers:
             for cls in Provider.providers():
                 try:
@@ -66,7 +70,9 @@ class Clue(object):
             if NSUserDefaults.standardUserDefaults().boolForKey_("googleSocialContext"):
                 self.getMoreUrls()
 
-        
+        # tell every provider to look for clues.
+        # TODO - we really don't need to do this _incredibly_ often. a 30 second
+        # timeout would make Shelf a lot less twitchy in terms of looking for feeds
         for provider in self.providers:
             provider.provide()
 
@@ -74,6 +80,8 @@ class Clue(object):
         # are done already
         self.delegate.updateWebContent_fromClue_( self.content(), self )
 
+    # use Google Social - ask it to tell us which urls are linked to using
+    # rel="me" links from any of the urls that we already have for this person.
     def getMoreUrls( self ):
         if not self.ab_urls(): return # no point
         api = "http://socialgraph.apis.google.com/lookup?pretty=1&fme=1"
@@ -81,6 +89,7 @@ class Clue(object):
         print_info("Social graph API call to " + api )
         Cache.getContentOfUrlAndCallback( self.gotSocialGraphData, api, timeout = 3600 * 48 ) # huge timeout here
 
+    # callback from Google Social call
     def gotSocialGraphData( self, raw, isStale ):
         try:
             data = simplejson.loads( raw )
@@ -89,51 +98,60 @@ class Clue(object):
         urls = data['nodes'].keys()
         self.addExtraUrls( urls )
     
+    
     def addExtraUrls( self, urls ):
-        all_extra_urls = self.extra_urls + urls
+        # build hash to dedupe - keys are the normalized url form,
+        # values are the URLs as they came in.
         dedupe = {}
-        for url in all_extra_urls:
+        for url in self.extra_urls + urls:
             if re.match(r'http', url): # HTTP only
                 # respect existing normalizartion forms
                 if not normalize_url( url ) in dedupe:
                     dedupe[ normalize_url( url ) ] = url
         self.extra_urls = dedupe.values()
 
-        # remove all the urls we already know about
+        # remove all the urls we already know about from the Address Book
         known_urls = [ normalize_url( url ) for url in self.ab_urls() ]
-        for url in [ u for u in self.extra_urls ]: # cheap copy, as we're mutating the array
+        for url in [ u for u in self.extra_urls ]: # cheap copy, as we're mutating the array and python doesn't like looping over an array you're changing in place
             if normalize_url( url ) in known_urls:
                 self.extra_urls.remove(url)
         
-        print_info("I have the AB urls '%s'"%(", ".join(self.ab_urls())))
-        print_info("Google gave me the urls '%s'"%(", ".join(self.extra_urls)))
+        print_info("I have the Address Book urls '%s'"%(", ".join(self.ab_urls())))
+        print_info("Google gave me the extra urls '%s'"%(", ".join(self.extra_urls)))
 
-        self.getInfo() # TODO - this is a little too heavy for my liking.
+        self.getInfo() # TODO - this kicks everything off again. Too heavy?
 
+    # the providers callback to this function when they have something new to say.
+    # We just pass the message upwards
     def providerUpdated_(self, provider):
         print_info("Update for %s from %s"%( self, provider ))
+        # It's unlikely we'll get a message from a provider we don't own, but..
         if provider in self.providers:
             self.delegate.updateWebContent_fromClue_( self.content(), self )
     
+    # this method returns the HTML content that should be in the webview for this clue.
     def content(self):
+        # jut cat together the content of our providers.
+        # TODO - long term, I'd like providers to return smarter objects, with
+        # contents and date and headings, so the front-end can group them by
+        # source, or URL, or date, and get a date-sorted list of everything a
+        # person has done.
         content = ""
         for provider in self.providers:
             content += provider.content()
         if not content:
             return "<p>thinking..</p>"
         return content
-    
+        
+    # stop this clue from thinking soon. Tell all the providers to stop.
     def stop(self):
         for current in self.providers:
             current.stop()
 
-    def __eq__(self, other):
-        if not other: return False
-        return self.uniqueId() == other.uniqueId()
-    
-    def __str__(self):
-        return "<Clue: '%s'>"%self.displayName()
-    
+
+    # strip urls matching the passed regexp from the boring_urls list, and
+    # return them. This lets providers 'take posession of' urls so the FeedProvider
+    # doesn't see them
     def takeUrls(self,pattern):
         interesting = []
         for u in self.urls():
@@ -144,9 +162,25 @@ class Clue(object):
                 self.boring_urls.remove(u)
         return interesting
     
+    
+    ######################################
+    # These methods represent the properties of the underlying person
+
+    # Used for == comparison
+    def __eq__(self, other):
+        if not other: return False
+        return self.uniqueId() == other.uniqueId()
+    
+    # Stringify to something readable
+    def __str__(self):
+        return "<Clue: '%s'>"%self.displayName()
+    
+    # must be globally unique
     def uniqueId(self):
         return self.person.uniqueId()
-        
+    
+    # returns an NSImage for this person. Falls back to a nice default if there's
+    # nothing in the Address Book
     def image(self):
         if not self.nsimage:
             self.nsimage = NSImage.alloc().initWithData_( self.person.imageData() )
@@ -188,6 +222,7 @@ class Clue(object):
     def emails(self):
         return self._multi_to_list( self.person.valueForProperty_(kABEmailProperty) )
 
+    # Address Book urls. Rather than urls we have from all sources.
     def ab_urls(self):
         return self._multi_to_list( self.person.valueForProperty_(kABURLsProperty) )
     
@@ -202,7 +237,7 @@ class Clue(object):
             return gmtime( self.person.valueForProperty_( kABBirthdayProperty ).timeIntervalSince1970() )
         return None
 
-
+    # utility method for dealing with the Cocoa Address Book interface.
     def _multi_to_list(self, multi):
         if not multi: return []
         output = []

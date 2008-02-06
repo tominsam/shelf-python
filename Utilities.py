@@ -26,7 +26,9 @@ def html_escape( s ):
     s = re.sub(r">", "&gt;", s)
     return s
 
-# this is a HACK
+# this is a HACK to normalize urls. not that it's not required to return
+# something that's still a valid url! (though it currently does) Don't assume
+# that it does
 def normalize_url( url ):
     url = re.sub(r'/$', '', url) # trailing slash
     url = re.sub(r'//www.flickr.', '//flickr.', url) # flickr special casing
