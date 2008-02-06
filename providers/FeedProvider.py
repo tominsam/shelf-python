@@ -50,7 +50,7 @@ class FeedAtom(object):
             self.provider.changed()
         
     def failed( self, error ):
-        if self.stale:
+        if self.feed:
             # never mind, we have _something_
             return
         self.error = error
@@ -61,7 +61,7 @@ class FeedAtom(object):
         if self.dead:
             return ""
         elif self.error:
-            return self.title() + "<pre>%s</pre>"%html_escape(unicode( self.error ))
+            return "" # don't display error self.title() + "<pre>%s</pre>"%html_escape(unicode( self.error ))
         elif self.feed:
             return self.title() + self.htmlForFeed( url = self.url, feed = self.feed, stale = self.stale )
         else:
