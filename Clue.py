@@ -53,7 +53,6 @@ class Clue(object):
         # Clues are constructed using Clue.forPerson() from everywhere. Eventually
         # I'd like clues to be a little more flexible.
         self.person = person
-        self.nsimage = None
         self.extra_urls = [] # Urls from google social
         self.providers = []
 
@@ -193,14 +192,12 @@ class Clue(object):
     # returns an NSImage for this person. Falls back to a nice default if there's
     # nothing in the Address Book
     def image(self):
-        if not self.nsimage:
-            self.nsimage = NSImage.alloc().initWithData_( self.person.imageData() )
-            if not self.nsimage:
-                if self.isCompany():
-                    self.nsimage = NSImage.imageNamed_("NSUserGroup")
-                else:
-                    self.nsimage = NSImage.imageNamed_("NSUser")
-        return self.nsimage
+        if self.person.imageData():
+            return NSImage.alloc().initWithData_( self.person.imageData() )
+        if self.isCompany():
+            return NSImage.imageNamed_("NSUserGroup")
+        else:
+            return NSImage.imageNamed_("NSUser")
 
     def forename(self):
         return self.person.valueForProperty_(kABFirstNameProperty)
