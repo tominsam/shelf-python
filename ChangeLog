@@ -58,8 +58,13 @@ you visit, and every URL belonging to anyone you IM with, to Google.
 There are now some trivial preferences for how you want Shelf to display -
 the old default behaviours of 'always come to the foreground when I have something to tell you' and 'window is always on top if there is context' are now options.
 
+#### Known bugs
+
 The Dopplr module is currently broken, due to the odd SSL certificate Dopplr
 use. Sorry. Working on it.
+
+The RSS feed fetcher shares a cookie store with Safari. This may or may not
+be a bug or a feature, depending on your point of view. Anyone care?
 
 #### Technical changes:
 

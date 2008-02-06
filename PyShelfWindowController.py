@@ -134,7 +134,7 @@ class ShelfController (NSWindowController):
     # fade the active context if we don't recieve any context for a while
     def deferFade(self):
         NSObject.cancelPreviousPerformRequestsWithTarget_selector_object_( self, "fade", None )
-        self.performSelector_withObject_afterDelay_('fade', None, 3 )
+        self.performSelector_withObject_afterDelay_('fade', None, 4 )
     
     # callback from getClue on the handler function
     def gotClue(self, clue):
@@ -162,16 +162,17 @@ class ShelfController (NSWindowController):
         self.companyView.setStringValue_( "" )
         self.imageView.setImage_( NSImage.imageNamed_("NSUser") )
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
-        self.setWebContent_( "<p>No context</p>" )
+        self.setWebContent_( "" )
 
     def updateInfo(self):
         clue = self.current_clue
+        self.current_clue.setDelegate_(self)
 
         self.nameView.setStringValue_( clue.displayName() )
         self.companyView.setStringValue_( clue.companyName() )
         self.imageView.setImage_( clue.image() ) # leak?
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
-        self.setWebContent_( "<p>thinking..</p>" )
+        self.setWebContent_( clue.content() )
 
         # always safe
         self.window().setHidesOnDeactivate_( False )
@@ -183,9 +184,16 @@ class ShelfController (NSWindowController):
 
         if NSUserDefaults.standardUserDefaults().boolForKey_("alwaysOnTop"):
             self.window().setLevel_( NSFloatingWindowLevel ) # stuff to 'on top'
+        
+        # do this so the webview has a chance to display something quickly
+        self.performSelector_withObject_afterDelay_('kickClue', None, 0 )
 
-        clue.setDelegate_(self)
-        clue.getInfo()
+    def kickClue(self):
+        self.current_clue.getInfo()
+    
+    def updateWebContent_(self, clue, content):
+        if clue == self.current_clue:
+            self.setWebContent_( content )
 
     def setWebContent_(self, html):
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )

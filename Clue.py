@@ -51,7 +51,7 @@ class Clue(object):
 
         # just in case any providers (basicprovider, I'm looking at you)
         # are done already
-        self.delegate.setWebContent_( self.content() )
+        self.delegate.updateWebContent_( self, self.content() )
 
     def getMoreUrls( self ):
         if not self.ab_urls(): return # no point
@@ -92,8 +92,7 @@ class Clue(object):
     def providerUpdated_(self, provider):
         print_info("Update for %s from %s"%( self, provider ))
         if provider in self.providers:
-            self.delegate.setWebContent_( self.content() )
-            #self.delegate.performSelector_withObject_afterDelay_("setWebContent_", self.content(), 0.1)
+            self.delegate.updateWebContent_( self, self.content() )
     
     def content(self):
         content = ""
@@ -108,6 +107,7 @@ class Clue(object):
             current.stop()
 
     def __eq__(self, other):
+        if not other: return False
         return self.uniqueId() == other.uniqueId()
     
     def __str__(self):

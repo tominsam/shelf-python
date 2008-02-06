@@ -50,6 +50,9 @@ class FeedAtom(object):
             self.provider.changed()
         
     def failed( self, error ):
+        if self.stale:
+            # never mind, we have _something_
+            return
         self.error = error
         self.stale = False
         self.provider.changed()
