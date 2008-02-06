@@ -6,7 +6,7 @@ from autorss import getRSSLinkFromHTMLSource
 import urllib, urlparse
 import time
 
-from Utilities import _info, html_escape
+from Utilities import *
 import Cache
 
 class FeedAtom(object):
@@ -112,7 +112,6 @@ class FeedProvider( Provider ):
     def provide( self ):
         todo = self.urls() # if we're claiming from boring_urls, do it first
         if not todo: return
-
         self.atoms = [ self.atomClass()( self, url ) for url in todo ]
 
     # override these

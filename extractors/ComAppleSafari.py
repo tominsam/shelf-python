@@ -1,7 +1,7 @@
 from ScriptingBridge import *
 from Extractor import *
 import urlparse
-from Utilities import _info
+from Utilities import *
 
 class ComAppleSafari(Extractor):
 
@@ -23,7 +23,7 @@ class ComAppleSafari(Extractor):
             # look for rel="me" links
             relme = RelMeParser()
             relme.feed( tab.source() )
-            _info("Found rel='me' links: %s"%( ",".join(relme.hrefs) ) )
+            print_info("Found rel='me' links: %s"%( ",".join(relme.hrefs) ) )
             for link in relme.hrefs:
                 profile = urlparse.urljoin( tab.URL(), link )
                 # not sure what to do here. This might point somewhere

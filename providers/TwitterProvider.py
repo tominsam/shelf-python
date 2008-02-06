@@ -1,5 +1,5 @@
 from FeedProvider import *
-from Utilities import _info
+from Utilities import *
 
 # cunning subclassing of feedprovider here as a demo.
 

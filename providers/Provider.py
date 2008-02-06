@@ -10,7 +10,7 @@ import re
 from time import time
 import traceback
 
-from Utilities import _info
+from Utilities import *
 import Cache
 
 class Provider( object ):
@@ -26,21 +26,19 @@ class Provider( object ):
     def providers( myClass ):
         return Provider.PROVIDERS
 
-    def __init__(self, person, delegate):
+    def __init__(self, person):
         #NSLog("** Provider '%s' init"%self.__class__.__name__)
         super( Provider, self ).__init__()
         self.atoms = []
         self.running = True
         self.person = person
-        self.delegate = delegate
         self.provide()
     
     def content(self):
         return "".join(self.atoms)
     
     def changed(self):
-        if self.running:
-            self.delegate.providerUpdated_(self)
+        self.person.providerUpdated_(self)
 
     def provide( self ):
         pass

@@ -5,7 +5,7 @@ import xmltramp
 from datetime import datetime
 from time import time, strftime, gmtime
 
-from Utilities import _info, html_escape
+from Utilities import *
 import Cache
 
 class DopplrProvider( Provider ):

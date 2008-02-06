@@ -25,6 +25,7 @@ objc.loadBundle('Sparkle', globals(), bundle_path=bundle_path)
 
 NSUserDefaults.standardUserDefaults().registerDefaults_({
     'googleSocial':False,
+    'googleSocialContext':False,
     'bringAppForward':True,
     'alwaysOnTop':True,
     'debug':False

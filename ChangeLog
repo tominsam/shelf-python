@@ -42,23 +42,32 @@ Shelf now stops correctly when quit. oops.
 Feed provider now displays the first 10 words of the blog entry under the
 heading, and the entry date.
 
-Use urllib2 to get urls - this lets me do the right thing for feeds that
-need authentication.
+Add 'birthday' to the list of simple information displayed about a user.
 
-<strike>Cache now persists between runs. Maybe.</strike> Nope, doesn't work very well.
+I now use the Google Social Graph to try to derive a person from a page you're
+looking at, if that page isn't already in your address book. Likewise, I use
+the Google Social Graph to find out more urls from someone once I have one URL
+for them. So if your homepage links to your flickr page, and only your
+homepage is in my address book, I'll still see your flickr photos when I visit
+your home page, and I'll see you if I visit your flickr page. Magic.
 
-Add 'birthday' to the list of simple information displayed about a user
+The Google Social stuff is off by default - there are two preferences for
+turning it on. This is because it's a privacy _nightmare_ - it sends every URL
+you visit, and every URL belonging to anyone you IM with, to Google.
 
-Trunk currently contains experimental Google Social Graph code. This is
-possibly bad - it sends every url you look at, every feed url you look at, and
-the homepages of everyone you get tweets from, to Google. Bad? Probably. So
-this needs to be a preference.
+There are now some trivial preferences for how you want Shelf to display -
+the old default behaviours of 'always come to the foreground when I have something to tell you' and 'window is always on top if there is context' are now options.
+
+The Dopplr module is currently broken, due to the odd SSL certificate Dopplr
+use. Sorry. Working on it.
+
+#### Technical changes:
 
 Converted build process to use py2app rather than xcode, because I know how to
 make py2app dance to my tunes. Specifically, I know how to make it pull in
 external libraries and bundle them properly. Reorganised source files into
 folders so I can keep track of where things are.
 
-Huge great internal re-write. The Extractor code-path is now much more
+_Huge_ great internal re-write. Many more code-paths are now much more
 message-passing based, and can do things in the background. The Google Social
-stuff uses this, so no longer blocks the foreground thread. Provider is next.
+stuff uses this, so no longer blocks the foreground thread.

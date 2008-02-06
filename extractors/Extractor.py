@@ -14,7 +14,7 @@ from urllib import quote
 import simplejson
 
 import Cache
-from Utilities import _info
+from Utilities import *
 from Clue import *
 
 class Extractor(object):
@@ -31,7 +31,7 @@ class Extractor(object):
 
     def addClues( self, clues ):
         if clues and self.caller:
-            _info("found a clue!")
+            print_info("found a clue!")
             self.caller.gotClue( clues[0] )
             self.caller = None
             NSObject.cancelPreviousPerformRequestsWithTarget_( self )
@@ -39,12 +39,16 @@ class Extractor(object):
     def clues_from_email( self, email ):
         # email look like 'Name <email>' sometimes.
         name, email = parseaddr( email )
-        _info("Looking for people with email '%s'"%email)
+        print_info("Looking for people with email '%s'"%email)
         self.addClues( self._search_for( email, "Email" ) )
     
     def clues_from_url( self, url ):
         if not url: return
         original = url # preserve
+        
+        if re.match(r'xmpp:', url):
+            self.clues_from_jabber( re.sub(r'xmpp:', '', url) )
+            return
 
         url = re.sub(r'^\w+://', '', url)
         clues = self._search_for_url( url )
@@ -61,14 +65,13 @@ class Extractor(object):
             # order is a little sensitive for now, as if the cache is good,
             # the clues are updated _Before_ this function returns.
             # I consider this a bug in the implementation.
-            graph_urls = self.getSocialGraphFor( original )
+            self.getSocialGraphFor( original )
 
     
     def _search_for_url( self, url ):
-        url = re.sub(r'^\w+://(www\.)?','',url) # strip leanding http:// and www (if present)
-        url = re.sub(r'/+$', '', url) # strip trailing slash
+        url = normalize_url( url )
         
-        _info("Looking for people with URL '%s'"%url)
+        print_info("Looking for people with URL '%s'"%url)
 
         # search for url, plus url with trailing slash
         clues =  self._search_for( url, "URLs", kABSuffixMatchCaseInsensitive )
@@ -76,15 +79,15 @@ class Extractor(object):
         return clues
 
     def clues_from_aim( self, username ):
-        _info("Looking for people with AIM %s"%username)
+        print_info("Looking for people with AIM %s"%username)
         self.addClues( self._search_for( username, kABAIMInstantProperty ) )
     
     def clues_from_jabber( self, username ):
-        _info("Looking for people with Jabber %s"%username)
+        print_info("Looking for people with Jabber %s"%username)
         self.addClues( self._search_for( username, kABJabberInstantProperty ) )
     
     def clues_from_yahoo( self, username ):
-        _info("Looking for people with Yahoo! %s"%username)
+        print_info("Looking for people with Yahoo! %s"%username)
         self.addClues( self._search_for( username, kABYahooInstantProperty ) )
     
     def clues_from_name( self, name ):
@@ -92,7 +95,7 @@ class Extractor(object):
         self.addClues( self.clues_from_names( names[0], names[-1] ) )
 
     def clues_from_names( self, forename, surname ):
-        _info("Looking for people called '%s' '%s'"%( forename, surname ))
+        print_info("Looking for people called '%s' '%s'"%( forename, surname ))
         forename_search = ABPerson.searchElementForProperty_label_key_value_comparison_( kABFirstNameProperty, None, None, forename, kABPrefixMatchCaseInsensitive )
         surname_search = ABPerson.searchElementForProperty_label_key_value_comparison_( kABLastNameProperty, None, None, surname, kABEqualCaseInsensitive )
         se = ABSearchElement.searchElementForConjunction_children_( kABSearchAnd, [ forename_search, surname_search ] )
@@ -114,7 +117,7 @@ class Extractor(object):
             return []
         
         if not feeds: return []
-
+        
         # I'm going to assume that the _first_ microformat on the page
         # is the person the page is about. I can't really do better
         # than that, can I?
@@ -129,7 +132,7 @@ class Extractor(object):
         clues = []
         
         if 'url' in card:
-            clues += self.clues_from_url( card['url'] )
+            self.clues_from_url( card['url'] )
 
         if 'email' in card:
             if isinstance(card['email'], str) or isinstance(card['email'], unicode):
@@ -140,24 +143,20 @@ class Extractor(object):
             for addr in addrs:
                 # bloody flickr
                 e = re.sub(r'\s*\[\s*at\s*\]\s*', '@', addr)
-                clues += self.clues_from_email( e )
+                self.clues_from_email( e )
 
         if 'family-name' in card and 'given-name' in card:
             # TODO - check ordering here for .jp issues? Gah.
-            clues += self.clues_from_names( card['given-name'], card['family-name'] )
+            self.clues_from_names( card['given-name'], card['family-name'] )
         
         if 'fn' in card:
-             clues += self.clues_from_name( card['fn'] )
+            self.clues_from_name( card['fn'] )
 
-        if len(clues) == 0:
-            _info( "Can't get anything useful from %s"%(repr(card)) )
-        
-        self.addClues( clues )
 
     def getSocialGraphFor( self, url ):
         api = "http://socialgraph.apis.google.com/lookup?pretty=1&fme=1"
         api += "&q=" + quote( url )
-        _info("Social graph API call to " + api )
+        print_info("Social graph API call to " + api )
         Cache.getContentOfUrlAndCallback( self.gotSocialGraphData, api, timeout = 3600 * 12 ) # huge timeout here
     
     def gotSocialGraphData( self, raw, isStale ):
@@ -170,6 +169,6 @@ class Extractor(object):
         urls += extra # TODO _ weed dupes
 
         for graph_url in urls:
-            _info("Google Social Graph URL '%s'"%graph_url)
+            print_info("Google Social Graph URL '%s'"%graph_url)
             self.addClues( self._search_for_url( graph_url ) )
 

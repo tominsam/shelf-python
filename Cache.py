@@ -7,8 +7,9 @@ import base64
 import urllib
 import os
 import os.path
+import hashlib
 
-from Utilities import _info
+from Utilities import *
 
 def keyForUrlUsernamePassword( url, username, password ):
     return "%s:::%s:::%s"%( url, username, password )
@@ -20,7 +21,10 @@ def filenameForKey( key ):
     except OSError:
         pass
     filename = urllib.quote( key, '' )
-    return os.path.join( folder, filename )
+    # this can make filenames that are waaaay too long
+    hasher = hashlib.md5()
+    hasher.update(filename)
+    return os.path.join( folder, hasher.hexdigest() )
 
 # ask Cocoa to download an url and get back to us. It pulls the file to disk locally, and uses this as a cache,
 # using mtime. The callback should be a function that will be called
@@ -38,20 +42,18 @@ def getContentOfUrlAndCallback( callback, url, username = None, password = None,
 
     if os.path.exists(filename):
         if time() - os.path.getmtime( filename ) < timeout:
-            _info("cached file is still fresh")
+            print_info("cached file is still fresh")
             callback( file( filename ).read(), False )
             return # no need to get the URL
         
         elif wantStale:
             # call the callback immediately with the stale data.
-            _info("We have stale data")
+            print_info("We have stale data")
             callback( file( filename ).read(), True )
             # don't return - we still want to fetch the file
     
     # TODO - if we're already fetching the file on behalf of someone
     # else, it would be nice to do the Right Thing here.
-
-    _info("fetching %s to %s"%( url, filename ))
 
     req = NSMutableURLRequest.requestWithURL_( NSURL.URLWithString_( url ) )
     if username or password:
@@ -70,14 +72,12 @@ class DownloadDelegate(object):
         self.failure = failure
     
     def downloadDidBegin_(self, downloader):
-        _info("Begun download of %s"%downloader.request())
+        print_info("Begun download of %s"%downloader.request())
     
     def download_didCreateDestination_(self, downloader, filename):
-        _info("downloader created file %s"%filename)
         self.filename = filename
     
     def downloadDidFinish_(self, downloader):
-        _info("finished download of %s"%downloader.request())
         # the downloader sets the mtime to be the web server's idea of
         # when the file was last updated. Which is cute. But useless to us.
         # I want to know when I fetched it.
@@ -86,7 +86,7 @@ class DownloadDelegate(object):
         self.callback( data, False )
 
     def download_didFailWithError_(self, downloader, error):
-        _info("ERROR downloading %s: %s"%( downloader.request(), error ))
+        print_info("ERROR downloading %s: %s"%( downloader.request(), error ))
         if self.failure:
             self.failure( error )
 

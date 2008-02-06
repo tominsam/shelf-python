@@ -1,6 +1,6 @@
 from ScriptingBridge import *
 from Extractor import *
-from Utilities import _info
+from Utilities import *
 
 class ComAppleMail( Extractor ):
 

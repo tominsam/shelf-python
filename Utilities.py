@@ -5,7 +5,7 @@ from AddressBook import *
 
 import re
 
-def dump( obj ):
+def as_dump( obj ):
     methods = dir(obj)
     for x in dir(object()) + dir(NSObject.alloc().init()):
         if x in methods: methods.remove(x)
@@ -13,10 +13,10 @@ def dump( obj ):
     print( obj.__class__.__name__ )
     print( "\n".join(map(lambda x: " - %s"%x, methods) ) )
 
-def app(bundle):
+def as_app(bundle):
     return SBApplication.applicationWithBundleIdentifier_(bundle)
 
-def _info(stuff):
+def print_info(stuff):
     if NSUserDefaults.standardUserDefaults().boolForKey_("debug"):
         print(stuff)
 
@@ -25,4 +25,9 @@ def html_escape( s ):
     s = re.sub(r"<", "&lt;", s)
     s = re.sub(r">", "&gt;", s)
     return s
-    
+
+# this is a HACK
+def normalize_url( url ):
+    url = re.sub(r'/$', '', url) # trailing slash
+    url = re.sub(r'//www.flickr.', '//flickr.', url) # flickr special casing
+    return url

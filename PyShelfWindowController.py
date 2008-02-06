@@ -10,7 +10,10 @@ import traceback
 import os
 from time import time as epoch_time
 
+from Utilities import *
+
 from Provider import *
+
 Provider.addProvider( "BasicProvider" )
 Provider.addProvider( "TwitterProvider" )
 Provider.addProvider( "DopplrProvider" )
@@ -19,7 +22,6 @@ Provider.addProvider( "FlickrProvider" )
 # urls in the address book card not claimed by another provider
 Provider.addProvider( "FeedProvider" )
 
-from Utilities import _info
 
 class ShelfController (NSWindowController):
     companyView = objc.IBOutlet()
@@ -91,13 +93,13 @@ class ShelfController (NSWindowController):
                 cls = getattr( mod, classname )
                 self.handlers[ bundle ] = cls()
             except ImportError:
-                _info( "** Couldn't import file for %s"%( classname ) )
+                print_info( "** Couldn't import file for %s"%( classname ) )
                 self.handlers[ bundle ] = None
 
         return self.handlers[ bundle ]
 
     def poll(self):
-        _info( "\n---- poll start ----" )
+        print_info( "\n---- poll start ----" )
         
         # First thing I do, schedule the next poll event, so that I can just return with impunity later
         if self.running:
@@ -112,27 +114,27 @@ class ShelfController (NSWindowController):
             print( "Inexplicable lack of 'NSApplicationBundleIdentifier' for %s"%repr( NSWorkspace.sharedWorkspace().activeApplication() ) )
             return
 
-        _info( "current app is %s"%bundle )
+        print_info( "current app is %s"%bundle )
 
         # this app has no effect on the current context, otherwise activating
         # the app drops the current context. TODO - don't hard-code bundle name
         if bundle.lower() in ["org.jerakeen.pyshelf"]:
-            _info("Ignoring myself")
+            print_info("Ignoring myself")
             self.deferFade()
             return
 
         handler = self.handler_for( bundle )
         
         if not handler:
-            _info("Don't know how to get clues from %s"%bundle)
+            print_info("Don't know how to get clues from %s"%bundle)
             return
         else:
-            _info( "Looking for clues using %s"%handler )
+            print_info( "Looking for clues using %s"%handler )
             handler.getClue( self )
 
     # fade the active context if we don't recieve any context for a while
     def deferFade(self):
-        _info("deferring fade")
+        print_info("deferring fade")
         NSObject.cancelPreviousPerformRequestsWithTarget_selector_object_( self, "fade", None )
         self.performSelector_withObject_afterDelay_('fade', None, 3 )
     
@@ -140,36 +142,38 @@ class ShelfController (NSWindowController):
     def gotClue(self, clue):
 
         if self.current_clue and self.current_clue == clue:
-            _info("Context has not changed")
+            print_info("Context has not changed")
             self.deferFade() # put off the context fade
             return
 
         # clue has changed
-        _info("New context - %s"%clue)
+        print_info("New context - %s"%clue)
+        if self.current_clue: self.current_clue.stop()
         self.current_clue = clue
-        self.update_info_for( clue )
-        _info("update complete")
+        self.updateInfo()
+        print_info("update complete")
 
     
     def fade(self):
-        _info("fading context")
+        print_info("fading...")
+        if self.current_clue: self.current_clue.stop()
         self.current_clue = None
-        self.nameView.setStringValue_( "" )
-        self.companyView.setStringValue_( "" )
-        self.imageView.setImage_( NSImage.imageNamed_("NSUser") )
+
         self.window().setLevel_( NSNormalWindowLevel ) # unstuff from 'on top'
         self.window().setHidesOnDeactivate_( True ) # hide window if we have nothing
 
+        self.nameView.setStringValue_( "" )
+        self.companyView.setStringValue_( "" )
+        self.imageView.setImage_( NSImage.imageNamed_("NSUser") )
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
         self.setWebContent( "<p>No context</p>" )
 
+    def updateInfo(self):
+        clue = self.current_clue
 
-    def update_info_for( self, clue ):
-        _info("updating header")
         self.nameView.setStringValue_( clue.displayName() )
         self.companyView.setStringValue_( clue.companyName() )
         self.imageView.setImage_( clue.image() ) # leak?
-
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
         self.setWebContent( "<p>thinking..</p>" )
 
@@ -184,28 +188,12 @@ class ShelfController (NSWindowController):
         if NSUserDefaults.standardUserDefaults().boolForKey_("alwaysOnTop"):
             self.window().setLevel_( NSFloatingWindowLevel ) # stuff to 'on top'
 
+        clue.setDelegate_(self)
+        clue.getInfo()
 
-        _info( "stopping %s old providers"%len( self.providers ) )
-        for current in self.providers:
-            current.stop()
+        if NSUserDefaults.standardUserDefaults().boolForKey_("googleSocialContext"):
+            clue.getMoreUrls()
 
-        _info( "creating new providers" )
-        self.providers = []
-        for cls in Provider.providers():
-            try:
-                self.providers.append( cls( clue, self ) )
-            except:
-                print("Failed to create provider %s for clue:"%cls)
-                print(traceback.format_exc())
-        _info( "update done" )
-
-    def updateWebview(self):
-        _info( "updating webview" )
-        content = ""
-        for provider in self.providers:
-            content += provider.content()
-        self.setWebContent( content )
-    
     def setWebContent(self, html):
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
         self.webView.mainFrame().loadHTMLString_baseURL_( """
@@ -222,11 +210,7 @@ class ShelfController (NSWindowController):
             "style.css", # live
             html
         ), base )
-        _info( "webview update complete" )
-
-    def providerUpdated_(self, provider):
-        _info("Provider '%s' updated"%( provider ))
-        self.performSelector_withObject_afterDelay_('updateWebview', None, 0)
+        print_info( "webview update complete" )
 
     # supress right-click menu
     def webView_contextMenuItemsForElement_defaultMenuItems_( self, webview, element, items ):

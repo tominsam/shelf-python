@@ -1,6 +1,6 @@
 from Provider import *
 from urllib import quote
-from Utilities import _info
+from Utilities import *
 
 import time
 
@@ -25,5 +25,8 @@ class BasicProvider( Provider ):
 
         if self.person.urls():
             self.atoms.append("<p>" + "<br>".join(map(lambda url: "<a href='%s'>%s</a>"%(url, url), self.person.urls())) + "</p>")
+        
+        if not self.atoms:
+            self.atoms.append("<p>No address book information for %s</p>"%self.person.forename())
         
         self.changed()
