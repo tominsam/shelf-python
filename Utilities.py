@@ -31,5 +31,6 @@ def html_escape( s ):
 # that it does
 def normalize_url( url ):
     url = re.sub(r'/$', '', url) # trailing slash
-    url = re.sub(r'//www.flickr.', '//flickr.', url) # flickr special casing
+    url = re.sub(r'^\w+://', '', url) # protocol
+    url = re.sub(r'^www.flickr.', 'flickr.', url) # flickr special casing
     return url

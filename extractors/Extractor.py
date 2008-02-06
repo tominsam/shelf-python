@@ -76,6 +76,9 @@ class Extractor(object):
         url = normalize_url( url )
         
         print_info("Looking for people with URL '%s'"%url)
+        
+        previous = Clue.forUrl( url )
+        if previous: return [ previous ]
 
         # search for url, plus url with trailing slash
         clues =  self._search_for( url, "URLs", kABSuffixMatchCaseInsensitive )

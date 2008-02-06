@@ -33,6 +33,17 @@ class Clue(object):
         print_info("creating new person")
         Clue.CACHE[ person.uniqueId() ] = Clue( person )
         return Clue.CACHE[ person.uniqueId() ]
+    
+    # sometimes, google will suggest a page for a person because I have
+    # page A, that lnks to page B, that links to page C. Shelf suggests
+    # page C as a page for this person. When I visit page C, Google will only
+    # tell me about page B, and I won't be able to tie it back to that person.
+    # To work around this, I'll just remember every url I get for a person.
+    @classmethod
+    def forUrl( cls, url ):
+        for person in Clue.CACHE.values():
+            if normalize_url( url) in [ normalize_url(u) for u in person.urls() ]:
+                return person
 
     def __init__(self, person):
         # for now, clues are tied to AddressBook person objects.
