@@ -88,7 +88,7 @@ class DownloadDelegate(object):
         self.callback( data, False )
 
     def download_didFailWithError_(self, downloader, error):
-        print_info("error downloading %s: %s"%( downloader.request(), error ))
+        print("error downloading %s: %s"%( downloader.request(), error ))
         if self.failure:
             self.failure( error )
 
