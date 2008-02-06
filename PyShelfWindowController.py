@@ -11,16 +11,7 @@ import os
 from time import time as epoch_time
 
 from Utilities import *
-
-from Provider import *
-
-Provider.addProvider( "BasicProvider" )
-Provider.addProvider( "TwitterProvider" )
-# SSL failure Provider.addProvider( "DopplrProvider" )
-Provider.addProvider( "FlickrProvider" )
-# Order is important - FeedProvider must be _last_, because it uses all
-# urls in the address book card not claimed by another provider
-Provider.addProvider( "FeedProvider" )
+from Clue import *
 
 
 class ShelfController (NSWindowController):
@@ -29,23 +20,21 @@ class ShelfController (NSWindowController):
     nameView = objc.IBOutlet()
     webView = objc.IBOutlet()
 
+    # first-cut init goes here - we've been woken up, and all the GUI
+    # component objects exist. Don't spend too long here, though, I think
+    # the app icon is still bouncing.
     def awakeFromNib(self):
         self.handlers = {}
-        self.providers = []
         self.current_clue = None
-        self.running = True
 
-        #self.window().setAllowsToolTipsWhenApplicationIsInactive_( 1 )
-        #self.window().setAlphaValue_( 0.9 )
-        
+        # get the RGB hex code of the system 'background' color.
         bg = self.window().backgroundColor().colorUsingColorSpaceName_( NSCalibratedRGBColorSpace )
         rgb = "%x%x%x"%(
             bg.redComponent() * 255.999999,
             bg.greenComponent() * 255.999999,
             bg.blueComponent() * 255.999999
         )
-        # TODO - ok. Now do something with this information. Specifically,
-        # get it into the CSS.
+        # TODO - ok. Now do something with this information. Specifically, get it into the CSS.
         
         # evil. Alter the webkit view object so that it'll accept a clickthrough
         # - this is very handy, as the window is on top and full of context.
@@ -54,43 +43,60 @@ class ShelfController (NSWindowController):
         objc.classAddMethod( WebHTMLView, "acceptsFirstMouse:", lambda a,b: 1 )
         # ps - when I say 'evil', I mean it. Really, _really_ evil. TODO -
         # subclass the thing and do it properly.
-        
-        self.showWindow_(self)
 
-        
-    def applicationDidFinishLaunching_(self, sender):
+        # create application support folder. The cache goes here. I suppose
+        # I should really keep it in a Cache folder somewhere
         folder = os.path.join( os.environ['HOME'], "Library", "Application Support", "Shelf" )
         if not os.path.exists( folder ):
             os.mkdir( folder )
-        self.performSelector_withObject_afterDelay_( 'poll', None, 0 )
+
+
+    # this is called once we're all launched. Bouncing all over now. 
+    def applicationDidFinishLaunching_(self, sender):
+        # There's no initial context.
         self.fade()
 
+        # start polling right away
+        self.performSelector_withObject_afterDelay_( 'poll', None, 0 )
 
+
+    # we've been told to close
     def applicationWillTerminate_(self, sender):
-        for current in self.providers:
-            current.stop()
+        # if we're doing anything in the background, stop it.
+        if self.current_clue:
+            self.current_clue.stop()
 
         # kill the poller and any other long-running things
         NSObject.cancelPreviousPerformRequestsWithTarget_( self )
-        self.running = False
-        
-    # callback from the little right-pointing arrow
+
+
+    # This is the callback from the little right-pointing arrow on the main
+    # window, to the right of the person icon. Means 'open in address book'
     def openRecord_(self, thing):
         if self.current_clue:
             NSWorkspace.sharedWorkspace().openURL_(
                 NSURL.URLWithString_("addressbook://%s"%self.current_clue.uniqueId())
             )
 
+    
+    # return an Extractor class instance (confusingly called 'handler' for now. Must fix..)
+    # for the app with the passed bundle name.
     def handler_for( self, bundle ):
         if not bundle: return None
+        
+        # haven't seen this application before? Look for a file on disk with
+        # the right name and load it.
         if not bundle in self.handlers:
             # convert bundlename to classname like 'ComAppleMail'
             classname = re.sub(r'\.(\w)', lambda m: m.group(1).upper(), bundle )
             classname = re.sub(r'^(\w)', lambda m: m.group(1).upper(), classname )
             
             try:
+                # this imports the module with the name 'clasname'.py as the local variable mod
                 mod = __import__(classname, globals(), locals(), [''])
+                # then get the single class attribute from that module object
                 cls = getattr( mod, classname )
+                # instantiate the class, and remember it so we don't do this again
                 self.handlers[ bundle ] = cls()
             except ImportError:
                 print_info( "** Couldn't import file for %s"%( classname ) )
@@ -98,13 +104,12 @@ class ShelfController (NSWindowController):
 
         return self.handlers[ bundle ]
 
+    # the main poll loop. Called regularly.
     def poll(self):
         print_info( "\n---- poll start ----" )
         
-        # First thing I do, schedule the next poll event, so that I can just return with impunity later
-        if self.running:
-            self.performSelector_withObject_afterDelay_( 'poll', None, 1 )
-
+        # First thing I do, schedule the next poll event, so that I can just return with impunity from this function
+        self.performSelector_withObject_afterDelay_( 'poll', None, 2 )
 
         # get bundle name of active application
         try:
@@ -124,35 +129,47 @@ class ShelfController (NSWindowController):
             return
 
         handler = self.handler_for( bundle )
-        
         if not handler:
             print_info("Don't know how to get clues from %s"%bundle)
             return
-        else:
-            handler.getClue( self )
 
-    # fade the active context if we don't recieve any context for a while
-    def deferFade(self):
-        NSObject.cancelPreviousPerformRequestsWithTarget_selector_object_( self, "fade", None )
-        self.performSelector_withObject_afterDelay_('fade', None, 4 )
+        self.performSelector_withObject_afterDelay_("lookForCluesWith:", handler, 0)
     
+    def lookForCluesWith_( self, handler ):
+        # tell the handler to look for clues. Pass it 'self' so that it
+        # can call us back
+        handler.getClue(self)
+
+
     # callback from getClue on the handler function
     def gotClue(self, clue):
+        self.deferFade() # put off the context fade
 
         if self.current_clue and self.current_clue == clue:
-            self.deferFade() # put off the context fade
+            # the context hasn't changed. Don't do anything.
             return
 
         # clue has changed
         print_info("New context - %s"%clue)
-        if self.current_clue: self.current_clue.stop()
+        if self.current_clue:
+            self.current_clue.stop()
         self.current_clue = clue
-        self.updateInfo()
+        self.performSelector_withObject_afterDelay_('updateInfo', None, 0 )
 
     
+    # fade the active context if we don't recieve any context for a while.
+    # call this method every time something interesting happens, and it'll
+    # stop the window going away for another few seconds. That way, I don't
+    # have to explicitly watch for 'nothing happened'.
+    def deferFade(self):
+        NSObject.cancelPreviousPerformRequestsWithTarget_selector_object_( self, "fade", None )
+        self.performSelector_withObject_afterDelay_('fade', None, 5 )
+    
+    # Put window into 'no context, fall to background' state, clear current state
     def fade(self):
         print_info("fading...")
-        if self.current_clue: self.current_clue.stop()
+        if self.current_clue:
+            self.current_clue.stop()
         self.current_clue = None
 
         self.window().setLevel_( NSNormalWindowLevel ) # unstuff from 'on top'
@@ -164,38 +181,47 @@ class ShelfController (NSWindowController):
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
         self.setWebContent_( "" )
 
+    # put the window into 'I have context' state, display the header, and
+    # tell the Clue object to start fetching state about itself.
     def updateInfo(self):
         clue = self.current_clue
-        self.current_clue.setDelegate_(self)
+        clue.setDelegate_(self) # so the clue can send us 'I have updated' messages
 
         self.nameView.setStringValue_( clue.displayName() )
         self.companyView.setStringValue_( clue.companyName() )
-        self.imageView.setImage_( clue.image() ) # leak?
+        self.imageView.setImage_( clue.image() ) # does this leak?
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
-        self.setWebContent_( clue.content() )
+        self.setWebContent_( clue.content() ) # will initially be 'thinking..'
 
         # always safe
         self.window().setHidesOnDeactivate_( False )
         
         if NSUserDefaults.standardUserDefaults().boolForKey_("bringAppForward"):
+            # slightly voodoo, this. But otherwise it doesn't seem 100% reliable
             self.showWindow_(self)
             self.window().display()
             self.window().orderFrontRegardless()
 
         if NSUserDefaults.standardUserDefaults().boolForKey_("alwaysOnTop"):
-            self.window().setLevel_( NSFloatingWindowLevel ) # stuff to 'on top'
+            self.window().setLevel_( NSFloatingWindowLevel ) # 'on top'
         
-        # do this so the webview has a chance to display something quickly
+        # do this so we can return to the main runloop ASAP, so the
+        # webview has a chance to display something.
         self.performSelector_withObject_afterDelay_('kickClue', None, 0 )
 
     def kickClue(self):
-        self.current_clue.getInfo()
-    
-    def updateWebContent_(self, clue, content):
+        if self.current_clue:
+            self.current_clue.getInfo()
+
+    # called from the clue when it's updated itself and wants to add to the webview
+    def updateWebContent_fromClue_(self, content, clue):
+        # old clues may still expect to be able to update the data.
         if clue == self.current_clue:
             self.setWebContent_( content )
 
     def setWebContent_(self, html):
+        # the base path of the webview is the resource folder, so I can use
+        # relative paths to refer to the CSS.
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
         self.webView.mainFrame().loadHTMLString_baseURL_( """
             <html>
@@ -212,16 +238,18 @@ class ShelfController (NSWindowController):
             html
         ), base )
 
-    # supress right-click menu
+    # supress the 'reload' item from the right-click menu - it makes no sense
     def webView_contextMenuItemsForElement_defaultMenuItems_( self, webview, element, items ):
         return filter( lambda i: i.title() != "Reload", items )
 
-    # stolen from djangokit
+    # stolen from djangokit. When the webview wants to fetch a resource,
+    # it means either 'I want a file off disk to serve this page' (ok, then)
+    # or 'I want to follow this link' (no, I'll just get the system to do that).
     def webView_decidePolicyForNavigationAction_request_frame_decisionListener_( self, webview, action, request, frame, listener):
         url = request.URL()
 
         # serve files
-        if url.scheme() == 'file' or url.scheme() == 'about':
+        if url.scheme() == 'file' or url.scheme() == 'about': # local files
             listener.use()
             return
             

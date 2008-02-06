@@ -1,15 +1,29 @@
 import objc
 from AddressBook import *
+
 import re
 from time import time, gmtime
-
-from Utilities import *
-from Provider import *
 from urllib import quote
 import simplejson
 
+from Utilities import *
+
+from Provider import *
+
+Provider.addProvider( "BasicProvider" )
+Provider.addProvider( "TwitterProvider" )
+# (SSL failure) Provider.addProvider( "DopplrProvider" )
+Provider.addProvider( "FlickrProvider" )
+# Order is important - FeedProvider must be _last_, because it uses all
+# urls in the address book card not claimed by another provider
+Provider.addProvider( "FeedProvider" )
+
+
 class Clue(object):
     
+    # Make Clue objects singletons - one Person in the address book, one Clue.
+    # This way clues can retain their local providers and content, so a clue
+    # you've seen before will display more quickly.
     CACHE = {}
     @classmethod
     def forPerson( cls, person ):
@@ -21,15 +35,22 @@ class Clue(object):
         return Clue.CACHE[ person.uniqueId() ]
 
     def __init__(self, person):
+        # for now, clues are tied to AddressBook person objects.
+        # But nothing outside the Clue object knows this - names, etc are
+        # all extractd from the Clue object using methods on the Clue, not
+        # on the ABPerson.
+        # Clues are constructed using Clue.forPerson() from everywhere. Eventually
+        # I'd like clues to be a little more flexible.
         self.person = person
         self.nsimage = None
-        self.extra_urls = []
-        self.cache = {}
+        self.extra_urls = [] # Urls from google social
         self.providers = []
 
     def setDelegate_(self, delegate):
         self.delegate = delegate
     
+    # Kick off all the providers to start getting information on the person.
+    # providers call back to this object when they have something.
     def getInfo(self):
         self.boring_urls = self.urls()
 
@@ -51,7 +72,7 @@ class Clue(object):
 
         # just in case any providers (basicprovider, I'm looking at you)
         # are done already
-        self.delegate.updateWebContent_( self, self.content() )
+        self.delegate.updateWebContent_fromClue_( self.content(), self )
 
     def getMoreUrls( self ):
         if not self.ab_urls(): return # no point
@@ -92,7 +113,7 @@ class Clue(object):
     def providerUpdated_(self, provider):
         print_info("Update for %s from %s"%( self, provider ))
         if provider in self.providers:
-            self.delegate.updateWebContent_( self, self.content() )
+            self.delegate.updateWebContent_fromClue_( self.content(), self )
     
     def content(self):
         content = ""
