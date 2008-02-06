@@ -58,6 +58,8 @@ def getContentOfUrlAndCallback( callback, url, username = None, password = None,
     if username or password:
         base64string = base64.encodestring('%s:%s' % (username, password))[:-1]
         req.setValue_forHTTPHeaderField_("Basic %s"%base64string, "Authorization")
+
+    req.setValue_forHTTPHeaderField_("Shelf/0.0.12 +http://jerakeen.org/code/shelf/", "User-Agent")
     
     delegate = DownloadDelegate( callback, failure )
     downloader = NSURLDownload.alloc().initWithRequest_delegate_( req, delegate )
