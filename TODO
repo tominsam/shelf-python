@@ -16,6 +16,10 @@ display online/offline status if possible.
 
 
 
+google social is suggesting pages for people that don't then link back to them.
+Am I doing something wrong in the API? If not, is this a Google bug? Even if so,
+I should remember how I got these urls, so they link back for me.
+
 
 22:56 <@muttley> I actually want something passive
 22:57 <@blech> how?

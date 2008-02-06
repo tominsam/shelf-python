@@ -21,6 +21,17 @@ class FeedAtom(object):
 
         self.getFeedUrl()
     
+    def sortDate(self):
+        if not self.feed:
+            return None
+        if len(self.feed.entries) == 0:
+            return None
+        if 'updated_parsed' in self.feed.entries[0]:
+            return self.feed.entries[0].updated_parsed
+        if "published_parsed" in self.feed.entries[0]:
+            return self.feed.entries[0].published_parsed
+        return None
+    
     def getFeedUrl(self):
         # it's very unlikely that the feed source will move
         # TODO - check stale cache first. Man, the feed provider is too complicated.
@@ -110,6 +121,10 @@ class FeedAtom(object):
 class FeedProvider( Provider ):
     
     def content(self):
+        def sortByDate(a, b):
+            return cmp( b.sortDate(), a.sortDate() )
+        self.atoms.sort(sortByDate)
+
         return "".join([ atom.content() for atom in self.atoms ])
     
     def atomClass(self):
