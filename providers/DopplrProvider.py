@@ -1,7 +1,7 @@
 from Provider import *
 import urllib
 import re
-import xmltramp
+import simplejson
 from datetime import datetime
 from time import time, strftime, gmtime
 
@@ -19,7 +19,7 @@ class DopplrProvider( Provider ):
         self.atoms = [ "<h3><a href='http://www.dopplr.com/traveller/%s/'>Dopplr</a>&nbsp;%s</h3>"%( self.username, self.spinner() ) ]
         self.changed()
 
-        url = "https://www.dopplr.com/api/traveller_info.xml?token=%s&traveller=%s"%( self.token, self.username )
+        url = "https://www.dopplr.com/api/traveller_info.js?token=%s&traveller=%s"%( self.token, self.username )
         Cache.getContentOfUrlAndCallback( self.gotDopplrData, url, timeout = 3600, wantStale = True, failure = self.failed )
     
     def failed(self, error):
@@ -28,19 +28,19 @@ class DopplrProvider( Provider ):
     
     def gotDopplrData(self, data, stale):
         try:
-            doc = xmltramp.parse( data )
-            doc.traveller.status
-        except AttributeError:
+            doc = simplejson.loads( data )
+            doc['traveller']['status']
+        except ValueError, KeyError:
             return # no service?
         
         # dopplr api coveniently provides offset from UTC :-)
-        self.offset = int(str(doc.traveller.current_city.utcoffset))
+        self.offset = int(str(doc['traveller']['current_city']['utcoffset']))
 
         self.atoms = []
         self.atoms.append("<h3><a href='http://www.dopplr.com/traveller/%s/'>Dopplr</a></h3>"%( self.username ))
         self.atoms.append("<p>%s %s.</p>"%(
             self.person.displayName(),
-            doc.traveller.status
+            doc['traveller']['status']
         ))
         self.atoms.append("")
 
