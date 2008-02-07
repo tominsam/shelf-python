@@ -26,5 +26,6 @@ class OrgMozillaFirefox( Extractor ):
         if error:
             print("ERROR: %s"%repr(error))
             return
-        url = ret.stringValue()
-        self.clues_from_url( url )
+        if ret:
+            url = ret.stringValue()
+            self.clues_from_url( url )
