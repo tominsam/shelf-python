@@ -94,3 +94,5 @@ thumbnails. I think I prefer this way.
 Feeds in the display are now ordered with the most recently updated feed at
 the top of the list. 'Special' feeds (twitter, flickr) are still ordered above
 all others.
+
+We now correctly strip CSS styling from feed contents.

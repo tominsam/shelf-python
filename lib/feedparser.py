@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+
+# local changes (tomi):
+# - added 'style' to the unacceptable_elements_with_end_tag list (http://code.google.com/p/feedparser/issues/detail?id=12)
+
+
 """Universal feed parser
 
 Handles RSS 0.9x, RSS 1.0, RSS 2.0, CDF, Atom 0.3, and Atom 1.0 feeds
@@ -1615,7 +1620,7 @@ class _HTMLSanitizer(_BaseHTMLProcessor):
       'span', 'src', 'start', 'summary', 'tabindex', 'target', 'title', 'type',
       'usemap', 'valign', 'value', 'vspace', 'width']
 
-    unacceptable_elements_with_end_tag = ['script', 'applet']
+    unacceptable_elements_with_end_tag = ['script', 'applet', 'style']
 
     def reset(self):
         _BaseHTMLProcessor.reset(self)
