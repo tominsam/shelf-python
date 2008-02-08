@@ -25,7 +25,11 @@ class ComAppleSafari(Extractor):
 
             # look for rel="me" links
             relme = RelMeParser()
-            relme.feed( tab.source() )
+            try:
+                relme.feed( tab.source() )
+            except UnicodeDecodeError:
+                # bad page source
+                return
             print_info("Found rel='me' links: %s"%( ",".join(relme.hrefs) ) )
             for link in relme.hrefs:
                 profile = urlparse.urljoin( tab.URL(), link )
