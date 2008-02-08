@@ -14,7 +14,7 @@ class BasicProvider( Provider ):
             self.atoms.append("<p>" + ", ".join(emails) + "</p>" )
 
         if self.person.birthday():
-            self.atoms.append("<p>Born %s</p>"%time.strftime("%B %d", self.person.birthday()))
+            self.atoms.append("<p>Born %s</p>"%time.strftime("%B %d, %Y", self.person.birthday()))
 
         addresses = self.person.addresses()
         if len(addresses) > 0:

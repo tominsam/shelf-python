@@ -38,6 +38,10 @@ def filenameForKey( key ):
 # _again_.
 def getContentOfUrlAndCallback( callback, url, username = None, password = None, wantStale = False, timeout = 600, failure = None ):
     
+    # I have address book entries that are just 'www.foo.com'
+    if not re.match(r'^\w+://', url):
+        url = "http://%s"%url
+    
     filename = filenameForKey( keyForUrlUsernamePassword( url, username, password ) )
 
     if os.path.exists(filename):
