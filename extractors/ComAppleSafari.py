@@ -15,6 +15,8 @@ class ComAppleSafari(Extractor):
 
         # window 0 is always the foreground window? Seems it.
         tab = self.safari.windows()[ 0 ].currentTab()
+        if not tab.exists(): return # foreground window is not a browser window.
+        
         self.clues_from_url( tab.URL() )
         if self.done: return
         

@@ -1,0 +1,17 @@
+The Shelf source code repository includes imported snapshots of the following libraries:
+
+autorss.py - Copyright 2002, Mark Pilgrim, licensed under the Python license.
+
+feedparser.py - Copyright 2002-2006, Mark Pilgrim, licensed under something that looks like the 3-clause BSD licence with the no-endorsement clause removed
+
+microformatparser.py - Copyright 2005, Phil Dawes, 'Distributed under a New BSD style license'
+
+Shelf uses the simplejson library (http://www.undefined.org/python/). It's not included
+in the source tree, but building shelf requires it to be installed, and the library
+is built into the .app binary. simplesjson is copyright 2006, Bob Ippolito, licensed under the X11/MIT license.
+
+
+Given all this, Shelf needs a license. Python? Still thinking about it. Please
+don't submit any patches unless you're willing to have them licensed under something
+random that I think of later.
+
