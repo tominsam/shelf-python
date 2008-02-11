@@ -36,9 +36,15 @@ class FeedAtom(object):
         # it's very unlikely that the feed source will move
         # TODO - check stale cache first. Man, the feed provider is too complicated.
         special = self.specialCaseFeedUrl( self.url )
-        if special:
-            print_info("special-case feed url %s"%special)
-            self.getFeed( special )
+        # return None to mean 'no special case', blank string to mean "no feed here"
+        if special != None:
+            if len(special) > 0:
+                print_info("special-case feed url %s"%special)
+                self.getFeed( special )
+            else:
+                # bad feed
+                self.dead = True
+                self.provider.changed()
             return
     
         Cache.getContentOfUrlAndCallback( self.gotMainPage, self.url, timeout = self.timeout() * 10, wantStale = False, failure = self.failed ) # TODO - use stale version somehow
@@ -49,6 +55,10 @@ class FeedAtom(object):
         lastfm = re.match(r'http://(www\.)?last.fm/user/(\w+)', url)
         if lastfm:
             return "http://ws.audioscrobbler.com/1.0/user/%s/recenttracks.rss"%lastfm.group(2)
+        if re.match(r'http://search\.cpan\.org/~', url):
+            return "" # bad feed
+        if re.match(r'http://use\.perl\.org/~\w+/?$', url): # /journal is ok
+            return "" # bad feed
 
         return None
 
@@ -118,10 +128,18 @@ class FeedAtom(object):
         html = u""
         entries = feed.entries
         for item in entries[0:4]:
-            if 'published_parsed' in item:
-                html += u'<span class="feed-date">%s</span>'%( time.strftime("%b %d", item.published_parsed ) )
-            elif 'updated_parsed' in item:
-                html += u'<span class="feed-date">%s</span>'%( time.strftime("%b %d", item.updated_parsed ) )
+            date = None
+            if 'published_parsed' in item: date = item.published_parsed
+            elif 'updated_parsed' in item: date = item.updated_parsed
+            
+            if date:
+                #html += u'<span class="feed-date">%s</span>'%( time.strftime("%b %d", date ) )
+                ago = time_ago_in_words(date) + " ago"
+                # TODO - think about these. The output from the function is Too Damn Long, is all.
+                ago = re.sub(r'^about ', '~', ago )
+                ago = re.sub(r'minute', 'min', ago )
+                ago = re.sub(r'second', 'sec', ago )
+                html += u'<span class="feed-date">%s</span>'%ago
             html += u'<p class="feed-title"><a href="%s">%s</a></p>'%( item.link, item.title )
             detail = None
             if 'content' in item and len(item.content) > 0:

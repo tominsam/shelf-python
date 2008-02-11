@@ -8,6 +8,7 @@ import urllib
 import os
 import os.path
 import hashlib
+import re
 
 from Utilities import *
 
