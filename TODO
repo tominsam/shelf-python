@@ -11,8 +11,9 @@ Dopplr:
 
 Sort out licenses!
 
-
 display online/offline status if possible.
+
+use gravatar to fetch picture if there's nothing in addressbook
 
 
 

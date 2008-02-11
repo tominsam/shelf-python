@@ -35,8 +35,23 @@ class FeedAtom(object):
     def getFeedUrl(self):
         # it's very unlikely that the feed source will move
         # TODO - check stale cache first. Man, the feed provider is too complicated.
+        special = self.specialCaseFeedUrl( self.url )
+        if special:
+            print_info("special-case feed url %s"%special)
+            self.getFeed( special )
+            return
+    
         Cache.getContentOfUrlAndCallback( self.gotMainPage, self.url, timeout = self.timeout() * 10, wantStale = False, failure = self.failed ) # TODO - use stale version somehow
     
+    def specialCaseFeedUrl( self, url ):
+        print_info("trying to special-case url %s"%url)
+        # http://www.last.fm/user/blackbeltjones/ -> http://ws.audioscrobbler.com/1.0/user/blackbeltjones/recenttracks.rss
+        lastfm = re.match(r'http://(www\.)?last.fm/user/(\w+)', url)
+        if lastfm:
+            return "http://ws.audioscrobbler.com/1.0/user/%s/recenttracks.rss"%lastfm.group(2)
+
+        return None
+
     def gotMainPage( self, data, stale ):
         rss = getRSSLinkFromHTMLSource(data)
         if rss:
@@ -46,8 +61,11 @@ class FeedAtom(object):
             self.dead = True
             self.provider.changed()
     
-    def getFeed(self, feed_url, username = None, password = None):
-        Cache.getContentOfUrlAndCallback( self.gotFeed, feed_url, username, password, timeout = self.timeout(), wantStale = True, failure = self.failed )
+    def username(self): return None
+    def password(self): return None
+    
+    def getFeed(self, feed_url ):
+        Cache.getContentOfUrlAndCallback( self.gotFeed, feed_url, username = self.username, password = self.password, timeout = self.timeout(), wantStale = True, failure = self.failed )
 
     def gotFeed( self, data, stale ):
         feed = feedparser.parse( data )

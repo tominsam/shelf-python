@@ -96,3 +96,5 @@ the top of the list. 'Special' feeds (twitter, flickr) are still ordered above
 all others.
 
 We now correctly strip CSS styling from feed contents.
+
+Special casing for last.fm urls is now in, so you'll see contact's recently-played tracks.

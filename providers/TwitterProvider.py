@@ -6,17 +6,17 @@ from Utilities import *
 
 class TwitterAtom( FeedAtom ):
 
-    def getFeedUrl(self):
+    def specialCaseFeedUrl( self, url ):
         # deriving the feed url from the username is faster than
         # fetching the HTML first.
-        username = re.search(r'twitter\.com/([^/]+)', self.url).group(1)
-        feed_url = "http://twitter.com/statuses/user_timeline/%s.atom"%(username)
-        self.getFeed(
-            feed_url,
-            NSUserDefaults.standardUserDefaults().stringForKey_("twitterUsername"),
-            NSUserDefaults.standardUserDefaults().stringForKey_("twitterPassword")
-        )
-        
+        username = re.search(r'twitter\.com/([^/]+)', url).group(1)
+        return "http://twitter.com/statuses/user_timeline/%s.atom"%(username)
+    
+    def username(self):
+        return NSUserDefaults.standardUserDefaults().stringForKey_("twitterUsername")
+    
+    def password(self):
+        NSUserDefaults.standardUserDefaults().stringForKey_("twitterPassword")
 
     def htmlForFeed( self, url, feed, stale = False ):
         return '<p>%s</p>'%( feed.entries[0].title )
