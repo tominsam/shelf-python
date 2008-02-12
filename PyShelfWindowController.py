@@ -85,6 +85,7 @@ class ShelfController (NSWindowController):
         # and how to fade the window.
         self.current_clue = None
         self.fade()
+        self.deferFade(3) # cause the window to vanish again if we don'e find anything
         self.window().setHidesOnDeactivate_( False )
         self.showWindow_(self)
         self.window().display()
@@ -174,9 +175,9 @@ class ShelfController (NSWindowController):
     # call this method every time something interesting happens, and it'll
     # stop the window going away for another few seconds. That way, I don't
     # have to explicitly watch for 'nothing happened'.
-    def deferFade(self):
+    def deferFade(self, count = 5):
         NSObject.cancelPreviousPerformRequestsWithTarget_selector_object_( self, "fade", None )
-        self.performSelector_withObject_afterDelay_('fade', None, 5 )
+        self.performSelector_withObject_afterDelay_('fade', None, count )
     
     # Put window into 'no context, fall to background' state, clear current state
     def fade(self):
