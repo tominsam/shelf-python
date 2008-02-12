@@ -81,15 +81,15 @@ stuff uses this, so no longer blocks the foreground thread.
 
 ### 0.0.12 (in development)
 
-Added many docs to the source code.
-
-Shelf now sends a proper User-Agent to remote servers when fetching feeds.
-
-Removed the xmltramp library, using simplejson to parse the Dopplr API files
-instead. Not that the Dopplr module works. But if it did, I would.
+Feed entries now display about how long ago they were, rather than absolute
+times. Do we like this? Maybe this should be a preference.
 
 Messed with the flickr photo display style to include titles, and have smaller
 thumbnails. I think I prefer this way.
+
+Special casing for last.fm urls is now in, so you'll see your contact's
+recently-played tracks. Special-casing for the few pages I know of
+that have [totally broken RSS feeds](http://jerakeen.org/blog/2008/02/irritating-rss-feed-links/).
 
 Feeds in the display are now ordered with the most recently updated feed at
 the top of the list. 'Special' feeds (twitter, flickr) are still ordered above
@@ -97,11 +97,11 @@ all others.
 
 We now correctly strip CSS styling from feed contents.
 
-Special casing for last.fm urls is now in, so you'll see contact's
-recently-played tracks. Special-casing for the few pages I know of
-that have [totally brokwn RSS feeds](http://jerakeen.org/blog/2008/02/irritating-rss-feed-links/).
-
-Feed entries now display about how long ago they were, rather than absolute
-times. Do we like this? Maybe this should be a preference.
-
 The file cache now cleans itself up. The first run of the app may take a while... Sorry.
+
+Shelf now sends a proper User-Agent to remote servers when fetching feeds.
+
+Documented large chunks of the source much better.
+
+Removed the xmltramp library, using simplejson to parse the Dopplr API files
+instead. Not that the Dopplr module works. But if it did, I would.
