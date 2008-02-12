@@ -27,6 +27,27 @@ def filenameForKey( key ):
     hasher.update(filename)
     return os.path.join( folder, hasher.hexdigest() )
 
+#LAST_CACHE_CLEAN = 0
+def cleanCache():
+    #if time() - LAST_CACHE_CLEAN < 60:
+    #    return
+
+    folder = os.path.join( os.environ['HOME'], "Library", "Application Support", "Shelf", "cache" )
+    try:
+        files = os.listdir(folder)
+    except OSError:
+        return
+
+    for file in os.listdir( folder ):
+        filename = os.path.join( folder, file )
+        # file not looked at in a day
+        if time() - os.path.getatime( filename ) > 24 * 3600:
+            print_info("Removing old cache file %s"%filename)
+            os.unlink( filename )
+    
+    #LAST_CACHE_CLEAN = time()
+
+
 # ask Cocoa to download an url and get back to us. It pulls the file to disk locally, and uses this as a cache,
 # using mtime. The callback should be a function that will be called
 # at some time in the future (BUG - if there's a good cache, it'll be
@@ -38,6 +59,7 @@ def filenameForKey( key ):
 # before this function returns), then will fetch the data and call the callback
 # _again_.
 def getContentOfUrlAndCallback( callback, url, username = None, password = None, wantStale = False, timeout = 600, failure = None ):
+    cleanCache()
     
     # I have address book entries that are just 'www.foo.com'
     if not re.match(r'^\w+://', url):
@@ -83,6 +105,7 @@ class DownloadDelegate(object):
     
     def download_didCreateDestination_(self, downloader, filename):
         self.filename = filename
+        os.utime( self.filename, None )
     
     def downloadDidFinish_(self, downloader):
         # the downloader sets the mtime to be the web server's idea of
@@ -104,3 +127,5 @@ class DownloadDelegate(object):
 #    def allowsAnyHTTPSCertificateForHost_(cls, host):
 #        return True
 
+
+    
