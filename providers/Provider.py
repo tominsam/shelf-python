@@ -28,6 +28,9 @@ class ProviderAtom( object ):
         else:
             spinner_html = ""
         return "<h3><a href='%s'>%s%s</a></h3>"%(self.url,self.name,spinner_html)
+    
+    def body(self):
+        return ""
 
     def sortOrder(self):
         return self.name
@@ -42,6 +45,9 @@ class ProviderAtom( object ):
             if body or self.stale:
                 return self.title() + self.body()
             return ""
+
+    def changed(self):
+        self.provider.changed()
 
 class Provider( object ):
     

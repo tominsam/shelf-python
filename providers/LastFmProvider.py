@@ -1,34 +1,67 @@
 from FeedProvider import *
 from Utilities import *
 
-class LastFmAtom( FeedAtom ):
+from xml.dom.minidom import parseString
+from time import time
+from urllib import quote
 
-    def htmlForFeed( self, url, feed, stale = False ):
-        self.name = "Last.FM"
+class LastFmAtom( ProviderAtom ):
+    def __init__(self, *stuff):
+        ProviderAtom.__init__( self, *stuff )
+
+        username = re.search(r'user/([^/]+)', self.url).group(1)
+        self.name = "last.fm / %s"%username
         
+        self.tracks = []
+
+        recent_url = "http://ws.audioscrobbler.com/1.0/user/%s/recenttracks.xml"%username
+        Cache.getContentOfUrlAndCallback( self.gotRecentTracks, recent_url, timeout = 120, wantStale = True, failure = self.failed )
+
+    def failed( self, error ):
+        self.stale = False
+        self.changed()
+
+    def gotRecentTracks(self, xml, stale):
+        self.stale = stale
+        dom = parseString( xml )
+        self.tracks = []
+        def gsv(node, val):
+            try:
+                return node.getElementsByTagName(val)[0].childNodes[0].wholeText
+            except IndexError:
+                return None
+        for track in dom.getElementsByTagName("track")[0:2]:
+            track.normalize()
+            data = {
+              'link':gsv(track, "url"),
+              'art':"",
+              'artist':gsv(track, "artist"),
+              'album':gsv(track, "album"),
+              'title':gsv(track, "name")
+            }
+            self.tracks.append( data )
+            if data['album']:
+                def updateArtwork(data, stale, trackdata = data):
+                    trackdata['art'] = gsv( parseString(data), 'small' )
+                    self.changed()
+                art_url = "http://ws.audioscrobbler.com/1.0/album/%s/%s/info.xml"%( quote(data['artist'],""), quote(data['album'],"") )
+                Cache.getContentOfUrlAndCallback( updateArtwork, art_url, timeout = 24 * 3600, wantStale = True )
+            
+        self.changed()
+    
+    def body(self):
         html = ""
 
-        entries = feed.entries
-        for item in entries[0:2]:
-            # ewwwwww
-            splitted = item.title.split(u"\u2013")
-            if len(splitted) != 2:
-                return
-                
-            artist, title = splitted
-
-            date = None
-            if 'published_parsed' in item: date = item.published_parsed
-            elif 'updated_parsed' in item: date = item.updated_parsed
-            
+        for track in self.tracks:
+            date = None # time()
             if date:
                 ago = time_ago_in_words(date) + " ago"
                 html += u'<span class="feed-date">%s</span>'%ago
 
-            html += "<a href='%s'><img src='%s' class='flickr-image'></a>"%( item.link, "" )
+            html += "<a href='%s'><img src='%s' class='flickr-image'></a>"%( track['link'], track['art'] )
 
-            html += '<p class="feed-title"><a href="%s">%s</a></p>'%( item.link, title )
-            html += u'<p class="feed-content">%s</p>'%( artist )
+            html += '<p class="feed-title"><a href="%s">%s</a></p>'%( track['link'], track['title'] )
+            html += u'<p class="feed-content">%s</p>'%( track['artist'] )
 
             html += '<div style="clear:both"></div>'
 
@@ -38,12 +71,16 @@ class LastFmAtom( FeedAtom ):
     def timeout(self):
         return 180
 
-class LastFmProvider( FeedProvider ):
+
+
+
+
+    
+class LastFmProvider( Provider ):
 
     def atomClass(self):
         return LastFmAtom
 
-    def urls(self):
-        return self.person.takeUrls(r'last\.fm/user/.')
-    
-        
+    def provide( self ):
+        urls = self.person.takeUrls(r'last\.fm/user/.')
+        self.atoms = [ self.atomClass()( self, url ) for url in urls ]

@@ -88,12 +88,15 @@ Messed with the flickr photo display style to include titles, and have smaller
 thumbnails. I think I prefer this way.
 
 Special casing for last.fm urls is now in, so you'll see your contact's
-recently-played tracks. Special-casing for the few pages I know of
-that have [totally broken RSS feeds](http://jerakeen.org/blog/2008/02/irritating-rss-feed-links/).
+recently-played tracks and coverart, if available.
+
+Special-casing for the few pages I know of that have
+[totally broken RSS feeds](http://jerakeen.org/blog/2008/02/irritating-rss-feed-links/)
+to supress them from the feedlists.
 
 Feeds in the display are now ordered with the most recently updated feed at
-the top of the list. 'Special' feeds (twitter, flickr) are still ordered above
-all others.
+the top of the list. 'Special' feeds (twitter, flickr, lastfm) are still
+ordered above all others.
 
 We now correctly strip CSS styling from feed contents.
 

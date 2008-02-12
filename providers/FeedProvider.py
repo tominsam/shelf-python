@@ -38,7 +38,7 @@ class FeedAtom(ProviderAtom):
             else:
                 # bad feed
                 self.dead = True
-                self.provider.changed()
+                self.changed()
             return
     
         Cache.getContentOfUrlAndCallback( self.gotMainPage, self.url, timeout = self.timeout() * 10, wantStale = False, failure = self.failed ) # TODO - use stale version somehow
@@ -63,7 +63,7 @@ class FeedAtom(ProviderAtom):
             self.getFeed( feed_url )
         else:
             self.dead = True
-            self.provider.changed()
+            self.changed()
     
     def username(self): return None
     def password(self): return None
@@ -77,10 +77,10 @@ class FeedAtom(ProviderAtom):
             self.feed = feed
             self.stale = stale
             self.name = feed.feed.title
-            self.provider.changed()
+            self.changed()
         else:
             self.dead = True
-            self.provider.changed()
+            self.changed()
         
     def failed( self, error ):
         if self.feed:
@@ -90,7 +90,7 @@ class FeedAtom(ProviderAtom):
             # no old feed, just display error
             self.error = error
             self.stale = False
-        self.provider.changed()
+        self.changed()
 
     def body(self):
         if self.feed and self.feed.entries:
