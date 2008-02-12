@@ -29,7 +29,7 @@ class ComAppleSafari(Extractor):
             relme = RelMeParser()
             try:
                 relme.feed( tab.source() )
-            except UnicodeDecodeError:
+            except Exception:
                 # bad page source
                 return
             print_info("Found rel='me' links: %s"%( ",".join(relme.hrefs) ) )
