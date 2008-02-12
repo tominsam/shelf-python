@@ -103,8 +103,10 @@ class FeedAtom(object):
             return ""
         elif self.error:
             return "" # don't display error self.title() + "<pre>%s</pre>"%html_escape(unicode( self.error ))
-        elif self.feed:
+        elif self.feed and self.feed.entries:
             return self.title() + self.htmlForFeed( url = self.url, feed = self.feed, stale = self.stale )
+        elif self.feed:
+            return "" # no entries
         else:
             return self.title() + self.htmlForPending( url = self.url, stale = self.stale )
     
@@ -135,10 +137,6 @@ class FeedAtom(object):
             if date:
                 #html += u'<span class="feed-date">%s</span>'%( time.strftime("%b %d", date ) )
                 ago = time_ago_in_words(date) + " ago"
-                # TODO - think about these. The output from the function is Too Damn Long, is all.
-                ago = re.sub(r'^about ', '~', ago )
-                ago = re.sub(r'minute', 'min', ago )
-                ago = re.sub(r'second', 'sec', ago )
                 html += u'<span class="feed-date">%s</span>'%ago
             html += u'<p class="feed-title"><a href="%s">%s</a></p>'%( item.link, item.title )
             detail = None

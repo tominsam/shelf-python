@@ -13,6 +13,7 @@ from Provider import *
 Provider.addProvider( "BasicProvider" )
 Provider.addProvider( "TwitterProvider" )
 Provider.addProvider( "DopplrProvider" )
+Provider.addProvider( "LastFmProvider" )
 Provider.addProvider( "FlickrProvider" )
 # Order is important - FeedProvider must be _last_, because it uses all
 # urls in the address book card not claimed by another provider
