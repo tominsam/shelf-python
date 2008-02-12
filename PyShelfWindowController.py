@@ -192,7 +192,7 @@ class ShelfController (NSWindowController):
         self.imageView.setImage_( clue.image() ) # does this leak?
         base = NSURL.fileURLWithPath_( NSBundle.mainBundle().resourcePath() )
         self.setWebContent_( clue.content() ) # will initially be 'thinking..'
-
+        
         # always safe
         self.window().setHidesOnDeactivate_( False )
         
@@ -207,11 +207,11 @@ class ShelfController (NSWindowController):
         
         # do this so we can return to the main runloop ASAP, so the
         # webview has a chance to display something.
-        self.performSelector_withObject_afterDelay_('kickClue', None, 0 )
+        self.performSelector_withObject_afterDelay_('kickClue', None, 0.1 )
 
     def kickClue(self):
         if self.current_clue:
-            self.current_clue.getInfo()
+            self.current_clue.start()
 
     # called from the clue when it's updated itself and wants to add to the webview
     def updateWebContent_fromClue_(self, content, clue):

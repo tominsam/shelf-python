@@ -62,11 +62,14 @@ class Clue(object):
     
     # Kick off all the providers to start getting information on the person.
     # providers call back to this object when they have something.
-    def getInfo(self):
+    def start(self):
         # the 'interesting' providers - flickr, twitter, etc - extract urls
         # from the boring_urls list based on regular expressions. The FeedProvider
         # wakes up right at the end, and turns everything left over into feeds.
         self.boring_urls = self.urls()
+        
+        # TODO - create providers in __init__, and require this to
+        # be fast. This means that BasicProvider is available _instantly_
 
         # first run for this Clue?
         if not self.providers:
@@ -130,7 +133,7 @@ class Clue(object):
         print_info("I have the Address Book urls '%s'"%(", ".join(self.ab_urls())))
         print_info("Google gave me the extra urls '%s'"%(", ".join(self.extra_urls)))
 
-        self.getInfo() # TODO - this kicks everything off again. Too heavy?
+        self.start() # TODO - this kicks everything off again. Too heavy?
 
     # the providers callback to this function when they have something new to say.
     # We just pass the message upwards

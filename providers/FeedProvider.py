@@ -9,19 +9,13 @@ import time
 from Utilities import *
 import Cache
 
-class FeedAtom(object):
-    def __init__(self, provider, url):
-        self.provider = provider
-        self.url = url
-        self.name = url
+class FeedAtom(ProviderAtom):
+    def __init__(self, *stuff):
+        ProviderAtom.__init__( self, *stuff )
         self.feed = None
-        self.stale = True
-        self.error = None
-        self.dead = False
-
         self.getFeedUrl()
     
-    def sortDate(self):
+    def sortOrder(self):
         if not self.feed:
             return None
         if len(self.feed.entries) == 0:
@@ -98,33 +92,19 @@ class FeedAtom(object):
             self.stale = False
         self.provider.changed()
 
-    def content(self):
-        if self.dead:
-            return ""
-        elif self.error:
-            return "" # don't display error self.title() + "<pre>%s</pre>"%html_escape(unicode( self.error ))
-        elif self.feed and self.feed.entries:
-            return self.title() + self.htmlForFeed( url = self.url, feed = self.feed, stale = self.stale )
+    def body(self):
+        if self.feed and self.feed.entries:
+            return self.htmlForFeed( url = self.url, feed = self.feed, stale = self.stale )
         elif self.feed:
             return "" # no entries
         else:
-            return self.title() + self.htmlForPending( url = self.url, stale = self.stale )
-    
-    
-    def title(self):
-        if self.stale:
-            spinner_html = "&nbsp;" + self.provider.spinner()
-        else:
-            spinner_html = ""
-        return "<h3><a href='%s'>%s%s</a></h3>"%(self.url,self.name,spinner_html)
-
+            return self.htmlForPending( url = self.url, stale = self.stale )
 
     def timeout(self):
         return 60 * 20
 
     def htmlForPending( self, url, stale = False ):
         return ""
-   
     
     def htmlForFeed( self, url, feed, stale = False ):
         html = u""
@@ -155,13 +135,6 @@ class FeedAtom(object):
 
 
 class FeedProvider( Provider ):
-    
-    def content(self):
-        def sortByDate(a, b):
-            return cmp( b.sortDate(), a.sortDate() )
-        self.atoms.sort(sortByDate)
-
-        return "".join([ atom.content() for atom in self.atoms ])
     
     def atomClass(self):
         return FeedAtom

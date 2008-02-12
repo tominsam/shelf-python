@@ -13,6 +13,36 @@ import traceback
 from Utilities import *
 import Cache
 
+class ProviderAtom( object ):
+    def __init__(self, provider, url):
+        self.provider = provider
+        self.url = url
+        self.name = url
+        self.stale = True
+        self.dead = False
+        self.error = None
+    
+    def title(self):
+        if self.stale:
+            spinner_html = "&nbsp;" + self.provider.spinner()
+        else:
+            spinner_html = ""
+        return "<h3><a href='%s'>%s%s</a></h3>"%(self.url,self.name,spinner_html)
+
+    def sortOrder(self):
+        return self.name
+
+    def content(self):
+        if self.dead:
+            return ""
+        elif self.error:
+            return "" # don't display error self.title() + "<pre>%s</pre>"%html_escape(unicode( self.error ))
+        else:
+            body = self.body()
+            if body or self.stale:
+                return self.title() + self.body()
+            return ""
+
 class Provider( object ):
     
     PROVIDERS = []
@@ -33,9 +63,15 @@ class Provider( object ):
         self.running = True
         self.person = person
         self.provide()
+
+    def atomClass(self):
+        return ProviderAtom
     
     def content(self):
-        return "".join(self.atoms)
+        def sorter(a, b):
+            return cmp( b.sortOrder(), a.sortOrder() )
+        self.atoms.sort(sorter)
+        return "".join([ atom.content() for atom in self.atoms ])
     
     def changed(self):
         self.person.providerUpdated_(self)
