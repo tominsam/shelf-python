@@ -81,6 +81,13 @@ stuff uses this, so no longer blocks the foreground thread.
 
 ### 0.0.12 (in development)
 
+Shelf now has a preference to only poll for context and display the window if
+a global shortcut key is pressed (currently, this is hard-coded to
+Command-Ctrl-J). Turning this on will stop Shelf from polling, it'll manually
+display the window when you press the hotkey. BUG - turning this preference
+off will require a restart of Shelf before the polling starts again. And yes,
+I'll make the key configurable soon.
+
 Feed entries now display about how long ago they were, rather than absolute
 times. Do we like this? Maybe this should be a preference.
 
@@ -100,7 +107,8 @@ ordered above all others.
 
 We now correctly strip CSS styling from feed contents.
 
-The file cache now cleans itself up. The first run of the app may take a while... Sorry.
+The file cache now cleans itself up. The first run of the app may take a
+while... Sorry.
 
 Shelf now sends a proper User-Agent to remote servers when fetching feeds.
 

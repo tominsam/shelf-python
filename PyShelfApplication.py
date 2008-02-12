@@ -14,12 +14,15 @@ class PyShelfApplication(NSApplication):
     def finishLaunching(self):
         super(PyShelfApplication, self).finishLaunching()
         # register cmd-control-J
-        self.hotKeyRef = RegisterEventHotKey(38, cmdKey | controlKey, (0, 0), GetApplicationEventTarget(), 0)
+        if NSUserDefaults.standardUserDefaults().boolForKey_("useHotkey"):
+            self.hotKeyRef = RegisterEventHotKey(38, cmdKey | controlKey, (0, 0), GetApplicationEventTarget(), 0)
 
     def sendEvent_(self, theEvent):
         if theEvent.type() == NSSystemDefined and theEvent.subtype() == kEventHotKeyPressedSubtype:
-            self.activateIgnoringOtherApps_(True)
-            NSRunAlertPanel(u'Hot Key Pressed', u'Hot Key Pressed',
-                None, None, None)
+            if NSUserDefaults.standardUserDefaults().boolForKey_("useHotkey"):
+                #self.activateIgnoringOtherApps_(True)
+                if self.delegate():
+                    self.delegate().hotKeyPressed()
+
         super(PyShelfApplication, self).sendEvent_(theEvent)
 

@@ -78,6 +78,18 @@ class ShelfController (NSWindowController):
                 NSURL.URLWithString_("addressbook://%s"%self.current_clue.uniqueId())
             )
 
+    def hotKeyPressed(self):
+        print("hotKeyPressed")
+        # TODO - this list here is a vage grab-bag of things I want to happen.
+        # Should think about how we want to feedback on a deliberate poll,
+        # and how to fade the window.
+        self.current_clue = None
+        self.fade()
+        self.window().setHidesOnDeactivate_( False )
+        self.showWindow_(self)
+        self.window().display()
+        self.window().orderFrontRegardless()
+        self.poll()
     
     # return an Extractor class instance (confusingly called 'handler' for now. Must fix..)
     # for the app with the passed bundle name.
@@ -109,7 +121,8 @@ class ShelfController (NSWindowController):
         print_info( "\n---- poll start ----" )
         
         # First thing I do, schedule the next poll event, so that I can just return with impunity from this function
-        self.performSelector_withObject_afterDelay_( 'poll', None, 2 )
+        if not NSUserDefaults.standardUserDefaults().boolForKey_("useHotkey"):
+            self.performSelector_withObject_afterDelay_( 'poll', None, 2 )
 
         # get bundle name of active application
         try:
@@ -167,6 +180,10 @@ class ShelfController (NSWindowController):
     
     # Put window into 'no context, fall to background' state, clear current state
     def fade(self):
+        if NSUserDefaults.standardUserDefaults().boolForKey_("useHotkey") and self.current_clue:
+            # if we're hotkey driven, don't passively fade ever
+            return
+
         print_info("fading...")
         if self.current_clue:
             self.current_clue.stop()
