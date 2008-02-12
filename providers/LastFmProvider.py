@@ -2,7 +2,7 @@ from FeedProvider import *
 from Utilities import *
 
 from xml.dom.minidom import parseString
-from time import time
+from time import time, gmtime
 from urllib import quote
 
 class LastFmAtom( ProviderAtom ):
@@ -15,7 +15,7 @@ class LastFmAtom( ProviderAtom ):
         self.tracks = []
 
         recent_url = "http://ws.audioscrobbler.com/1.0/user/%s/recenttracks.xml"%username
-        Cache.getContentOfUrlAndCallback( self.gotRecentTracks, recent_url, timeout = 120, wantStale = True, failure = self.failed )
+        Cache.getContentOfUrlAndCallback( self.gotRecentTracks, recent_url, timeout = 60, wantStale = True, failure = self.failed )
 
     def failed( self, error ):
         self.stale = False
@@ -30,22 +30,25 @@ class LastFmAtom( ProviderAtom ):
                 return node.getElementsByTagName(val)[0].childNodes[0].wholeText
             except IndexError:
                 return None
-        for track in dom.getElementsByTagName("track")[0:2]:
+        for track in dom.getElementsByTagName("track")[0:3]:
             track.normalize()
-            data = {
-              'link':gsv(track, "url"),
-              'art':"",
-              'artist':gsv(track, "artist"),
-              'album':gsv(track, "album"),
-              'title':gsv(track, "name")
-            }
-            self.tracks.append( data )
-            if data['album']:
-                def updateArtwork(data, stale, trackdata = data):
-                    trackdata['art'] = gsv( parseString(data), 'small' )
-                    self.changed()
-                art_url = "http://ws.audioscrobbler.com/1.0/album/%s/%s/info.xml"%( quote(data['artist'],""), quote(data['album'],"") )
-                Cache.getContentOfUrlAndCallback( updateArtwork, art_url, timeout = 24 * 3600, wantStale = True )
+            played = int(track.getElementsByTagName("date")[0].getAttribute('uts'))
+            if time() - played < 3600: # in the last hour
+                data = {
+                  'link':gsv(track, "url"),
+                  'art':"",
+                  'artist':gsv(track, "artist"),
+                  'album':gsv(track, "album"),
+                  'title':gsv(track, "name"),
+                  'date':played
+                }
+                self.tracks.append( data )
+                if data['album']:
+                    def updateArtwork(data, stale, trackdata = data):
+                        trackdata['art'] = gsv( parseString(data), 'small' )
+                        self.changed()
+                    art_url = "http://ws.audioscrobbler.com/1.0/album/%s/%s/info.xml"%( quote(data['artist'],""), quote(data['album'],"") )
+                    Cache.getContentOfUrlAndCallback( updateArtwork, art_url, timeout = 24 * 3600, wantStale = True )
             
         self.changed()
     
@@ -53,10 +56,8 @@ class LastFmAtom( ProviderAtom ):
         html = ""
 
         for track in self.tracks:
-            date = None # time()
-            if date:
-                ago = time_ago_in_words(date) + " ago"
-                html += u'<span class="feed-date">%s</span>'%ago
+            ago = time_ago_in_words(gmtime(track['date'])) + " ago"
+            html += u'<span class="feed-date">%s</span>'%ago
 
             html += "<a href='%s'><img src='%s' class='flickr-image'></a>"%( track['link'], track['art'] )
 
