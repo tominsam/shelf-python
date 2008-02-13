@@ -12,7 +12,7 @@ class DopplrProvider( Provider ):
 
     def provide( self ):
         self.token = NSUserDefaults.standardUserDefaults().stringForKey_("dopplrToken")
-        dopplrs = self.person.takeUrls(r'dopplr\.com/traveller')
+        dopplrs = self.clue.takeUrls(r'dopplr\.com/traveller')
         if not dopplrs or not self.token: return
         
         return # We have an SSL error right now - can't do anything.
@@ -41,7 +41,7 @@ class DopplrProvider( Provider ):
         self.atoms = []
         self.atoms.append("<h3><a href='http://www.dopplr.com/traveller/%s/'>Dopplr</a></h3>"%( self.username ))
         self.atoms.append("<p>%s %s.</p>"%(
-            self.person.displayName(),
+            self.clue.displayName(),
             doc['traveller']['status']
         ))
         self.atoms.append("")

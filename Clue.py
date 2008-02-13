@@ -42,9 +42,9 @@ class Clue(object):
     # To work around this, I'll just remember every url I get for a person.
     @classmethod
     def forUrl( cls, url ):
-        for person in Clue.CACHE.values():
-            if normalize_url( url) in [ normalize_url(u) for u in person.urls() ]:
-                return person
+        for clue in Clue.CACHE.values():
+            if normalize_url( url) in [ normalize_url(u) for u in clue.urls() ]:
+                return clue
 
     def __init__(self, person):
         # for now, clues are tied to AddressBook person objects.

@@ -30,5 +30,5 @@ class TwitterProvider( FeedProvider ):
         return TwitterAtom
 
     def urls(self):
-        return self.person.takeUrls(r'twitter\.com/.')
+        return self.clue.takeUrls(r'twitter\.com/.')
         

@@ -83,5 +83,5 @@ class LastFmProvider( Provider ):
         return LastFmAtom
 
     def provide( self ):
-        urls = self.person.takeUrls(r'last\.fm/user/.')
+        urls = self.clue.takeUrls(r'last\.fm/user/.')
         self.atoms = [ self.atomClass()( self, url ) for url in urls ]

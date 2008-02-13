@@ -146,6 +146,6 @@ class FeedProvider( Provider ):
 
     # override these
     def urls(self):
-        return self.person.boring_urls
+        return self.clue.boring_urls
     
     

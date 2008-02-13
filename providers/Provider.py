@@ -62,12 +62,12 @@ class Provider( object ):
     def providers( myClass ):
         return Provider.PROVIDERS
 
-    def __init__(self, person):
+    def __init__(self, clue):
         #NSLog("** Provider '%s' init"%self.__class__.__name__)
         super( Provider, self ).__init__()
         self.atoms = []
         self.running = True
-        self.person = person
+        self.clue = clue
         self.provide()
 
     def atomClass(self):
@@ -80,7 +80,7 @@ class Provider( object ):
         return "".join([ atom.content() for atom in self.atoms ])
     
     def changed(self):
-        self.person.providerUpdated_(self)
+        self.clue.providerUpdated_(self)
 
     def provide( self ):
         pass

@@ -45,5 +45,5 @@ class FlickrProvider( FeedProvider ):
         return FlickrAtom
 
     def urls(self):
-        return self.person.takeUrls(r'flickr\.com/(photos|people)/.')
+        return self.clue.takeUrls(r'flickr\.com/(photos|people)/.')
         
