@@ -13,6 +13,10 @@ class FeedAtom(ProviderAtom):
     def __init__(self, *stuff):
         ProviderAtom.__init__( self, *stuff )
         self.feed = None
+        self.refresh( False )
+    
+    def refresh( self, force ):
+        # TODO - force-refresh should blow the cache
         self.getFeedUrl()
     
     def sortOrder(self):
@@ -69,7 +73,9 @@ class FeedAtom(ProviderAtom):
     def password(self): return None
     
     def getFeed(self, feed_url ):
-        Cache.getContentOfUrlAndCallback( callback = self.gotFeed, url = feed_url, username = self.username(), password = self.password(), timeout = self.timeout(), wantStale = True, failure = self.failed )
+        # if we have a feed object, then I'm not interested in re-parsing a stale file.
+        wantStale = not self.feed
+        Cache.getContentOfUrlAndCallback( callback = self.gotFeed, url = feed_url, username = self.username(), password = self.password(), timeout = self.timeout(), wantStale = wantStale, failure = self.failed )
 
     def gotFeed( self, data, stale ):
         feed = feedparser.parse( data )
@@ -141,9 +147,19 @@ class FeedProvider( Provider ):
 
     def provide( self ):
         todo = self.urls() # if we're claiming from boring_urls, do it first
-        if not todo: return
-        self.atoms = [ self.atomClass()( self, url ) for url in todo ]
-
+        
+        # sync atoms to urls
+        for atom in [x for x in self.atoms]:
+            if atom.url in todo:
+                todo.remove( atom.url )
+                atom.refresh( False )
+            else:
+                atom.stop()
+                self.atoms.remove(atom)
+        
+        for url in todo:
+            self.atoms.append( self.atomClass()( self, url ) )
+        
     # override these
     def urls(self):
         return self.clue.boring_urls

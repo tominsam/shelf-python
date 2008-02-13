@@ -82,6 +82,8 @@ class Clue(object):
         # timeout would make Shelf a lot less twitchy in terms of looking for feeds
         for provider in self.providers:
             provider.provide()
+        
+        self.changed()
 
     # use Google Social - ask it to tell us which urls are linked to using
     # rel="me" links from any of the urls that we already have for this person.
@@ -124,11 +126,8 @@ class Clue(object):
 
     # the providers callback to this function when they have something new to say.
     # We just pass the message upwards
-    def providerUpdated_(self, provider):
-        print_info("Update for %s from %s"%( self, provider ))
-        # It's unlikely we'll get a message from a provider we don't own, but..
-        if self.delegate and provider in self.providers:
-            self.delegate.updateWebContent_fromClue_( self.content(), self )
+    def changed(self):
+        self.delegate.updateWebContent_fromClue_( self.content(), self )
     
     # this method returns the HTML content that should be in the webview for this clue.
     def content(self):

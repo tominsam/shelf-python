@@ -79,7 +79,7 @@ class Provider( object ):
         return "".join([ atom.content() for atom in self.atoms ])
     
     def changed(self):
-        self.clue.providerUpdated_(self)
+        self.clue.changed()
 
     def provide( self ):
         pass
