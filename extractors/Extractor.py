@@ -54,10 +54,17 @@ class Extractor(object):
             self.clues_from_jabber( re.sub(r'xmpp:', '', url) )
             return
 
-        url = re.sub(r'^\w+://', '', url)
+        if re.match(r'email:', url):
+            self.clues_from_email( re.sub(r'email:', '', url) )
+            return
+        
+        if re.match(r'\w+:', url) and not re.match(r'http', url):
+            # has a protocol, but isn't http
+            return
+        
         clues = self._search_for_url( url )
 
-        while not clues and re.search(r'/', url):
+        while not clues and re.search(r'//', url):
             url = re.sub(r'/[^/]*$','',url)
             clues += self._search_for_url( url )
 
@@ -168,6 +175,8 @@ class Extractor(object):
 
     SOCIAL_GRAPH_CACHE = {}
     def getSocialGraphFor( self, url ):
+        if not re.match(r'http', url): return
+
         if url in Extractor.SOCIAL_GRAPH_CACHE:
             print_info("using cached social graph data")
             self.addClues( Extractor.SOCIAL_GRAPH_CACHE[url] )
