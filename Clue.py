@@ -89,7 +89,7 @@ class Clue(object):
         if not self.ab_urls(): return # no point
         api = "http://socialgraph.apis.google.com/lookup?pretty=1&fme=1&q=" + ",".join([ quote(url) for url in self.ab_urls() ])
         print_info("Social graph API call to " + api )
-        Cache.getContentOfUrlAndCallback( callback = self.gotSocialGraphData, url = api, timeout = 3600 * 48, wantStale = False ) # huge timeout here
+        Cache.getContentOfUrlAndCallback( callback = self.gotSocialGraphData, url = api, timeout = 3600 * 48, wantStale = False, delay = 2 ) # huge timeout here
 
     # callback from Google Social call
     def gotSocialGraphData( self, raw, isStale ):

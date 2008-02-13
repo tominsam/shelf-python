@@ -66,8 +66,11 @@ def getContentOfUrlAndCallback( **params ):
     delegate = DownloadDelegate.alloc().init()
     for key in params:
         setattr(delegate, key, params[key] )
+        
+    delay = 0.1
+    if 'delay' in params: delay = params['delay']
     
-    delegate.performSelector_withObject_afterDelay_('start', None, 0 )
+    delegate.performSelector_withObject_afterDelay_('start', None, delay )
 
 class DownloadDelegate( NSObject ):
     

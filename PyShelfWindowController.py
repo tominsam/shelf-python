@@ -79,7 +79,6 @@ class ShelfController (NSWindowController):
             )
 
     def hotKeyPressed(self):
-        print("hotKeyPressed")
         # TODO - this list here is a vage grab-bag of things I want to happen.
         # Should think about how we want to feedback on a deliberate poll,
         # and how to fade the window.
@@ -217,15 +216,17 @@ class ShelfController (NSWindowController):
         if NSUserDefaults.standardUserDefaults().boolForKey_("bringAppForward"):
             # slightly voodoo, this. But otherwise it doesn't seem 100% reliable
             self.showWindow_(self)
-            self.window().display()
             self.window().orderFrontRegardless()
 
         if NSUserDefaults.standardUserDefaults().boolForKey_("alwaysOnTop"):
             self.window().setLevel_( NSFloatingWindowLevel ) # 'on top'
+
+        self.window().display()
         
         # do this so we can return to the main runloop ASAP, so the
         # webview has a chance to display something.
         self.performSelector_withObject_afterDelay_('kickClue', None, 0 )
+
 
     def kickClue(self):
         if self.current_clue:
