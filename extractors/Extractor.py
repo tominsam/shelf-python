@@ -183,7 +183,7 @@ class Extractor(object):
         except ValueError:
             return # meh
         original_url = data['canonical_mapping'].keys()[0]
-        urls = data['nodes'].keys()
+        urls = filter( lambda u: len(u) > 4 and re.match(r'http', u), data['nodes'].keys() ) # sometimes it returns '/' as a node.
         extra = []
         for u in urls:
             if 'unverified_claiming_nodes' in data['nodes'][u]:

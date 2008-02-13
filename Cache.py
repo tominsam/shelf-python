@@ -87,7 +87,7 @@ def getContentOfUrlAndCallback( callback, url, username = None, password = None,
         req.setValue_forHTTPHeaderField_("Basic %s"%base64string, "Authorization")
 
     # Send the right User-Agent. TODO - get the bundle version properly, don't hard-code
-    req.setValue_forHTTPHeaderField_("Shelf/0.0.12 +http://jerakeen.org/code/shelf/", "User-Agent")
+    req.setValue_forHTTPHeaderField_("Shelf/0.0.11.9 +http://jerakeen.org/code/shelf/", "User-Agent")
     
     delegate = DownloadDelegate( callback, failure )
     downloader = NSURLDownload.alloc().initWithRequest_delegate_( req, delegate )
