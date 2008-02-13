@@ -21,12 +21,14 @@ class ProviderAtom( object ):
         self.stale = True
         self.dead = False
         self.error = None
+        self.guessed = False
     
     def title(self):
+        spinner_html = ""
+        if self.guessed:
+            spinner_html += " (?) "
         if self.stale:
-            spinner_html = "&nbsp;" + self.provider.spinner()
-        else:
-            spinner_html = ""
+            spinner_html += self.provider.spinner()
         return "<h3><a href='%s'>%s%s</a></h3>"%(self.url,self.name,spinner_html)
     
     def body(self):

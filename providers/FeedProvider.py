@@ -164,7 +164,9 @@ class FeedProvider( Provider ):
                 self.atoms.remove(atom)
         
         for url in todo:
-            self.atoms.append( self.atomClass()( self, url ) )
+            atom = self.atomClass()( self, url )
+            atom.guessed = url in self.clue.extra_urls
+            self.atoms.append( atom )
     
     def isDuplicateFeed(self, url):
         # called once an atom has a feed url for itself. Rather than

@@ -33,7 +33,7 @@ def normalize_url( url ):
     url = re.sub(r'/$', '', url) # trailing slash
     url = re.sub(r'^\w+://', '', url) # protocol
     url = re.sub(r'^www.flickr.', 'flickr.', url) # flickr special casing
-    return url
+    return url.lower() # ewwww
 
 
 
