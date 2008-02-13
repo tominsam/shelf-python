@@ -48,30 +48,24 @@ def cleanCache():
     #LAST_CACHE_CLEAN = time()
 
 
-# ask Cocoa to download an url and get back to us. It pulls the file to disk locally, and uses this as a cache,
-# using mtime. The callback should be a function that will be called
-# at some time in the future (BUG - if there's a good cache, it'll be
-# called _before_ this function returns. Bad), with 2 params - the data,
-# and a true/false if the data is stale or not.
+# ask Cocoa to download an url and get back to us. It pulls the file to disk
+# locally, and uses this as a cache, using mtime. The callback should be a
+# function that will be called at some time in the future, with 2 params -
+# the data, and a true/false if the data is stale or not.
 #
 # Calling with wantstale of true will call the callback function right away
-# if here is _any_ data, even if it's old (BUG - as before, this is called
-# before this function returns), then will fetch the data and call the callback
-# _again_.
-def getContentOfUrlAndCallback(callback, url, username = None, password = None, wantStale = False, timeout = 600, failure = None ):
+# if here is _any_ data, even if it's old, then will fetch the data and call
+# the callback _again_.
+#
+def getContentOfUrlAndCallback( **params ):
     cleanCache()
     # I have address book entries that are just 'www.foo.com'
-    if not re.match(r'^\w+://', url):
-        url = "http://%s"%url
+    if not re.match(r'^\w+://', params['url']):
+        params['url'] = "http://%s"%url
 
     delegate = DownloadDelegate.alloc().init()
-    delegate.callback = callback
-    delegate.failure = failure
-    delegate.url = url
-    delegate.username = username
-    delegate.password = password
-    delegate.timeout = timeout
-    delegate.wantStale = wantStale
+    for key in params:
+        setattr(delegate, key, params[key] )
     
     delegate.performSelector_withObject_afterDelay_('start', None, 0 )
 

@@ -57,11 +57,6 @@ class Clue(object):
         self.delegate = None
         self.extra_urls = [] # Urls from google social
 
-        # the 'interesting' providers - flickr, twitter, etc - extract urls
-        # from the boring_urls list based on regular expressions. The FeedProvider
-        # wakes up right at the end, and turns everything left over into feeds.
-        self.boring_urls = self.urls()
-
         # on the first inflate of this person, ask google for more urls.
         if NSUserDefaults.standardUserDefaults().boolForKey_("googleSocialContext"):
             self.getMoreUrls()
@@ -76,7 +71,11 @@ class Clue(object):
     # Kick off all the providers to start getting information on the person.
     # providers call back to this object when they have something.
     def start(self):
-        if not self.delegate: return
+
+        # the 'interesting' providers - flickr, twitter, etc - extract urls
+        # from the boring_urls list based on regular expressions. The FeedProvider
+        # wakes up right at the end, and turns everything left over into feeds.
+        self.boring_urls = self.urls()
 
         # tell every provider to look for clues.
         # TODO - we really don't need to do this _incredibly_ often. a 30 second
@@ -90,7 +89,7 @@ class Clue(object):
         if not self.ab_urls(): return # no point
         api = "http://socialgraph.apis.google.com/lookup?pretty=1&fme=1&q=" + ",".join([ quote(url) for url in self.ab_urls() ])
         print_info("Social graph API call to " + api )
-        Cache.getContentOfUrlAndCallback( self.gotSocialGraphData, api, timeout = 3600 * 48, wantStale = False ) # huge timeout here
+        Cache.getContentOfUrlAndCallback( callback = self.gotSocialGraphData, url = api, timeout = 3600 * 48, wantStale = False ) # huge timeout here
 
     # callback from Google Social call
     def gotSocialGraphData( self, raw, isStale ):

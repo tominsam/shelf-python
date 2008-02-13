@@ -22,7 +22,7 @@ class DopplrProvider( Provider ):
         self.changed()
 
         url = "https://www.dopplr.com/api/traveller_info.js?token=%s&traveller=%s"%( self.token, self.username )
-        Cache.getContentOfUrlAndCallback( self.gotDopplrData, url, timeout = 3600, wantStale = True, failure = self.failed )
+        Cache.getContentOfUrlAndCallback( callback = self.gotDopplrData, url = url, timeout = 3600, wantStale = True, failure = self.failed )
     
     def failed(self, error):
         self.atoms[1:] = [ html_escape(unicode(error)) ]

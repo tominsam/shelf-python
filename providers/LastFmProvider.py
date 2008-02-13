@@ -15,7 +15,7 @@ class LastFmAtom( ProviderAtom ):
         self.tracks = []
 
         recent_url = "http://ws.audioscrobbler.com/1.0/user/%s/recenttracks.xml"%username
-        Cache.getContentOfUrlAndCallback( self.gotRecentTracks, recent_url, timeout = 60, wantStale = True, failure = self.failed )
+        Cache.getContentOfUrlAndCallback( callback = self.gotRecentTracks, url = recent_url, timeout = 60, wantStale = True, failure = self.failed )
 
     def failed( self, error ):
         self.stale = False
@@ -47,7 +47,7 @@ class LastFmAtom( ProviderAtom ):
                     trackdata['art'] = gsv( parseString(data), 'small' )
                     self.changed()
                 art_url = "http://ws.audioscrobbler.com/1.0/album/%s/%s/info.xml"%( quote(data['artist'],""), quote(data['album'],"") )
-                Cache.getContentOfUrlAndCallback( updateArtwork, art_url, timeout = 24 * 3600, wantStale = True )
+                Cache.getContentOfUrlAndCallback( callback = updateArtwork, url = art_url, timeout = 24 * 3600, wantStale = True )
             
         self.changed()
     

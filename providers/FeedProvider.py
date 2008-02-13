@@ -41,7 +41,7 @@ class FeedAtom(ProviderAtom):
                 self.changed()
             return
     
-        Cache.getContentOfUrlAndCallback( self.gotMainPage, self.url, timeout = self.timeout() * 10, wantStale = False, failure = self.failed ) # TODO - use stale version somehow
+        Cache.getContentOfUrlAndCallback( callback = self.gotMainPage, url = self.url, timeout = self.timeout() * 10, wantStale = False, failure = self.failed ) # TODO - use stale version somehow
     
     def specialCaseFeedUrl( self, url ):
         print_info("trying to special-case url %s"%url)
@@ -69,7 +69,7 @@ class FeedAtom(ProviderAtom):
     def password(self): return None
     
     def getFeed(self, feed_url ):
-        Cache.getContentOfUrlAndCallback( self.gotFeed, feed_url, username = self.username(), password = self.password(), timeout = self.timeout(), wantStale = True, failure = self.failed )
+        Cache.getContentOfUrlAndCallback( callback = self.gotFeed, url = feed_url, username = self.username(), password = self.password(), timeout = self.timeout(), wantStale = True, failure = self.failed )
 
     def gotFeed( self, data, stale ):
         feed = feedparser.parse( data )

@@ -184,7 +184,7 @@ class Extractor(object):
         api = "http://socialgraph.apis.google.com/lookup?pretty=1&fme=1&edo=1&edi=1"
         api += "&q=" + quote( url )
         print_info("Social graph API call to " + api )
-        Cache.getContentOfUrlAndCallback( self.gotSocialGraphData, api, timeout = 3600 * 48 ) # huge timeout here
+        Cache.getContentOfUrlAndCallback( callback = self.gotSocialGraphData, url = api, timeout = 3600 * 48 ) # huge timeout here
 
     def gotSocialGraphData( self, raw, isStale ):
         try:
