@@ -69,15 +69,20 @@ def getContentOfUrlAndCallback( callback, url, username = None, password = None,
 
     if os.path.exists(filename):
         if time() - os.path.getmtime( filename ) < timeout:
+            #print("cached data %s available for %s"%(filename,url))
             callback( file( filename ).read(), False )
             return # no need to get the URL
         
         elif wantStale:
             # call the callback immediately with the stale data.
+            #print("stale data %s available for %s"%(filename,url))
             print_info("We have stale data")
             callback( file( filename ).read(), True )
             # don't return - we still want to fetch the file
-    
+    else:
+        #print("no file %s\n\tfor %s"%(filename,url))
+        pass
+
     # TODO - if we're already fetching the file on behalf of someone
     # else, it would be nice to do the Right Thing here.
 

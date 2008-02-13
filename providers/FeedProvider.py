@@ -69,7 +69,7 @@ class FeedAtom(ProviderAtom):
     def password(self): return None
     
     def getFeed(self, feed_url ):
-        Cache.getContentOfUrlAndCallback( self.gotFeed, feed_url, username = self.username, password = self.password, timeout = self.timeout(), wantStale = True, failure = self.failed )
+        Cache.getContentOfUrlAndCallback( self.gotFeed, feed_url, username = self.username(), password = self.password(), timeout = self.timeout(), wantStale = True, failure = self.failed )
 
     def gotFeed( self, data, stale ):
         feed = feedparser.parse( data )
