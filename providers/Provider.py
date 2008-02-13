@@ -68,7 +68,6 @@ class Provider( object ):
         self.atoms = []
         self.running = True
         self.clue = clue
-        self.provide()
 
     def atomClass(self):
         return ProviderAtom

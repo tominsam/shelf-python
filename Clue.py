@@ -55,7 +55,15 @@ class Clue(object):
         # I'd like clues to be a little more flexible.
         self.person = person
         self.extra_urls = [] # Urls from google social
-        self.providers = []
+        self.fresh = True # never been run
+
+        # the 'interesting' providers - flickr, twitter, etc - extract urls
+        # from the boring_urls list based on regular expressions. The FeedProvider
+        # wakes up right at the end, and turns everything left over into feeds.
+        self.boring_urls = self.urls()
+
+        # create providers
+        self.providers = [ cls(self) for cls in Provider.providers() ]
 
     def setDelegate_(self, delegate):
         self.delegate = delegate
@@ -63,23 +71,10 @@ class Clue(object):
     # Kick off all the providers to start getting information on the person.
     # providers call back to this object when they have something.
     def start(self):
-        # the 'interesting' providers - flickr, twitter, etc - extract urls
-        # from the boring_urls list based on regular expressions. The FeedProvider
-        # wakes up right at the end, and turns everything left over into feeds.
-        self.boring_urls = self.urls()
-        
-        # TODO - create providers in __init__, and require this to
-        # be fast. This means that BasicProvider is available _instantly_
 
         # first run for this Clue?
-        if not self.providers:
-            for cls in Provider.providers():
-                try:
-                    self.providers.append( cls( self ) )
-                except:
-                    print("Failed to create provider %s for clue:"%cls)
-                    print(traceback.format_exc())
-
+        if self.fresh:
+            self.fresh = False
             # on the first inflate of this person, ask google for more urls.
             if NSUserDefaults.standardUserDefaults().boolForKey_("googleSocialContext"):
                 self.getMoreUrls()

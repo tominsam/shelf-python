@@ -225,7 +225,7 @@ class ShelfController (NSWindowController):
         
         # do this so we can return to the main runloop ASAP, so the
         # webview has a chance to display something.
-        self.performSelector_withObject_afterDelay_('kickClue', None, 0.1 )
+        self.performSelector_withObject_afterDelay_('kickClue', None, 0 )
 
     def kickClue(self):
         if self.current_clue:
