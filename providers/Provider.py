@@ -33,7 +33,7 @@ class ProviderAtom( object ):
         return ""
 
     def sortOrder(self):
-        return self.name
+        return None
 
     def content(self):
         if self.dead:

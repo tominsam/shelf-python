@@ -54,16 +54,21 @@ class Clue(object):
         # Clues are constructed using Clue.forPerson() from everywhere. Eventually
         # I'd like clues to be a little more flexible.
         self.person = person
+        self.delegate = None
         self.extra_urls = [] # Urls from google social
-        self.fresh = True # never been run
 
         # the 'interesting' providers - flickr, twitter, etc - extract urls
         # from the boring_urls list based on regular expressions. The FeedProvider
         # wakes up right at the end, and turns everything left over into feeds.
         self.boring_urls = self.urls()
 
+        # on the first inflate of this person, ask google for more urls.
+        if NSUserDefaults.standardUserDefaults().boolForKey_("googleSocialContext"):
+            self.getMoreUrls()
+
         # create providers
         self.providers = [ cls(self) for cls in Provider.providers() ]
+
 
     def setDelegate_(self, delegate):
         self.delegate = delegate
@@ -71,13 +76,7 @@ class Clue(object):
     # Kick off all the providers to start getting information on the person.
     # providers call back to this object when they have something.
     def start(self):
-
-        # first run for this Clue?
-        if self.fresh:
-            self.fresh = False
-            # on the first inflate of this person, ask google for more urls.
-            if NSUserDefaults.standardUserDefaults().boolForKey_("googleSocialContext"):
-                self.getMoreUrls()
+        if not self.delegate: return
 
         # tell every provider to look for clues.
         # TODO - we really don't need to do this _incredibly_ often. a 30 second
@@ -85,18 +84,13 @@ class Clue(object):
         for provider in self.providers:
             provider.provide()
 
-        # just in case any providers (basicprovider, I'm looking at you)
-        # are done already
-        self.delegate.updateWebContent_fromClue_( self.content(), self )
-
     # use Google Social - ask it to tell us which urls are linked to using
     # rel="me" links from any of the urls that we already have for this person.
     def getMoreUrls( self ):
         if not self.ab_urls(): return # no point
-        api = "http://socialgraph.apis.google.com/lookup?pretty=1&fme=1"
-        api += "&q=" + ",".join([ quote(url) for url in self.ab_urls() ])
+        api = "http://socialgraph.apis.google.com/lookup?pretty=1&fme=1&q=" + ",".join([ quote(url) for url in self.ab_urls() ])
         print_info("Social graph API call to " + api )
-        Cache.getContentOfUrlAndCallback( self.gotSocialGraphData, api, timeout = 3600 * 48 ) # huge timeout here
+        Cache.getContentOfUrlAndCallback( self.gotSocialGraphData, api, timeout = 3600 * 48, wantStale = False ) # huge timeout here
 
     # callback from Google Social call
     def gotSocialGraphData( self, raw, isStale ):
@@ -106,7 +100,6 @@ class Clue(object):
             return # meh
         urls = data['nodes'].keys()
         self.addExtraUrls( urls )
-    
     
     def addExtraUrls( self, urls ):
         # build hash to dedupe - keys are the normalized url form,
@@ -135,7 +128,7 @@ class Clue(object):
     def providerUpdated_(self, provider):
         print_info("Update for %s from %s"%( self, provider ))
         # It's unlikely we'll get a message from a provider we don't own, but..
-        if provider in self.providers:
+        if self.delegate and provider in self.providers:
             self.delegate.updateWebContent_fromClue_( self.content(), self )
     
     # this method returns the HTML content that should be in the webview for this clue.
@@ -154,6 +147,7 @@ class Clue(object):
         
     # stop this clue from thinking soon. Tell all the providers to stop.
     def stop(self):
+        NSObject.cancelPreviousPerformRequestsWithTarget_( self )
         for current in self.providers:
             current.stop()
 

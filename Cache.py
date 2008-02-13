@@ -58,52 +58,67 @@ def cleanCache():
 # if here is _any_ data, even if it's old (BUG - as before, this is called
 # before this function returns), then will fetch the data and call the callback
 # _again_.
-def getContentOfUrlAndCallback( callback, url, username = None, password = None, wantStale = False, timeout = 600, failure = None ):
+def getContentOfUrlAndCallback(callback, url, username = None, password = None, wantStale = False, timeout = 600, failure = None ):
     cleanCache()
-    
     # I have address book entries that are just 'www.foo.com'
     if not re.match(r'^\w+://', url):
         url = "http://%s"%url
+
+    delegate = DownloadDelegate.alloc().init()
+    delegate.callback = callback
+    delegate.failure = failure
+    delegate.url = url
+    delegate.username = username
+    delegate.password = password
+    delegate.timeout = timeout
+    delegate.wantStale = wantStale
     
-    filename = filenameForKey( keyForUrlUsernamePassword( url, username, password ) )
+    delegate.performSelector_withObject_afterDelay_('start', None, 0 )
 
-    if os.path.exists(filename):
-        if time() - os.path.getmtime( filename ) < timeout:
-            #print("cached data %s available for %s"%(filename,url))
-            callback( file( filename ).read(), False )
-            return # no need to get the URL
-        
-        elif wantStale:
-            # call the callback immediately with the stale data.
-            #print("stale data %s available for %s"%(filename,url))
-            print_info("We have stale data")
-            callback( file( filename ).read(), True )
-            # don't return - we still want to fetch the file
-    else:
-        #print("no file %s\n\tfor %s"%(filename,url))
-        pass
-
-    # TODO - if we're already fetching the file on behalf of someone
-    # else, it would be nice to do the Right Thing here.
-
-    req = NSMutableURLRequest.requestWithURL_( NSURL.URLWithString_( url ) )
-    if username or password:
-        base64string = base64.encodestring('%s:%s' % (username, password))[:-1]
-        req.setValue_forHTTPHeaderField_("Basic %s"%base64string, "Authorization")
-
-    # Send the right User-Agent. TODO - get the bundle version properly, don't hard-code
-    req.setValue_forHTTPHeaderField_("Shelf/0.0.11.9 +http://jerakeen.org/code/shelf/", "User-Agent")
+class DownloadDelegate( NSObject ):
     
-    delegate = DownloadDelegate( callback, failure )
-    downloader = NSURLDownload.alloc().initWithRequest_delegate_( req, delegate )
-    downloader.setDestination_allowOverwrite_( filename, True )
+    def init(self):
+        self = NSObject.init( self )
+        if not self: return
 
+        self.callback = None
+        self.failure = None
+        self.url = None
+        self.username = None
+        self.password = None
+        self.timeout = None
+        self.wantStale = None
 
-class DownloadDelegate(object):
+        return self
+
+    # this is a seperate function so I can call it after a delay
+    def start(self):
+        filename = filenameForKey( keyForUrlUsernamePassword( self.url, self.username, self.password ) )
+
+        if os.path.exists(filename):
+            if time() - os.path.getmtime( filename ) < self.timeout:
+                self.callback( file( filename ).read(), False )
+                return # no need to get the URL
+
+            elif self.wantStale:
+                # call the callback immediately with the stale data.
+                print_info("We have stale data")
+                self.callback( file( filename ).read(), True )
+                # don't return - we still want to fetch the file
+
+        # TODO - if we're already fetching the file on behalf of someone
+        # else, it would be nice to do the Right Thing here.
+
+        req = NSMutableURLRequest.requestWithURL_( NSURL.URLWithString_( self.url ) )
+        if self.username or self.password:
+            base64string = base64.encodestring('%s:%s' % (self.username, self.password))[:-1]
+            req.setValue_forHTTPHeaderField_("Basic %s"%base64string, "Authorization")
+
+        # Send the right User-Agent. TODO - get the bundle version properly, don't hard-code
+        req.setValue_forHTTPHeaderField_("Shelf/0.0.11.9 +http://jerakeen.org/code/shelf/", "User-Agent")
     
-    def __init__(self, callback, failure):
-        self.callback = callback
-        self.failure = failure
+        downloader = NSURLDownload.alloc().initWithRequest_delegate_( req, self )
+        downloader.setDestination_allowOverwrite_( filename, True )
     
     def downloadDidBegin_(self, downloader):
         print_info("Begun download of %s"%downloader.request())
