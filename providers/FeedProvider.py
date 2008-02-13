@@ -13,6 +13,7 @@ class FeedAtom(ProviderAtom):
     def __init__(self, *stuff):
         ProviderAtom.__init__( self, *stuff )
         self.feed = None
+        self.feed_url = None
         self.refresh( False )
     
     def refresh( self, force ):
@@ -73,9 +74,14 @@ class FeedAtom(ProviderAtom):
     def password(self): return None
     
     def getFeed(self, feed_url ):
-        # if we have a feed object, then I'm not interested in re-parsing a stale file.
-        wantStale = not self.feed
-        Cache.getContentOfUrlAndCallback( callback = self.gotFeed, url = feed_url, username = self.username(), password = self.password(), timeout = self.timeout(), wantStale = wantStale, failure = self.failed )
+        if not self.feed_url and self.provider.isDuplicateFeed( feed_url ):
+            self.dead = True
+            self.changed()
+        else:
+            self.feed_url = feed_url
+            # if we have a feed object, then I'm not interested in re-parsing a stale file.
+            wantStale = not self.feed
+            Cache.getContentOfUrlAndCallback( callback = self.gotFeed, url = feed_url, username = self.username(), password = self.password(), timeout = self.timeout(), wantStale = wantStale, failure = self.failed )
 
     def gotFeed( self, data, stale ):
         feed = feedparser.parse( data )
@@ -159,6 +165,13 @@ class FeedProvider( Provider ):
         
         for url in todo:
             self.atoms.append( self.atomClass()( self, url ) )
+    
+    def isDuplicateFeed(self, url):
+        # called once an atom has a feed url for itself. Rather than
+        # removing the atom, just mark it as dead, so that the proide()
+        # function above doesn't re-add it
+        if not url: return False
+        return normalize_url(url) in [ normalize_url(a.feed_url) for a in filter(lambda a: a.feed_url, self.atoms) ]
         
     # override these
     def urls(self):
