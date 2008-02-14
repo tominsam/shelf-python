@@ -19,10 +19,10 @@ class ComAppleSafari(Extractor):
         
         self.clues_from_url( tab.URL() )
         if self.done: return
-        
+
         if tab.source():
             # look for microformats
-            self.clues_from_microformats( tab.source() )
+            self.clues_from_html( tab.source(), tab.URL() )
             if self.done: return
 
             # look for rel="me" links

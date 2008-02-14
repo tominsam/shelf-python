@@ -13,7 +13,7 @@ class ComRancheroNetNewsWire(Extractor):
         if not selected.exists(): return
 
         if selected.objectDescription():
-            self.clues_from_microformats( selected.objectDescription() )
+            self.clues_from_html( selected.objectDescription(), selected.URL() )
             if self.done: return
 
         self.clues_from_url( selected.URL() )

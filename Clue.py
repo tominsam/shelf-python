@@ -101,8 +101,11 @@ class Clue(object):
             return # meh
         urls = data['nodes'].keys()
         self.addExtraUrls( urls )
+        self.start() # TODO - this kicks everything off again. Too heavy?
     
     def addExtraUrls( self, urls ):
+        if not urls: return
+        
         # build hash to dedupe - keys are the normalized url form,
         # values are the URLs as they came in.
         dedupe = {}
@@ -122,7 +125,6 @@ class Clue(object):
         print_info("I have the Address Book urls '%s'"%(", ".join(self.ab_urls())))
         print_info("Google gave me the extra urls '%s'"%(", ".join(self.extra_urls)))
 
-        self.start() # TODO - this kicks everything off again. Too heavy?
 
     # the providers callback to this function when they have something new to say.
     # We just pass the message upwards
