@@ -114,8 +114,13 @@ The feedprovider de-dupes its blocks based on the feed url, rather than
 the page url. No more repeated flickr photos blocks because they have more than
 one different url to their photos.
 
-Blocks that have come from the Google Social Graph now have a little 'G'
-in their title bar. Ugly, but I want a way of distinguishing them a little.
+If there are rel="me" links in the current page, and you're using Safari,
+I can use them directly to resolve context rather than relying on google
+to have spidered the page.
+
+Blocks that have come from the Google Social Graph or have otherwise been
+guessed now have a little 'G' in their title bar. Ugly, but I want a way of
+distinguishing them a little.
 
 Shelf now sends a proper User-Agent to remote servers when fetching feeds.
 

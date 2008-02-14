@@ -12,8 +12,5 @@ rename 'atom' to 'block' everywhere
 
 blocks maybe want a little 'refresh' icon on them?
 
-blocks from google need to indicate that they're not primary, and should offer to add themselves
-
-dedupe feeds based on url uniqueness.
-
-under safari, parse rel="me" lnks for more urls for the clue
+Guessed blocks have the 'G' symbol. clicking this symbol should offer to add
+it to the address book card.

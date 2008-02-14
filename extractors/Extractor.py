@@ -194,7 +194,7 @@ class Extractor(object):
             self.addClues( Extractor.SOCIAL_GRAPH_CACHE[url], more_urls )
             return
         api = "http://socialgraph.apis.google.com/lookup?pretty=1&fme=1&edo=1&edi=1"
-        api += "&q=" + quote( url )
+        api += "&q=" + quote( url, '' )
         print_info("Social graph API call to " + api )
         # TODO _ respect more_urls here
         Cache.getContentOfUrlAndCallback( callback = self.gotSocialGraphData, url = api, timeout = 3600 * 48 ) # huge timeout here

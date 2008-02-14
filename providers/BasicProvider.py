@@ -12,7 +12,7 @@ class BasicProvider( Provider ):
         if self.clue.emails():
             content += "<p>"
             for email in self.clue.emails():
-                content += "<a href='mailto:%s'>%s</a>"%( email, email )
+                content += "<a href='mailto:%s'>%s</a> "%( email, email )
             content += "</p>"
 
         if self.clue.birthday():

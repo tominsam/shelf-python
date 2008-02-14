@@ -9,7 +9,7 @@ from distutils.core import setup
 import py2app
 from glob import glob
 
-version = "0.0.11.9" # update in Cache.py as well, for the User-Agent string
+version = "0.0.12" # update in Cache.py as well, for the User-Agent string
 
 plist = dict(
   CFBundleName="Shelf",
