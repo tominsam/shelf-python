@@ -202,6 +202,7 @@ class ShelfController (NSWindowController):
     # tell the Clue object to start fetching state about itself.
     def updateInfo(self):
         clue = self.current_clue
+        if not clue: return
         clue.setDelegate_(self) # so the clue can send us 'I have updated' messages
 
         self.nameView.setStringValue_( clue.displayName() )
