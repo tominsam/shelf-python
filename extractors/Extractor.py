@@ -135,12 +135,12 @@ class Extractor(object):
         if self.done: return
         try:
             feeds = microformatparser.parse( source, url )
-        except HTMLParseError:
+        except HTMLParseError, UnicodeDecodeError:
             feeds = []
 
         try:
             relmes = relmeparser.parse( source, url )
-        except HTMLParseError:
+        except HTMLParseError, UnicodeDecodeError:
             relmes = []
 
         # try all rel="me" links for urls we can deal with.
