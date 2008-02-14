@@ -234,8 +234,11 @@ class Clue(object):
         return self.emails()[0]
         
     def birthday(self):
-        if self.person.valueForProperty_( kABBirthdayProperty ):
-            return gmtime( self.person.valueForProperty_( kABBirthdayProperty ).timeIntervalSince1970() )
+        try:
+            if self.person.valueForProperty_( kABBirthdayProperty ):
+                return gmtime( self.person.valueForProperty_( kABBirthdayProperty ).timeIntervalSince1970() )
+        except ValueError: # too old.. TODO - Um, I know people born <1970. Must fix.
+            pass
         return None
 
     # utility method for dealing with the Cocoa Address Book interface.
