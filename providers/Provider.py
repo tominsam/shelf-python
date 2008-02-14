@@ -26,11 +26,11 @@ class ProviderAtom( object ):
     def title(self):
         spinner_html = ""
         if self.guessed:
-            spinner_html += " (?) "
+            spinner_html += ' <img src="guess.png" class="guess"> '
         if self.stale:
             spinner_html += self.provider.spinner()
         return "<h3><a href='%s'>%s%s</a></h3>"%(self.url,self.name,spinner_html)
-    
+
     def body(self):
         return ""
 

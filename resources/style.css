@@ -37,6 +37,13 @@ h3 img.spinner {
     margin-right: 5px;
 }
 
+h3 img.guess {
+    margin: 0;
+    padding: 0;
+    float: right;
+    margin-right: 5px;
+}
+
 img.flickr-image {
 /*    width :75px;
     height: 75px;

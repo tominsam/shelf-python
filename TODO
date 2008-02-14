@@ -16,3 +16,4 @@ blocks from google need to indicate that they're not primary, and should offer t
 
 dedupe feeds based on url uniqueness.
 
+under safari, parse rel="me" lnks for more urls for the clue

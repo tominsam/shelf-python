@@ -103,12 +103,19 @@ to supress them from the feedlists.
 
 Feeds in the display are now ordered with the most recently updated feed at
 the top of the list. 'Special' feeds (twitter, flickr, lastfm) are still
-ordered above all others.
+ordered above all others. I'll change this soon.
 
 We now correctly strip CSS styling from feed contents.
 
 The file cache now cleans itself up. The first run of the app may take a
 while... Sorry.
+
+The feedprovider de-dupes its blocks based on the feed url, rather than
+the page url. No more repeated flickr photos blocks because they have more than
+one different url to their photos.
+
+Blocks that have come from the Google Social Graph now have a little 'G'
+in their title bar. Ugly, but I want a way of distinguishing them a little.
 
 Shelf now sends a proper User-Agent to remote servers when fetching feeds.
 

@@ -160,7 +160,6 @@ class FeedProvider( Provider ):
                 todo.remove( atom.url )
                 atom.refresh( False )
             else:
-                atom.stop()
                 self.atoms.remove(atom)
         
         for url in todo:
