@@ -121,7 +121,7 @@ class FeedAtom(ProviderAtom):
     def htmlForFeed( self, url, feed, stale = False ):
         html = u""
         entries = feed.entries
-        for item in entries[0:4]:
+        for item in filter( lambda item: "link" in item, entries )[0:4]:
             date = None
             if 'published_parsed' in item: date = item.published_parsed
             elif 'updated_parsed' in item: date = item.updated_parsed

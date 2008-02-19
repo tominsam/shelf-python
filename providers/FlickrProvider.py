@@ -19,7 +19,7 @@ class FlickrAtom( FeedAtom ):
 
             # ewwwwww
             img = re.search(r'"(http://[^"]*_m.jpg)"', item.content[0].value).group(1)
-            img = re.sub(r'_m.jpg', '_t.jpg', img)
+            img = re.sub(r'_m.jpg', '_s.jpg', img)
             html += "<a href='%s'><img src='%s' class='flickr-image'></a>"%( item.link, img )
             html += '<p class="feed-title"><a href="%s">%s</a></p>'%( item.link, item.title )
 
