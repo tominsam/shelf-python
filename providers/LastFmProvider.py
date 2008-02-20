@@ -46,7 +46,7 @@ class LastFmAtom( ProviderAtom ):
                 def updateArtwork(data, stale, trackdata = data):
                     trackdata['art'] = gsv( parseString(data), 'small' )
                     self.changed()
-                art_url = "http://ws.audioscrobbler.com/1.0/album/%s/%s/info.xml"%( quote(data['artist'],""), quote(data['album'],"") )
+                art_url = "http://ws.audioscrobbler.com/1.0/album/%s/%s/info.xml"%( quote(data['artist'].encode('utf-8'),""), quote(data['album'].encode('utf-8'),"") )
                 Cache.getContentOfUrlAndCallback( callback = updateArtwork, url = art_url, timeout = 24 * 3600, wantStale = True )
             
         self.changed()
