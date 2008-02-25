@@ -129,7 +129,8 @@ class Clue(object):
     # the providers callback to this function when they have something new to say.
     # We just pass the message upwards
     def changed(self):
-        self.delegate.updateWebContent_fromClue_( self.content(), self )
+        if self.delegate:
+            self.delegate.updateWebContent_fromClue_( self.content(), self )
     
     # this method returns the HTML content that should be in the webview for this clue.
     def content(self):

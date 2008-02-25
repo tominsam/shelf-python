@@ -1,6 +1,6 @@
 # slightly based on http://phildawes.net/microformats/microformatparser.html
 
-from sgmllib import SGMLParser
+from sgmllib import SGMLParser, SGMLParseError
 import urlparse
 
 class RelMeProcessor(SGMLParser):
@@ -23,10 +23,12 @@ def parse(inp, base = "http://dummy/url"):
         str = inp.read()
     except AttributeError:
         str = inp
-    m.feed(str)
-    m.close()
-    return map( lambda u: urlparse.urljoin( base, u ), m.rels )
-
+    try:
+        m.feed(str)
+        m.close()
+        return map( lambda u: urlparse.urljoin( base, u ), m.rels )
+    except SGMLParseError:
+        return []
 
 if __name__ == "__main__":
     import urllib, sys
