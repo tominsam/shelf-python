@@ -53,7 +53,7 @@ class ProviderAtom( object ):
 
     def changed(self):
         self.provider.changed()
-
+    
 class Provider( object ):
     
     PROVIDERS = []

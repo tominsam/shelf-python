@@ -16,10 +16,10 @@ class DopplrAtom( ProviderAtom ):
         self.name = "Dopplr / %s"%self.username
         self.response = None
         
-        token = NSUserDefaults.standardUserDefaults().stringForKey_("dopplrToken")
-        if not token: return
+        self.token = NSUserDefaults.standardUserDefaults().stringForKey_("dopplrToken")
+        if not self.token: return
 
-        url = "https://www.dopplr.com/api/traveller_info.js?token=%s&traveller=%s"%( token, self.username )
+        url = "https://www.dopplr.com/api/traveller_info.js?token=%s&traveller=%s"%( self.token, self.username )
         Cache.getContentOfUrlAndCallback( callback = self.gotDopplrData, url = url, timeout = 3600, wantStale = True, failure = self.failed )
 
     def failed(self, error):
@@ -41,6 +41,8 @@ class DopplrAtom( ProviderAtom ):
         self.changed()
         
     def body(self):
+        if not self.token:
+            return """<p>No Dopplr API token defined. <a href="https://www.dopplr.com/api/AuthSubRequest?scope=http://www.dopplr.com&next=shelf://shelf/&session=1">click here</a> to get one.</a></p>"""
         if not self.response: return None
 
         # dopplr api coveniently provides offset from UTC :-)
