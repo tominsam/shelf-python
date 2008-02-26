@@ -15,6 +15,7 @@ class DopplrAtom( ProviderAtom ):
         self.username = re.search(r'/traveller/([^/]+)', self.url).group(1)
         self.name = "Dopplr / %s"%self.username
         self.response = None
+        self.fail = None
         
         self.token = NSUserDefaults.standardUserDefaults().stringForKey_("dopplrToken")
         if not self.token: return
@@ -23,7 +24,8 @@ class DopplrAtom( ProviderAtom ):
         Cache.getContentOfUrlAndCallback( callback = self.gotDopplrData, url = url, timeout = 3600, wantStale = True, failure = self.failed )
 
     def failed(self, error):
-        self.dead = True
+        NSLog("dopplr client fail: %@", error)
+        self.fail = error
         self.changed()
     
     def gotDopplrData(self, data, stale):
@@ -43,6 +45,10 @@ class DopplrAtom( ProviderAtom ):
     def body(self):
         if not self.token:
             return """<p>No Dopplr API token defined. <a href="https://www.dopplr.com/api/AuthSubRequest?scope=http://www.dopplr.com&next=shelf://shelf/&session=1">click here</a> to get one.</a></p>"""
+        
+        if self.fail:
+           return """<p>Problem talking to Dopplr - maybe the token is invalid? Try <a href="https://www.dopplr.com/api/AuthSubRequest?scope=http://www.dopplr.com&next=shelf://shelf/&session=1">re-authorizing</a>.</a>.</p>"""
+        
         if not self.response: return None
 
         # dopplr api coveniently provides offset from UTC :-)

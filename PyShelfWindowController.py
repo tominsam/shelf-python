@@ -303,7 +303,25 @@ class ShelfController (NSWindowController):
         matches = re.search(r'token=(.*)', theURL.stringValue())
         if matches:
             token = matches.group(1)
+            url = "https://www.dopplr.com/api/AuthSubSessionToken?token=%s"%( token )
+            Cache.getContentOfUrlAndCallback( callback = self.gotDopplrToken, url = url, timeout = 3600, wantStale = False )
+            return
+        else:
+            alert = NSAlert.alertWithMessageText_defaultButton_alternateButton_otherButton_informativeTextWithFormat_(
+                "Shelf", "Continue", None, None, "Failed to get token - sorry.")
+
+        self.prefsWindow.display()
+        self.prefsWindow.makeKeyAndOrderFront_(self)
+        alert.beginSheetModalForWindow_modalDelegate_didEndSelector_contextInfo_(
+          self.prefsWindow, self, None, None)
+
+
+    def gotDopplrToken(self, data, stale):
+        matches = re.search(r'Token=(.*)', data)
+        if matches:
+            token = matches.group(1)
             NSUserDefaults.standardUserDefaults().setObject_forKey_(token, "dopplrToken")
+            NSUserDefaults.standardUserDefaults().synchronize()
             alert = NSAlert.alertWithMessageText_defaultButton_alternateButton_otherButton_informativeTextWithFormat_(
                 "Shelf", "Continue", None, None, "Got a Dopplr token!")
         else:
