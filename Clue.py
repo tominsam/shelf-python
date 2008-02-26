@@ -139,12 +139,15 @@ class Clue(object):
         # contents and date and headings, so the front-end can group them by
         # source, or URL, or date, and get a date-sorted list of everything a
         # person has done.
-        content = ""
-        for provider in self.providers:
-            content += provider.content()
-        if not content:
-            return "<p>thinking..</p>"
-        return content
+        atoms = []
+        for p in self.providers:
+            atoms += p.atoms
+        
+        atoms.sort(lambda a,b: cmp(b.sortOrder(), a.sortOrder()))
+        content = "".join([ atom.content() for atom in atoms ])
+        if content: return content
+        
+        return "<p>thinking..</p>"
         
     # stop this clue from thinking soon. Tell all the providers to stop.
     def stop(self):

@@ -79,7 +79,7 @@ _Huge_ great internal re-write. Many more code-paths are now much more
 message-passing based, and can do things in the background. The Google Social
 stuff uses this, so no longer blocks the foreground thread.
 
-### 0.0.12 (in development)
+### 0.0.12 (released 2008-02-14)
 
 Shelf now has a preference to only poll for context and display the window if
 a global shortcut key is pressed (currently, this is hard-coded to
@@ -128,3 +128,14 @@ Documented large chunks of the source much better.
 
 Removed the xmltramp library, using simplejson to parse the Dopplr API files
 instead. Not that the Dopplr module works. But if it did, I would.
+
+### 0.0.13 (under development)
+
+All blocks are now sorted by date, rather than just Feed blocks. This means
+that if a contact has blogged something more recently than they've twittered
+something, the blog block will be above the twitter block.
+
+The Dopplr provider is back and working again.
+
+Lots of trivial little encoding fixes and catches for annoying 'other apps
+suck' failure cases.

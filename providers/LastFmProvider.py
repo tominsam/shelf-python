@@ -20,6 +20,10 @@ class LastFmAtom( ProviderAtom ):
     def failed( self, error ):
         self.stale = False
         self.changed()
+    
+    def sortOrder(self):
+        if len(self.tracks):
+            return self.tracks[0]['date']
 
     def gotRecentTracks(self, xml, stale):
         self.stale = stale

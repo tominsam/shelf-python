@@ -13,12 +13,15 @@ import traceback
 from Utilities import *
 import Cache
 
+MAX_SORT_ORDER = 999999999999
+MIN_SORT_ORDER = 1
+
 class ProviderAtom( object ):
     def __init__(self, provider, url):
         self.provider = provider
         self.url = url
         self.name = url
-        self.stale = True
+        self.stale = False
         self.dead = False
         self.error = None
         self.guessed = False
@@ -35,7 +38,7 @@ class ProviderAtom( object ):
         return ""
 
     def sortOrder(self):
-        return None
+        return MIN_SORT_ORDER
 
     def content(self):
         if self.dead:
@@ -45,7 +48,7 @@ class ProviderAtom( object ):
         else:
             body = self.body()
             if body or self.stale:
-                return self.title() + self.body()
+                return self.title() + body
             return ""
 
     def changed(self):
@@ -73,13 +76,7 @@ class Provider( object ):
 
     def atomClass(self):
         return ProviderAtom
-    
-    def content(self):
-        def sorter(a, b):
-            return cmp( b.sortOrder(), a.sortOrder() )
-        self.atoms.sort(sorter)
-        return "".join([ atom.content() for atom in self.atoms ])
-    
+        
     def changed(self):
         self.clue.changed()
 

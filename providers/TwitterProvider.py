@@ -20,7 +20,19 @@ class TwitterAtom( FeedAtom ):
         NSUserDefaults.standardUserDefaults().stringForKey_("twitterPassword")
 
     def htmlForFeed( self, url, feed, stale = False ):
-        return '<p>%s</p>'%( feed.entries[0].title )
+        item = feed.entries[0]
+        html = ""
+
+        date = None
+        if 'published_parsed' in item: date = item.published_parsed
+        elif 'updated_parsed' in item: date = item.updated_parsed
+        if date:
+            #html += u'<span class="feed-date">%s</span>'%( time.strftime("%b %d", date ) )
+            ago = time_ago_in_words(date) + " ago"
+            html += u'<span class="feed-date">%s</span>'%ago
+        
+        html += '<p>%s</p>'%( item.title )
+        return html
 
     def timeout(self):
         return 180

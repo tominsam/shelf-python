@@ -22,14 +22,14 @@ class FeedAtom(ProviderAtom):
     
     def sortOrder(self):
         if not self.feed:
-            return None
+            return MIN_SORT_ORDER
         if len(self.feed.entries) == 0:
-            return None
+            return MIN_SORT_ORDER
         if 'updated_parsed' in self.feed.entries[0]:
-            return self.feed.entries[0].updated_parsed
+            return time.mktime(self.feed.entries[0].updated_parsed)
         if "published_parsed" in self.feed.entries[0]:
-            return self.feed.entries[0].published_parsed
-        return None
+            return time.mktime(self.feed.entries[0].published_parsed)
+        return MIN_SORT_ORDER
     
     def getFeedUrl(self):
         # it's very unlikely that the feed source will move

@@ -4,59 +4,81 @@ import re
 import simplejson
 from datetime import datetime
 from time import time, strftime, gmtime
+import feedparser # can parse iso8601 dates
 
 from Utilities import *
 import Cache
 
-class DopplrProvider( Provider ):
-
-    def provide( self ):
-        self.token = NSUserDefaults.standardUserDefaults().stringForKey_("dopplrToken")
-        dopplrs = self.clue.takeUrls(r'dopplr\.com/traveller')
-        if not dopplrs or not self.token: return
+class DopplrAtom( ProviderAtom ):
+    def __init__(self, provider, url):
+        ProviderAtom.__init__( self, provider, url )
+        self.username = re.search(r'/traveller/([^/]+)', self.url).group(1)
+        self.name = "Dopplr / %s"%self.username
+        self.response = None
         
-        return # We have an SSL error right now - can't do anything.
-    
-        self.username = re.search(r'/traveller/([^/]+)', dopplrs[0]).group(1)
-        self.atoms = [ "<h3><a href='http://www.dopplr.com/traveller/%s/'>Dopplr</a>&nbsp;%s</h3>"%( self.username, self.spinner() ) ]
-        self.changed()
+        token = NSUserDefaults.standardUserDefaults().stringForKey_("dopplrToken")
+        if not token: return
 
-        url = "https://www.dopplr.com/api/traveller_info.js?token=%s&traveller=%s"%( self.token, self.username )
+        url = "https://www.dopplr.com/api/traveller_info.js?token=%s&traveller=%s"%( token, self.username )
         Cache.getContentOfUrlAndCallback( callback = self.gotDopplrData, url = url, timeout = 3600, wantStale = True, failure = self.failed )
-    
+
     def failed(self, error):
-        self.atoms[1:] = [ html_escape(unicode(error)) ]
+        self.dead = true
         self.changed()
     
     def gotDopplrData(self, data, stale):
+        self.stale = stale
         try:
             doc = simplejson.loads( data )
-            doc['traveller']['status']
-        except ValueError, KeyError:
-            return # no service?
+            self.response = doc['traveller']
+        except ValueError, e:
+            print(e)
+            self.dead = true
+        except KeyError, e:
+            print(e)
+            self.dead = true
         
+        self.changed()
+        
+    def body(self):
+        if not self.response: return None
+
         # dopplr api coveniently provides offset from UTC :-)
-        self.offset = int(str(doc['traveller']['current_city']['utcoffset']))
+        offset = int(str(self.response['current_city']['utcoffset']))
+        readable_time = strftime("%l:%M&nbsp;%p&nbsp;on&nbsp;%A", gmtime( time() + offset ))
 
-        self.atoms = []
-        self.atoms.append("<h3><a href='http://www.dopplr.com/traveller/%s/'>Dopplr</a></h3>"%( self.username ))
-        self.atoms.append("<p>%s %s.</p>"%(
-            self.clue.displayName(),
-            doc['traveller']['status']
-        ))
-        self.atoms.append("")
+        if 'current_trip' in self.response:
+            start = feedparser._parse_date_iso8601( self.response['current_trip']['start'] )
+            finish = feedparser._parse_date_iso8601( self.response['current_trip']['finish'] )
 
-        self.performSelector_withObject_afterDelay_( 'updateClock', None, 0 )
+            body = "<p>%s is in %s (from %s to %s). Local time is %s.</p>"%(
+                self.provider.clue.displayName(),
+                self.response['current_trip']['city']['name'],
+                strftime("%B&nbsp;%d", start ),
+                strftime("%B&nbsp;%d", finish ),
+                readable_time
+            )
+        else:
+            body = "<p>%s is at home in %s (where it is %s).</p>"%(
+                self.provider.clue.displayName(),
+                self.response['current_city']['name'],
+                readable_time
+            )
+
+        return body
+
+    def sortOrder(self):
+        return MAX_SORT_ORDER - 1
+
+
+class DopplrProvider( Provider ):
+
+    def atomClass(self):
+        return DopplrAtom
+
+    def provide( self ):
+        dopplrs = self.clue.takeUrls(r'dopplr\.com/traveller')
         
-        self.changed()
-
-    def updateClock(self):
-        self.performSelector_withObject_afterDelay_( 'updateClock', None, 20 )
-
-        epoch = time() + self.offset
-        self.atoms[2] = "<p class='time'>Time in %s is %s.</p>"%(
-            doc.traveller.current_city.country,
-            strftime("%a&nbsp;%l:%M&nbsp;%p", gmtime(epoch))
-        )
-        self.changed()
-
+        self.atoms = []
+        for url in dopplrs:
+            self.atoms.append( DopplrAtom( self, url ) )
