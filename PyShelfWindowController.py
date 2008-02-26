@@ -4,6 +4,9 @@ from WebKit import *
 from AddressBook import *
 from ScriptingBridge import *
 
+from Carbon.AppleEvents import kAEISGetURL, kAEInternetSuite
+import struct
+
 import objc
 import re
 import traceback
@@ -13,12 +16,15 @@ from time import time as epoch_time
 from Utilities import *
 from Clue import *
 
+from PyShelfURLProtocol import *
+
 
 class ShelfController (NSWindowController):
     companyView = objc.IBOutlet()
     imageView = objc.IBOutlet()
     nameView = objc.IBOutlet()
     webView = objc.IBOutlet()
+    prefsWindow = objc.IBOutlet()
 
     # first-cut init goes here - we've been woken up, and all the GUI
     # component objects exist. Don't spend too long here, though, I think
@@ -50,6 +56,16 @@ class ShelfController (NSWindowController):
         if not os.path.exists( folder ):
             os.mkdir( folder )
 
+
+
+        # Add a handler for the event GURL/GURL. One might think that
+        # Carbon.AppleEvents.kEISInternetSuite/kAEISGetURL would work,
+        # but the system headers (and hence the Python wrapper for those)
+        # are wrong.
+        manager = NSAppleEventManager.sharedAppleEventManager()
+
+        manager.setEventHandler_andSelector_forEventClass_andEventID_(
+            self, 'handleURLEvent:withReplyEvent:', fourCharToInt( "GURL" ), fourCharToInt( "GURL" ))
 
     # this is called once we're all launched. Bouncing all over now. 
     def applicationDidFinishLaunching_(self, sender):
@@ -276,4 +292,30 @@ class ShelfController (NSWindowController):
         # everything else can be ignored, and opened by the system
         listener.ignore()
         NSWorkspace.sharedWorkspace().openURL_( url )
+
+    def getDopplrToken_(self, sender):
+        url = "https://www.dopplr.com/api/AuthSubRequest?scope=http://www.dopplr.com&next=shelf://shelf/&session=1"
+        NSWorkspace.sharedWorkspace().openURL_( NSURL.URLWithString_(url) )
+
+    def handleURLEvent_withReplyEvent_(self, event, replyEvent):
+        theURL = event.descriptorForKeyword_(fourCharToInt('----'))
+        
+        matches = re.search(r'token=(.*)', theURL.stringValue())
+        if matches:
+            token = matches.group(1)
+            NSUserDefaults.standardUserDefaults().setObject_forKey_(token, "dopplrToken")
+            alert = NSAlert.alertWithMessageText_defaultButton_alternateButton_otherButton_informativeTextWithFormat_(
+                "Shelf", "Continue", None, None, "Got a Dopplr token!")
+        else:
+            alert = NSAlert.alertWithMessageText_defaultButton_alternateButton_otherButton_informativeTextWithFormat_(
+                "Shelf", "Continue", None, None, "Failed to get token - sorry.")
+
+        self.prefsWindow.display()
+        self.prefsWindow.makeKeyAndOrderFront_(self)
+        alert.beginSheetModalForWindow_modalDelegate_didEndSelector_contextInfo_(
+          self.prefsWindow, self, None, None)
+    
+
+def fourCharToInt(code):
+    return struct.unpack('>l', code)[0]
 

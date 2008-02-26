@@ -23,7 +23,7 @@ class DopplrAtom( ProviderAtom ):
         Cache.getContentOfUrlAndCallback( callback = self.gotDopplrData, url = url, timeout = 3600, wantStale = True, failure = self.failed )
 
     def failed(self, error):
-        self.dead = true
+        self.dead = True
         self.changed()
     
     def gotDopplrData(self, data, stale):

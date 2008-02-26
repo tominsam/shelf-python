@@ -28,6 +28,7 @@ NSUserDefaults.standardUserDefaults().registerDefaults_({
     'googleSocialContext':False,
     'bringAppForward':True,
     'alwaysOnTop':True,
+    'firstRun':True,
     'debug':False
 })
 

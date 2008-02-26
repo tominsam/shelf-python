@@ -20,6 +20,14 @@ plist = dict(
   CFBundleVersion=version,
   NSHumanReadableCopyright="Copyright 2008 Tom Insam",
 
+  NSAppleScriptEnabled=True,
+  CFBundleURLTypes=[
+    dict(
+      CFBundleURLName='Shelf callback',
+      CFBundleURLSchemes=['shelf'],
+    )
+  ],
+
   # sparkle appcast url, for auto-updates
   SUFeedURL="http://jerakeen.org/code/shelf/appcast/"
 )
