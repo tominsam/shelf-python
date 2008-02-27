@@ -50,15 +50,14 @@ class FeedAtom(ProviderAtom):
     
     def specialCaseFeedUrl( self, url ):
         print_info("trying to special-case url %s"%url)
-        # http://www.last.fm/user/blackbeltjones/ -> http://ws.audioscrobbler.com/1.0/user/blackbeltjones/recenttracks.rss
-        lastfm = re.match(r'http://(www\.)?last.fm/user/(\w+)', url)
-        if lastfm:
-            return "http://ws.audioscrobbler.com/1.0/user/%s/recenttracks.rss"%lastfm.group(2)
         if re.match(r'http://search\.cpan\.org/~', url):
+            print_info("RSS feed is known-bad (search.cpan)")
             return "" # bad feed
         if re.match(r'http://use\.perl\.org/~\w+/?$', url): # /journal is ok
+            print_info("RSS feed is known-bad (use.perl)")
             return "" # bad feed
-
+        
+        print_info("No special case")
         return None
 
     def gotMainPage( self, data, stale ):

@@ -13,6 +13,8 @@ suck' failure cases.
 
 RSS feed items without titles no longer break the Feed Provider.
 
+
+
 ### 0.0.12 (released 2008-02-14)
 
 Shelf now has a preference to only poll for context and display the window if
@@ -63,6 +65,8 @@ Documented large chunks of the source much better.
 Removed the xmltramp library, using simplejson to parse the Dopplr API files
 instead. Not that the Dopplr module works. But if it did, I would.
 
+
+
 ### 0.0.11 (released 2008-02-06)
 
 Feed provider now displays the first 10 words of the blog entry under the
@@ -105,6 +109,8 @@ _Huge_ great internal re-write. Many more code-paths are now much more
 message-passing based, and can do things in the background. The Google Social
 stuff uses this, so no longer blocks the foreground thread.
 
+
+
 ### 0.0.10 (released 2008-01-11)
 
 I've taken a random stab at CSS styling - the thing is a lot prettier now,
@@ -137,6 +143,8 @@ Mattb had an odd crashing bug that I don't understand, where there seemed to be
 no 'active application'. I'm now guarding against this case.
 
 Shelf now stops correctly when quit. oops.
+
+
 
 ### 0.0.8 (released 2008-01-10)
 
