@@ -35,10 +35,10 @@ class DopplrAtom( ProviderAtom ):
             self.response = doc['traveller']
         except ValueError, e:
             print(e)
-            self.dead = true
+            self.dead = True
         except KeyError, e:
             print(e)
-            self.dead = true
+            self.dead = True
         
         self.changed()
         

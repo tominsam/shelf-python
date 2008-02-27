@@ -16,9 +16,6 @@ from time import time as epoch_time
 from Utilities import *
 from Clue import *
 
-from PyShelfURLProtocol import *
-
-
 class ShelfController (NSWindowController):
     companyView = objc.IBOutlet()
     imageView = objc.IBOutlet()

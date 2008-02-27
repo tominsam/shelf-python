@@ -135,7 +135,11 @@ All blocks are now sorted by date, rather than just Feed blocks. This means
 that if a contact has blogged something more recently than they've twittered
 something, the blog block will be above the twitter block.
 
-The Dopplr provider is back and working again.
+The Dopplr provider is back and working again. It now properly uses the
+Dopplr auth-bounce code to get itself a token from Dopplr, so should actually
+be usable by people other than me.
 
 Lots of trivial little encoding fixes and catches for annoying 'other apps
 suck' failure cases.
+
+RSS feed items without titles no longer break the Feed Provider.

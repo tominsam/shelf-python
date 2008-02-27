@@ -130,7 +130,8 @@ class FeedAtom(ProviderAtom):
                 #html += u'<span class="feed-date">%s</span>'%( time.strftime("%b %d", date ) )
                 ago = time_ago_in_words(date) + " ago"
                 html += u'<span class="feed-date">%s</span>'%ago
-            html += u'<p class="feed-title"><a href="%s">%s</a></p>'%( item.link, item.title )
+            title = 'title' in item and item.title or "untitled"
+            html += u'<p class="feed-title"><a href="%s">%s</a></p>'%( item.link, title )
             detail = None
             if 'content' in item and len(item.content) > 0:
                 detail = item.content[0].value
