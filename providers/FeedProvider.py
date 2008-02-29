@@ -25,9 +25,9 @@ class FeedAtom(ProviderAtom):
             return MIN_SORT_ORDER
         if len(self.feed.entries) == 0:
             return MIN_SORT_ORDER
-        if 'updated_parsed' in self.feed.entries[0]:
+        if 'updated_parsed' in self.feed.entries[0] and self.feed.entries[0].updated_parsed:
             return time.mktime(self.feed.entries[0].updated_parsed)
-        if "published_parsed" in self.feed.entries[0]:
+        if "published_parsed" in self.feed.entries[0] and self.feed.entries[0].published_parsed:
             return time.mktime(self.feed.entries[0].published_parsed)
         return MIN_SORT_ORDER
     
@@ -121,7 +121,6 @@ class FeedAtom(ProviderAtom):
         html = u""
         entries = feed.entries
         for item in filter( lambda item: "link" in item, entries )[0:4]:
-            date = None
             if 'published_parsed' in item: date = item.published_parsed
             elif 'updated_parsed' in item: date = item.updated_parsed
             
@@ -130,7 +129,10 @@ class FeedAtom(ProviderAtom):
                 ago = time_ago_in_words(date) + " ago"
                 html += u'<span class="feed-date">%s</span>'%ago
             title = 'title' in item and item.title or "untitled"
-            html += u'<p class="feed-title"><a href="%s">%s</a></p>'%( item.link, title )
+            try:
+                html += u'<p class="feed-title"><a href="%s">%s</a></p>'%( item.link, title )
+            except UnicodeDecodeError:
+                html += u'<p class="feed-title"><a href="%s">invalid unicode title</a></p>'%( item.link )
             detail = None
             if 'content' in item and len(item.content) > 0:
                 detail = item.content[0].value
@@ -142,7 +144,10 @@ class FeedAtom(ProviderAtom):
                     trimmed = u" ".join( re.split(r'\s+', raw.strip())[0:10] )
                 except UnicodeDecodeError:
                     trimmed = u"invalid unicode content"
-                html += u'<p class="feed-content">%s&nbsp;<a href="%s">...</a></p>'%( trimmed, item.link )
+                try:
+                    html += u'<p class="feed-content">%s&nbsp;<a href="%s">...</a></p>'%( trimmed, item.link )
+                except UnicodeDecodeError:
+                    html += u'<p class="feed-content">invalid unicode content</p>'
         return html
 
 

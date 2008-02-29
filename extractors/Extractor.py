@@ -139,6 +139,8 @@ class Extractor(object):
             feeds = []
         except UnicodeDecodeError:
             feeds = []
+        except TypeError:
+            feeds = []
 
         try:
             relmes = relmeparser.parse( source, url )
