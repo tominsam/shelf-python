@@ -59,7 +59,7 @@ class DopplrAtom( ProviderAtom ):
             start = feedparser._parse_date_iso8601( self.response['current_trip']['start'] )
             finish = feedparser._parse_date_iso8601( self.response['current_trip']['finish'] )
 
-            body = "<p>%s is in %s (from %s to %s). Local time is %s.</p>"%(
+            body = "<p>%s is in %s (from %s&nbsp;to %s). Local time is %s.</p>"%(
                 self.provider.clue.displayName(),
                 self.response['current_trip']['city']['name'],
                 strftime("%B&nbsp;%d", start ),

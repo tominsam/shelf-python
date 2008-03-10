@@ -11,8 +11,10 @@ be usable by people other than me.
 Lots of trivial little encoding fixes and catches for annoying 'other apps
 suck' failure cases.
 
-RSS feed items without titles no longer break the Feed Provider.
+RSS feed items without titles no longer break the Feed provider.
 
+If you live in a non-GMT timezone, dates now work. Hurrah for going to
+conferences and having to suffer under my own bugs.
 
 
 ### 0.0.12 (released 2008-02-14)
