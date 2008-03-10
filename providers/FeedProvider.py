@@ -123,12 +123,14 @@ class FeedAtom(ProviderAtom):
         for item in filter( lambda item: "link" in item, entries )[0:4]:
             if 'published_parsed' in item: date = item.published_parsed
             elif 'updated_parsed' in item: date = item.updated_parsed
+            else: date = None
             
             if date:
                 #html += u'<span class="feed-date">%s</span>'%( time.strftime("%b %d", date ) )
                 ago = time_ago_in_words(date) + " ago"
                 html += u'<span class="feed-date">%s</span>'%ago
             title = 'title' in item and item.title or "untitled"
+
             try:
                 html += u'<p class="feed-title"><a href="%s">%s</a></p>'%( item.link, title )
             except UnicodeDecodeError:

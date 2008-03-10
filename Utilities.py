@@ -150,7 +150,7 @@ def time_ago_in_words(from_time, include_seconds=False):
     """
     Like distance_of_time_in_words, but where ``to_time`` is fixed to ``datetime.now()``.
     """
-    ago = distance_of_time_in_words(from_time, datetime.now(), include_seconds)
+    ago = distance_of_time_in_words(from_time, datetime.utcnow(), include_seconds)
     # TODO - think about these. The output from the function is Too Damn Long, is all.
     ago = re.sub(r'^about ', '~', ago )
     ago = re.sub(r'minute', 'min', ago )
