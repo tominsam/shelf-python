@@ -23,6 +23,8 @@ def parse(inp, base = "http://dummy/url"):
         str = inp.read()
     except AttributeError:
         str = inp
+    if not str:
+        return []
     try:
         m.feed(str)
         m.close()
