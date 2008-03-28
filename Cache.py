@@ -112,7 +112,7 @@ class DownloadDelegate( NSObject ):
             req.setValue_forHTTPHeaderField_("Basic %s"%base64string, "Authorization")
 
         # Send the right User-Agent. TODO - get the bundle version properly, don't hard-code
-        req.setValue_forHTTPHeaderField_("Shelf/0.0.12.5 +http://jerakeen.org/code/shelf/", "User-Agent")
+        req.setValue_forHTTPHeaderField_("Shelf/0.0.13 +http://jerakeen.org/code/shelf/", "User-Agent")
     
         downloader = NSURLDownload.alloc().initWithRequest_delegate_( req, self )
         downloader.setDestination_allowOverwrite_( filename, True )
