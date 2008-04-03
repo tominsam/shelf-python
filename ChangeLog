@@ -1,3 +1,8 @@
+### 0.0.14 (development)
+
+las.fm changed their XML order? Anyway, I now explicitly order the tracks
+in the client.
+
 ### 0.0.13 (released 2008-03-28)
 
 All blocks are now sorted by date, rather than just Feed blocks. This means

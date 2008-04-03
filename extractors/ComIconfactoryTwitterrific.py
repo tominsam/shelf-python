@@ -9,7 +9,11 @@ class ComIconfactoryTwitterrific(Extractor):
         self.twitterific = SBApplication.applicationWithBundleIdentifier_("com.iconfactory.Twitterrific")
 
     def clues(self):
-        if not self.twitterific.tweets().count(): return
+        try:
+            if not self.twitterific.tweets().count(): return
+        except AttributeError:
+            # old twitteriffic
+            return
 
         url = self.twitterific.selection().userUrl()
         self.clues_from_url( url )

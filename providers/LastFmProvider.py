@@ -34,7 +34,16 @@ class LastFmAtom( ProviderAtom ):
                 return node.getElementsByTagName(val)[0].childNodes[0].wholeText
             except IndexError:
                 return None
-        for track in dom.getElementsByTagName("track")[0:3]:
+        alltracks = dom.getElementsByTagName("track")
+        
+        # sort tracks by order of last played
+        def byPlayed(a,b):
+            a_played = int(a.getElementsByTagName("date")[0].getAttribute('uts'))
+            b_played = int(b.getElementsByTagName("date")[0].getAttribute('uts'))
+            return a_played - b_played
+        alltracks.sort( byPlayed )
+
+        for track in alltracks[0:3]:
             track.normalize()
             played = int(track.getElementsByTagName("date")[0].getAttribute('uts'))
             data = {
