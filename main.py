@@ -14,7 +14,10 @@ import os
 
 # put external deps here where py2app can find them
 import simplejson
-
+import urllib2
+import sgmllib
+import cgi
+import xml.dom.minidom
 
 from PyObjCTools import AppHelper
 
