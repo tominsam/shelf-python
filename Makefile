@@ -1,6 +1,6 @@
 # wrapper Makefile for py2app invocation and cleaning
 
-PYTHON ?= python
+PYTHON ?= python2.5
 
 .PHONY: all
 all: dev
