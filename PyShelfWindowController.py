@@ -124,7 +124,9 @@ class ShelfController (NSWindowController):
                 # instantiate the class, and remember it so we don't do this again
                 self.handlers[ bundle ] = cls()
             except ImportError:
+		import traceback
                 print_info( "** Couldn't import file for %s"%( classname ) )
+		print_info( traceback.format_exc () )
                 self.handlers[ bundle ] = None
 
         return self.handlers[ bundle ]
@@ -135,7 +137,7 @@ class ShelfController (NSWindowController):
         
         # First thing I do, schedule the next poll event, so that I can just return with impunity from this function
         if not NSUserDefaults.standardUserDefaults().boolForKey_("useHotkey"):
-            self.performSelector_withObject_afterDelay_( 'poll', None, 2 )
+            self.performSelector_withObject_afterDelay_( 'poll', None, 4 )
 
         # get bundle name of active application
         try:
