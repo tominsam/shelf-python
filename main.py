@@ -20,6 +20,7 @@ import urllib2
 import sgmllib
 import cgi
 import xml.dom.minidom
+import HTMLParser
 
 from PyObjCTools import AppHelper
 
