@@ -61,7 +61,7 @@ def getContentOfUrlAndCallback( **params ):
     cleanCache()
     # I have address book entries that are just 'www.foo.com'
     if not re.match(r'^\w+://', params['url']):
-        params['url'] = "http://%s"%url
+        params['url'] = "http://%s" % params['url']
 
     delegate = DownloadDelegate.alloc().init()
     for key in params:
