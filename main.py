@@ -15,7 +15,7 @@ import os
 # put external deps here where py2app can find them
 import PyObjCTools
 import WebKit
-import simplejson
+import json
 import urllib2
 import sgmllib
 import cgi

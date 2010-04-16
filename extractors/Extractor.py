@@ -12,7 +12,7 @@ import sgmllib
 from HTMLParser import HTMLParseError
 import urllib, urlparse, urllib2
 from urllib import quote
-import simplejson
+import json
 
 import Cache
 from Utilities import *
@@ -32,6 +32,7 @@ class Extractor(object):
         self.clues() # implemented in subclasses. Calls addClues
 
     def addClues( self, clues, more_urls = [] ):
+        print_info("addClues: %s %s" % (str(clues), str(more_urls)))
         if clues and self.caller:
             print_info("found a clue!")
             clues[0].addExtraUrls( more_urls )
@@ -207,7 +208,7 @@ class Extractor(object):
 
     def gotSocialGraphData( self, raw, isStale ):
         try:
-            data = simplejson.loads( raw )
+            data = json.loads( raw )
         except ValueError:
             return # meh
         original_url = data['canonical_mapping'].keys()[0]

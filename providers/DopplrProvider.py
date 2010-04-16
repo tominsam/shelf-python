@@ -1,7 +1,7 @@
 from Provider import *
 import urllib
 import re
-import simplejson
+import json
 from datetime import datetime
 from time import time, strftime, gmtime
 import feedparser # can parse iso8601 dates
@@ -31,7 +31,7 @@ class DopplrAtom( ProviderAtom ):
     def gotDopplrData(self, data, stale):
         self.stale = stale
         try:
-            doc = simplejson.loads( data )
+            doc = json.loads( data )
             self.response = doc['traveller']
         except ValueError, e:
             print(e)
