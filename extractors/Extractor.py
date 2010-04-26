@@ -12,7 +12,7 @@ import sgmllib
 from HTMLParser import HTMLParseError
 import urllib, urlparse, urllib2
 from urllib import quote
-import simplejson
+import json
 
 import Cache
 from Utilities import *
@@ -207,7 +207,7 @@ class Extractor(object):
 
     def gotSocialGraphData( self, raw, isStale ):
         try:
-            data = simplejson.loads( raw )
+            data = json.loads( raw )
         except ValueError:
             return # meh
         original_url = data['canonical_mapping'].keys()[0]

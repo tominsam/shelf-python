@@ -3,6 +3,9 @@
 las.fm changed their XML order? Anyway, I now explicitly order the tracks
 in the client.
 
+Replaces simlpejson with json - requires Python 2.6, but Snow Leopard has that
+and I'm not really interested in supporting anything else.
+
 ### 0.0.13 (released 2008-03-28)
 
 All blocks are now sorted by date, rather than just Feed blocks. This means

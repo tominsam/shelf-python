@@ -11,9 +11,7 @@ import objc
 import Foundation
 import AppKit
 import os
-
-# put external deps here where py2app can find them
-import simplejson
+import json
 
 
 from PyObjCTools import AppHelper
@@ -21,7 +19,7 @@ from PyObjCTools import AppHelper
 # import sparkle framework
 base_path = os.path.join(os.path.dirname(os.getcwd()), 'Frameworks')
 bundle_path = os.path.abspath(os.path.join(base_path, 'Sparkle.framework'))
-objc.loadBundle('Sparkle', globals(), bundle_path=bundle_path)
+#objc.loadBundle('Sparkle', globals(), bundle_path=bundle_path)
 
 NSUserDefaults.standardUserDefaults().registerDefaults_({
     'googleSocial':False,

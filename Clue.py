@@ -4,7 +4,7 @@ from AddressBook import *
 import re
 from time import time, gmtime
 from urllib import quote
-import simplejson
+import json
 
 from Utilities import *
 
@@ -96,7 +96,7 @@ class Clue(object):
     # callback from Google Social call
     def gotSocialGraphData( self, raw, isStale ):
         try:
-            data = simplejson.loads( raw )
+            data = json.loads( raw )
         except ValueError:
             return # meh
         urls = data['nodes'].keys()
