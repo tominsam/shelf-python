@@ -12,9 +12,15 @@ import Foundation
 import AppKit
 import os
 import json
-
-
+from AppKit import *
 from PyObjCTools import AppHelper
+
+# dep tracking
+import urllib, urllib2
+import sgmllib
+import cgi
+import xml.dom.minidom
+
 
 # import sparkle framework
 base_path = os.path.join(os.path.dirname(os.getcwd()), 'Frameworks')
