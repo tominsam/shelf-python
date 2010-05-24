@@ -75,7 +75,7 @@ def getContentOfUrlAndCallback( **params ):
 class DownloadDelegate( NSObject ):
     
     def init(self):
-        self = NSObject.init( self )
+        self = super(DownloadDelegate, self).init()
         if not self: return
 
         self.callback = None

@@ -20,6 +20,11 @@ import urllib, urllib2
 import sgmllib
 import cgi
 import xml.dom.minidom
+import HTMLParser
+import ScriptingBridge
+import urlparse
+
+
 
 
 # import sparkle framework

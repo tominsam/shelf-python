@@ -116,6 +116,7 @@ class ShelfController (NSWindowController):
             classname = re.sub(r'\.(\w)', lambda m: m.group(1).upper(), bundle )
             classname = re.sub(r'^(\w)', lambda m: m.group(1).upper(), classname )
             
+            print_info("** importing file for class %s"%( classname ))
             try:
                 # this imports the module with the name 'clasname'.py as the local variable mod
                 mod = __import__(classname, globals(), locals(), [''])
@@ -123,8 +124,8 @@ class ShelfController (NSWindowController):
                 cls = getattr( mod, classname )
                 # instantiate the class, and remember it so we don't do this again
                 self.handlers[ bundle ] = cls()
-            except ImportError:
-                print_info( "** Couldn't import file for %s"%( classname ) )
+            except ImportError, e:
+                print_info( "** Couldn't import file for %s: %s "%( classname, e ) )
                 self.handlers[ bundle ] = None
 
         return self.handlers[ bundle ]
