@@ -11,6 +11,7 @@ from Utilities import *
 from Provider import *
 
 Provider.addProvider( "BasicProvider" )
+Provider.addProvider( "SpotlightProvider" )
 Provider.addProvider( "TwitterProvider" )
 Provider.addProvider( "DopplrProvider" )
 Provider.addProvider( "LastFmProvider" )
