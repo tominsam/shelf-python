@@ -9,48 +9,58 @@ class SpotlightAtom( ProviderAtom ):
   def __init__(self, provider, url):
     ProviderAtom.__init__( self, provider, url )
     clue = self.provider.clue
+    self.results = None
     if clue.emails():
-      print "Clue:", clue.emails()
+      if url == 'Recent Messages':
+        # query messages
+        predicate = "(kMDItemContentType = 'com.apple.mail.emlx') && (" + \
+         '||'.join(["((kMDItemAuthorEmailAddresses = '%s') || (kMDItemRecipientEmailAddresses = '%s'))" % (m, m) for m in clue.emails()]) + \
+         ")"
+      else:
+        # query attachments
+        # exclude image, text and html files that are sometimes wrongly attached to emails
+        exclusions = ['public.image','public.text']
+        predicate = "(" + \
+        '&&'.join(["(kMDItemContentTypeTree != '%s')" % e for e in exclusions]) + \
+        ") && (" + \
+        '||'.join(["(kMDItemWhereFroms like '*%s*')" % m for m in clue.emails()]) + \
+        ')'
       self.proxy = queryProxy.alloc().init()
-      setattr(self.proxy, 'provider', provider)
-      setattr(self.proxy, 'emails', clue.emails())
-      self.proxy.performSelector_withObject_afterDelay_('start', None, 0.1 )
+      setattr(self.proxy, 'atom', self)
+      setattr(self.proxy, 'predicate', predicate)
+      self.proxy.start()
 
   def sortOrder(self):
     return MAX_SORT_ORDER - 1
-    
+  
+  def body(self):
+    if not self.results: return None
+    body = []
+    for r in self.results[:10]:
+      body.append('<p><a href="shelf:file://%s">%s</a></p>' % (r.valueForAttribute_('kMDItemPath'),r.valueForAttribute_('kMDItemDisplayName')))
+    return ''.join(body)
+  
+# proxy NSObject class to receive notifications
 class queryProxy(NSObject):
   def init(self):
     self = super(queryProxy, self).init()
     if not self: return
-    self.provider = None
-    self.emails = None
-    self.query = None
+    self.atom = None
+    self.predicate = None
     return self
   
   def start(self):
-    # exclude image, text and html files that are sometimes wrongly attached to emails
-    exclusions = ['public.image','public.text']
     self.query = NSMetadataQuery.alloc().init()
-    # The easy bit - all e-mails where these addresses are seen
-    predicate = "((kMDItemContentType = 'com.apple.mail.emlx') && (" + \
-    '||'.join(["((kMDItemAuthorEmailAddresses = '%s') || (kMDItemRecipientEmailAddresses = '%s'))" % (m, m) for m in self.emails]) + \
-    ")"
-    predicate += " || (" + \
-    '&&'.join(["(kMDItemContentTypeTree != '%s')" % e for e in exclusions]) + \
-    ") && (" + \
-    '||'.join(["(kMDItemWhereFroms like '*%s*')" % m for m in self.emails]) + \
-    '))'
-    print predicate
-    self.query.setPredicate_(NSPredicate.predicateWithFormat_(predicate))
+    self.query.setPredicate_(NSPredicate.predicateWithFormat_(self.predicate))
     self.query.setSortDescriptors_(NSArray.arrayWithObject_(NSSortDescriptor.alloc().initWithKey_ascending_('kMDItemContentCreationDate',False)))
     NSNotificationCenter.defaultCenter().addObserver_selector_name_object_(self, self.gotSpotlightData_, NSMetadataQueryDidFinishGatheringNotification, self.query)
     self.query.startQuery()
   
   def gotSpotlightData_(self, notification):
     query = notification.object()
-    print "Query results: ", len(query.results())
-    self.provider.changed()
+    print "Got %d results for %s." % (len(query.results()), self.predicate)
+    self.atom.results = query.results()
+    self.atom.changed()
 
 class SpotlightProvider( Provider ):
   
@@ -58,4 +68,4 @@ class SpotlightProvider( Provider ):
     return SpotlightAtom
 
   def provide(self):
-    self.atoms = [ SpotlightAtom(self, "") ]
+    self.atoms = [ SpotlightAtom(self, "Recent Messages"), SpotlightAtom(self, "Attachments") ]
