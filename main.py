@@ -11,11 +11,10 @@ import objc
 import Foundation
 import AppKit
 import os
-import json
 from AppKit import *
 from PyObjCTools import AppHelper
 
-# dep tracking
+# put external deps here where py2app can find them
 import urllib, urllib2
 import sgmllib
 import cgi
@@ -23,9 +22,8 @@ import xml.dom.minidom
 import HTMLParser
 import ScriptingBridge
 import urlparse
-
-
-
+import json
+import WebKit
 
 # import sparkle framework
 base_path = os.path.join(os.path.dirname(os.getcwd()), 'Frameworks')

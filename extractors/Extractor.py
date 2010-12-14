@@ -32,6 +32,7 @@ class Extractor(object):
         self.clues() # implemented in subclasses. Calls addClues
 
     def addClues( self, clues, more_urls = [] ):
+        print_info("addClues: %s %s" % (str(clues), str(more_urls)))
         if clues and self.caller:
             print_info("found a clue!")
             clues[0].addExtraUrls( more_urls )
