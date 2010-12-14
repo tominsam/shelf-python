@@ -1,6 +1,14 @@
+### git HEAD
+
+Added a Spotlight provider that attempts to grab e-mail messages and 
+attachments exchanged with a particular contact.
+
+Tightened up indents and removed blank lines in some files to make it 
+easier to work on a somewhat cramped screen 
+
 ### 0.0.14 (development)
 
-las.fm changed their XML order? Anyway, I now explicitly order the tracks
+last.fm changed their XML order? Anyway, I now explicitly order the tracks
 in the client.
 
 Replaces simlpejson with json - requires Python 2.6, but Snow Leopard has that
@@ -23,7 +31,6 @@ RSS feed items without titles no longer break the Feed provider.
 
 If you live in a non-GMT timezone, dates now work. Hurrah for going to
 conferences and having to suffer under my own bugs.
-
 
 ### 0.0.12 (released 2008-02-14)
 

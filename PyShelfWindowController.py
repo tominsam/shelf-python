@@ -300,6 +300,14 @@ class ShelfController (NSWindowController):
     def handleURLEvent_withReplyEvent_(self, event, replyEvent):
         theURL = event.descriptorForKeyword_(fourCharToInt('----'))
         
+        # hack this to check for file: URLs
+        matches = re.search('^shelf:(file://.+)', theURL.stringValue())
+        if matches:
+            filename = matches.group(1)
+            print filename
+            os.popen('open %s' % filename)
+            return
+        
         matches = re.search(r'token=(.*)', theURL.stringValue())
         if matches:
             token = matches.group(1)

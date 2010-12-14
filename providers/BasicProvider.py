@@ -43,5 +43,5 @@ class BasicProvider( Provider ):
     def atomClass(self):
         return BasicAtom
 
-    def provide( self ):
+    def provide(self):
         self.atoms = [ BasicAtom(self, "") ]

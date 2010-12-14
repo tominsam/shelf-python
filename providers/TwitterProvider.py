@@ -3,7 +3,6 @@ from Utilities import *
 
 # cunning subclassing of feedprovider here as a demo.
 
-
 class TwitterAtom( FeedAtom ):
 
     def specialCaseFeedUrl( self, url ):

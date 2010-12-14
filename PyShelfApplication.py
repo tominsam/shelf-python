@@ -10,7 +10,6 @@ kEventHotKeyPressedSubtype = 6
 kEventHotKeyReleasedSubtype = 9
 
 class PyShelfApplication(NSApplication):
-
     def finishLaunching(self):
         super(PyShelfApplication, self).finishLaunching()
         # register cmd-control-J
