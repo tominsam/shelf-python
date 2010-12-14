@@ -19,3 +19,15 @@ Expanding links using the google social graph should be turnoffable. And add
 a button to do it on demand.
 
 Display AIM and facebook statues somehow.
+
+Normalize urls before testing them against the addressbook to catch, eg, deli.cio.us -> delicious.com change
+
+Follow redirects on urls where possible so we don't repeat sources (eg jerakeen.org/photos appears as a new source,
+though it's just a redirect to my flickr page now)
+
+Google Chrome support is very rough, though this is mostly a limitation of the lousy AppleScript it offers. Keep an
+eye on it.
+
+First display of shelf for a person seems sluggish - is it fetching things from the network before deciding if it needs
+to display the card? I'd rather open the window (in the background) as soon as possible to provide feedback that we
+might know something.

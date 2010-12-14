@@ -15,12 +15,17 @@ class ComGoogleChrome(Extractor):
 
         # window 0 is always the foreground window? Seems it.
         tab = self.chrome.windows()[ 0 ].activeTab()
-        #if not tab.exists(): return # foreground window is not a browser window.
+        
+        # this is in one version of the chome API, but not others.
+        if hasattr(tab, "exists"):
+            if not tab.exists(): return # foreground window is not a browser window.
         
         self.clues_from_url( tab.URL() )
-        if self.done: return
+        if self.done:
+            return
 
-        if tab.source():
+        # this is in one version of the chome API, but not others.
+        if hasattr(tab, "source") and tab.source():
             # look for microformats
             self.clues_from_html( tab.source(), tab.URL() )
             if self.done: return
