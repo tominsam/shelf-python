@@ -31,3 +31,7 @@ eye on it.
 First display of shelf for a person seems sluggish - is it fetching things from the network before deciding if it needs
 to display the card? I'd rather open the window (in the background) as soon as possible to provide feedback that we
 might know something.
+
+If the clue doesn't change, try not to do rediscovery of it. Or at least profile it and verify to myself that it's
+cheap. But I'd rather just not do re-discovery. The point is to get active app pings cheap enough that I can drop the
+hearbeat to one second.

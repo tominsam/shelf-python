@@ -2,6 +2,7 @@ from ScriptingBridge import *
 from Extractor import *
 import urlparse
 from Utilities import *
+from xml.etree.ElementTree import ElementTree
 
 class ComAppleSafari(Extractor):
 
@@ -19,6 +20,28 @@ class ComAppleSafari(Extractor):
         
         self.clues_from_url( tab.URL() )
         if self.done: return
+
+        if re.match( r'https://www.google.com/reader/', unicode(tab.URL()) ):
+            # google reader. Try to investigate current item.
+            js = """
+                var link = null;
+                var n = document.getElementById('entries').childNodes;
+                for (var i = 0; i < n.length; i++) {
+                    if (/expanded/.test(n[i].className)) {
+                        var l = n[i];
+                        var a = l.getElementsByClassName("entry-title-link")[0];
+                        if (a) {
+                            link = a.href;
+                            break;
+                        }
+                    }
+                }
+                link;
+            """
+            link = self.safari.doJavaScript_in_(js, self.safari.windows()[0].currentTab())
+            if link:
+                self.clues_from_url( link )
+                if self.done: return
 
         if tab.source():
             # look for microformats
@@ -58,4 +81,3 @@ class RelMeParser(SGMLParser):
     def do_a( self, attrs ):
         if not ('rel', 'me') in attrs: return
         self.hrefs += filter( lambda l: re.match(r'http', l), [e[1] for e in attrs if e[0]=='href'] )
-
