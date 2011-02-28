@@ -8,6 +8,9 @@ all: dev
 
 .PHONY: dev
 dev:
+	@echo -
+	@echo - dev build will not work under Snow Leopard unless you\'ve fixed your local build!!
+	@echo -
 	$(PYTHON) setup.py py2app -A
 
 .PHONY: dist

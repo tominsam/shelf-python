@@ -19,7 +19,7 @@ etc.
 
 In the root of the checkout, just run (assuming a recent macos)
 
-    python setup.py py2app
+    make dist
 
 This will write out a Shelf.app in the local dist folder. Don't use the -A flag to py2app under Snow Leopard, it doesn't
 work for some reason.
