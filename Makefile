@@ -2,8 +2,11 @@
 
 PYTHON ?= python
 
+# EVIL EVIL EVIL
+VERSION = $(shell grep 'version =' setup.py | cut -d'"' -f 2)
+
 .PHONY: all
-all: dev
+all: dist
 	@ :
 
 .PHONY: dev
@@ -16,6 +19,12 @@ dev:
 .PHONY: dist
 dist:
 	$(PYTHON) setup.py py2app
+
+.PHONY: zip
+zip:
+	cd dist && rm -f Shelf-$(VERSION).zip
+	cd dist && zip -r9 Shelf-$(VERSION).zip Shelf.app/
+	du -k dist/*.zip
 
 .PHONY: clean
 clean:
