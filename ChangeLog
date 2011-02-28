@@ -1,12 +1,18 @@
-### git HEAD
+### 0.0.15 (2011-02-28)
+
+Made work under Snow Leopard, Python 2.6, etc (Anil Madhavapeddy)
+
+Crazy experimental Google Reader support (Safari only)
+
+Support more versions of Chrome, hopefully. They keep changing the AS support.
 
 Added a Spotlight provider that attempts to grab e-mail messages and 
-attachments exchanged with a particular contact.
+attachments exchanged with a particular contact (Rui Carmo)
 
 Tightened up indents and removed blank lines in some files to make it 
-easier to work on a somewhat cramped screen 
+easier to work on a somewhat cramped screen.
 
-### 0.0.14 (development)
+### 0.0.14
 
 last.fm changed their XML order? Anyway, I now explicitly order the tracks
 in the client.

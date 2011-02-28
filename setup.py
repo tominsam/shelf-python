@@ -9,7 +9,7 @@ from distutils.core import setup
 import py2app
 from glob import glob
 
-version = "0.0.14" # update in Cache.py as well, for the User-Agent string
+version = "0.0.15" # update in Cache.py as well, for the User-Agent string
 
 plist = dict(
   CFBundleName="Shelf",
@@ -29,7 +29,7 @@ plist = dict(
   ],
 
   # sparkle appcast url, for auto-updates
-  SUFeedURL="http://jerakeen.org/code/shelf/appcast/"
+  SUFeedURL="http://code.movieos.org/shelf/appcast/" # doesn't exist, but it's a thing at least.
 )
 
 setup(
