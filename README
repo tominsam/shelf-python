@@ -1,0 +1,25 @@
+http://code.movieos.org/shelf/
+
+Shelf is an app for MacOS that looks at the current foreground application, and tries to figure out if what you’re
+looking at corresponds to a person in your Address Book. Then it’ll tell you things about them.
+
+## Using Shelf
+
+Just run it. It’ll sit in the background, and watch the foreground application. If it can tie something you’re looking
+at (the current url in your web browser, for instance, or the target of an open chat) to a person in your Address Book,
+it’ll open a window and show you their name and picture, and it’ll try to fetch RSS feeds for any URLs in their address
+card.
+
+It’s possible that you don’t have a very deep address book (most people just have email addresses, the URL field is
+hidden by default in Address Book.app). If you want a demo, just download my VCard file and import it. Then when you
+look at this page Shelf should figure out that you’re looking at me, and show you my recent Flickr photos, blog entries,
+etc.
+
+## Building Shelf
+
+In the root of the checkout, just run (assuming a recent macos)
+
+    python setup.py py2app
+
+This will write out a Shelf.app in the local dist folder. Don't use the -A flag to py2app under Snow Leopard, it doesn't
+work for some reason.
